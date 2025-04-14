@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "211474745144",
+    "project_id": "enviroreport-7da61",
+    "storage_bucket": "enviroreport-7da61.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211474745144:android:d93e10bb3f577e092723cd",
+        "android_client_info": {
+          "package_name": "com.enviro.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoHHqzQhIZI7MV0APCGrbuE8EpIKxm018"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211474745144:android:90a23dd3f7138fa92723cd",
+        "android_client_info": {
+          "package_name": "com.enviro.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoHHqzQhIZI7MV0APCGrbuE8EpIKxm018"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "name": "Water Pollution",
+    "fields": [
+      {
+        "label": "Pollution Source",
+        "type": "dropdown",
+        "options": ["Industrial", "Residential", "Agricultural"]
+      },
+      {
+        "label": "Pollution Type",
+        "type": "dropdown",
+        "options": ["Chemical", "Oil Spill", "Plastic Waste"]
+      },
+      { "label": "Date of Incident", "type": "date" },
+      { "label": "Time of Incident", "type": "time" },
+      { "label": "Location", "type": "location" },
+      { "label": "State", "type": "text" },
+      { "label": "Area", "type": "text" },
+      { "label": "Upload Document", "type": "file" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Air Pollution",
+    "fields": [
+      {
+        "label": "Pollution Source",
+        "type": "dropdown",
+        "options": ["Factory", "Vehicle", "Burning Waste"]
+      },
+      { "label": "Air Quality Index (AQI)", "type": "number" },
+      {
+        "label": "Pollution Type",
+        "type": "dropdown",
+        "options": ["Smoke", "Dust", "Chemical"]
+      },
+      { "label": "Date of Incident", "type": "date" },
+      { "label": "Time of Incident", "type": "time" },
+      { "label": "Location", "type": "location" },
+      { "label": "State", "type": "text" },
+      { "label": "Upload Evidence", "type": "file" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Soil Pollution",
+    "fields": [
+      {
+        "label": "Pollution Source",
+        "type": "dropdown",
+        "options": ["Agriculture", "Industry", "Waste Dumping"]
+      },
+      {
+        "label": "Contaminant Type",
+        "type": "dropdown",
+        "options": ["Heavy Metals", "Pesticides", "Plastics"]
+      },
+      { "label": "Date of Incident", "type": "date" },
+      { "label": "Time of Incident", "type": "time" },
+      { "label": "Location", "type": "location" },
+      { "label": "State", "type": "text" },
+      { "label": "Area", "type": "text" },
+      { "label": "Upload Report", "type": "file" }
+    ]
+  }
+]
