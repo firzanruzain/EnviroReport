@@ -1,0 +1,33 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.shadowStyle = shadowStyle;
+var _reactNative = require("react-native");
+/**
+ * Utility function to ensure that shadows look the same accross all platforms (iOS, android, web).
+ * Rationale: for some reasons, the shadow radius on iOS looks like too large by a factor of 2.
+ * To keep shadows consistent, this function will divide the shadow radius by 2 on iOS.
+ */
+function shadowStyle(_ref) {
+  let {
+    color,
+    opacity,
+    radius,
+    offset
+  } = _ref;
+  return {
+    shadowColor: color,
+    shadowOpacity: opacity,
+    shadowRadius: radius && _reactNative.Platform.select({
+      ios: radius / 2,
+      default: radius
+    }),
+    shadowOffset: offset && {
+      width: offset[0],
+      height: offset[1]
+    }
+  };
+}
+//# sourceMappingURL=utils.js.map
