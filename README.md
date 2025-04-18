@@ -140,17 +140,13 @@ This platform allows public users to submit detailed reports of environmental is
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
-### Prerequisites
+🚧 _This section is currently under construction and will be updated soon._
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+> Setup instructions and environment configuration details will be added here.
+> Stay tuned!
 
+<!--
 ### Installation
 
 1. Get a free API Key at [https://example.com](https://example.com)
@@ -171,7 +167,7 @@ This is an example of how to list things you need to use the software and how to
    git remote set-url origin firzanruzain/EnviroReport
    git remote -v # confirm the changes
    ```
-
+-->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -179,9 +175,11 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+🚧 _This section is currently under construction and will be updated soon._
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+> Setup instructions and environment configuration details will be added here.
+> Stay tuned!
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -190,12 +188,47 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+This project is currently under active development. Below are the planned and in-progress features:
 
-See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a full list of proposed features (and known issues).
+### Core Features
+- [x] User Registration and Authentication (Firebase)
+- [x] Role-based access (Public User, Staff)
+- [x] User Profile Management
+- [x] Submit Environmental Incident Reports
+- [x] Report Listing and Filtering (Public & Staff)
+- [x] Map View for Submitted Reports
+- [x] Staff Dashboard with Report Overview
+
+### Form Management System
+- [x] Create New Custom Forms (Drag & Drop)
+- [ ] Edit and Update Existing Forms
+- [ ] Delete Form Templates
+- [ ] Form Publishing and Visibility Control
+
+### Incident Handling Features
+- [x] Staff: Update Report Status (Open, Pending, Closed)
+- [ ] Staff: Provide Feedback on Reports
+- [ ] Real-time notifications for updates
+
+### Enhancements & Integrations
+- [ ] Push Notifications (via Firebase)
+- [ ] Activity Timeline for Report History
+- [ ] KPI or Analytics Dashboard (Staff)
+- [ ] Offline Mode / Sync on Reconnect
+
+### Testing & QA
+- [ ] Functional Testing (Manual)
+- [ ] CI/CD Setup (Expo EAS Build, GitHub Actions)
+- [ ] Bug Fixes and Refinement
+- [ ] Final UI Polish
+
+### Documentation & Deployment
+- [ ] Complete Setup Guide (Getting Started)
+- [ ] Deployment Guide for Admins
+- [ ] Final Demo & Walkthrough Video
+- [ ] Final Submission Package
+
+See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a full list of proposed features and bugs.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
