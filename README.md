@@ -24,7 +24,7 @@
 [![Issues][issues-shield]][issues-url]
 [![project_license][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
+[![wip-badge]][wip-url]
 
 
 <!-- PROJECT LOGO 
@@ -270,3 +270,6 @@ Project Link: [https://github.com/firzanruzain/EnviroReport](https://github.com/
 
 [GitHubBadge]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
 [GitHub-url]: https://github.com/
+
+[wip-badge]: https://img.shields.io/badge/Status-Work_in_Progress-yellow?style=for-the-badge
+[wip-url]: https://github.com/firzanruzain/EnviroReport
