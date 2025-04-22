@@ -10,7 +10,7 @@ const variantStyles = {
 };
 
 type ButtonProps = {
-  title: string;
+  title: React.ReactNode;
   onPress?: () => void;
   variant?: keyof typeof variantStyles;
   className?: string;
@@ -24,9 +24,7 @@ export default function Button({ title, onPress, variant, className, disabled }:
       onPress={onPress}
       className={`${disabled ? variantStyles.disabled : variantStyles[variant || "primary"]} ${className}`}
     >
-      <Text className="text-center text-3xl text-Secondary-100 font-pMedium">
         {title}
-      </Text>
     </TouchableOpacity>
   );
 }

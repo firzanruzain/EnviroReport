@@ -2,10 +2,14 @@
 module.exports = {
   // NOTE: Update this to include the paths to all of your component files.
   content: [
-    "./app/**/*.{js,jsx,ts,tsx}",
-    "./components/**/*.{js,jsx,ts,tsx}",
-    "../../packages/**/*.{js,ts,jsx,tsx}",
-  ],
+    "./apps/admin-app/app/**/*.{js,jsx,ts,tsx}",
+    "./apps/public-app/app/**/*.{js,jsx,ts,tsx}",
+    './apps/admin-app/**/*.{js,ts,jsx,tsx}',       // All admin-app files
+    './apps/public-app/**/*.{js,ts,jsx,tsx}',      // All public-app files
+    './apps/admin-app/components/**/*.{js,ts,jsx,tsx}',  // Explicitly admin components
+    './apps/public-app/components/**/*.{js,ts,jsx,tsx}', // Explicitly public components
+    './packages/shared-ui/**/*.{js,ts,jsx,tsx}',   // Shared components
+    ],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {

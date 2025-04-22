@@ -7,17 +7,17 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TextInput,
-  Button,
   ActivityIndicator,
   TouchableOpacity,
   StatusBar,
-  Alert
+  Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import images from "../../constants/images"
+import images from "../../constants/images";
+import { Button } from "ui-core";
 
 type inputprop = {
   placeholder: string;
@@ -28,7 +28,13 @@ type inputprop = {
   onChangeText?: any;
 };
 
-function Input({ placeholder, secureTextEntry, keyboardType='default', value, onChangeText }:inputprop) {
+function Input({
+  placeholder,
+  secureTextEntry,
+  keyboardType = "default",
+  value,
+  onChangeText,
+}: inputprop) {
   return (
     <TextInput
       className="bg-Secondary-100 h-[52px] w-[295px] px-10 pr-16 rounded-full font-pMedium my-2"
@@ -52,16 +58,16 @@ export default function Index() {
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-  }
+  };
 
   useEffect(() => {
-    if (!(email && password)){
+    if (!(email && password)) {
       enableButton(true);
-    }else{
+    } else {
       enableButton(false);
     }
   }, [email, password]);
-  
+
   const signUp = async () => {
     setLoading(true);
     try {
@@ -82,7 +88,7 @@ export default function Index() {
     } catch (e: any) {
       const err = e as FirebaseError;
       alert("Sign in failed: " + err.message);
-      Alert.alert('Sign in Failed', err.code);
+      Alert.alert("Sign in Failed", err.code);
     } finally {
       setLoading(false);
     }
@@ -199,19 +205,3 @@ export default function Index() {
     // </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 20,
-    flex: 1,
-    justifyContent: "center",
-  },
-  input: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
-});

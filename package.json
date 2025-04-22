@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "admin": "cd apps/admin-app && expo start --android",
+    "public": "cd apps/public-app && expo start",
+    "admin:clear": "cd apps/admin-app && expo start -c",
+    "public:clear": "cd apps/public-app && expo start -c"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +18,9 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "nativewind": "^4.1.23",
+    "tailwindcss": "^3.4.17"
+  }
 }
