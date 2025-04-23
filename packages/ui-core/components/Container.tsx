@@ -1,15 +1,15 @@
 import { View, Text, SafeAreaView, StatusBar } from 'react-native'
 import React from 'react'
 
-export default function Container({children}: {children?: React.ReactNode}) {
+export default function Container({children, className}: {children?: React.ReactNode, className?: string}) {
   return (
-    <SafeAreaView className="bg-Secondary-Default h-full flex-1 justify-center items-center px-10">
+    <SafeAreaView className={`bg-Secondary-Default h-full flex-1 justify-center items-center ${className}`}>
       <StatusBar
         translucent
         backgroundColor={"transparent"}
         barStyle={"dark-content"}
       />
-      <View className='justify-center w-full'>{children}</View>
+      {children}
     </SafeAreaView>
   );
 }

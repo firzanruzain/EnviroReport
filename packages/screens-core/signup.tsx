@@ -5,7 +5,7 @@ import Field from "../ui-core/components/Field";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "../ui-core/components/Button";
 import { useEffect, useState } from "react";
-import { Text, View, Image, ActivityIndicator} from "react-native"
+import { Text, View, Image, ActivityIndicator } from "react-native";
 import { getAuth } from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { Link } from "expo-router";
@@ -15,6 +15,7 @@ import { RotatingImage } from "ui-core";
 export default function login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [buttonEnabled, enableButton] = useState(false);
@@ -25,20 +26,21 @@ export default function login() {
   };
 
   useEffect(() => {
-    if (!(email && password)) {
+    if (!(email && password && name)) {
       enableButton(true);
     } else {
       enableButton(false);
     }
   }, [email, password]);
 
-  const signIn = async () => {
+  const signUp = async () => {
     setLoading(true);
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      await auth.createUserWithEmailAndPassword(email, password);
+      alert("Check your emails!");
     } catch (e: any) {
       const err = e as FirebaseError;
-      alert("Sign in failed: " + err.message);
+      alert("Registration failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -61,9 +63,14 @@ export default function login() {
         source={images.earthimage}
       ></RotatingImage>
       <View className="w-full justify-center">
-        <Text className="text-[36px] font-pBold text-primary-Default self-center mb-14">
-          Welcome Back!
+        <Text className="text-[36px] font-pBold text-primary-Default self-center mb-10">
+          Create Account
         </Text>
+        <Field
+          value={name}
+          onChangeText={setName}
+          placeholder="Name"
+        />
         <Field
           value={email}
           onChangeText={setEmail}
@@ -85,13 +92,6 @@ export default function login() {
             />
           }
         />
-        <Link
-          replace
-          href={"/"}
-          className="font-pBold text-dark-Default underline right-safe-offset-3 text-right"
-        >
-          Forgot Password?
-        </Link>
         {loading ? (
           <ActivityIndicator size={"small"} style={{ margin: 28 }} />
         ) : (
@@ -100,20 +100,20 @@ export default function login() {
               className="h-[52px]"
               disabled={buttonEnabled}
               variant="primary"
-              onPress={signIn}
+              onPress={signUp}
               title={
                 <Text className="text-center text-[18px] text-Secondary-100 font-pSemiBold">
-                  Log In
+                  Sign Up
                 </Text>
               }
             />
 
             <Link
               replace
-              href={"/signup"}
+              href={"/login"}
               className="text-center underline font-pBold text-dark-Default"
             >
-              Don't have an account? Sign Up
+              Already have an account? Log In
             </Link>
           </>
         )}

@@ -1,7 +1,7 @@
-import { Login } from 'screens-core';
+import Welcome from 'screens-core/welcome';
 
 export default function Index() {
   return (
-    <Login/>
+    <Welcome showLogin={false}/>
   );
 }

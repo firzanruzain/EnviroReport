@@ -8,9 +8,9 @@ This document lists all reusable and app-specific components used across the **P
 
 | Component Name        | Description                                       | Done? |
 | --------------------- | ------------------------------------------------- | ----- |
-| `PrimaryButton`     | Main call-to-action button                        | [ ]   |
-| `TextInputField`    | Generic form input with label                     | [ ]   |
-| `PasswordInput`     | Input with show/hide toggle for passwords         | [ ]   |
+| `PrimaryButton`     | Main call-to-action button                        | [x]   |
+| `TextInputField`    | Generic form input with label                     | [x]   |
+| `PasswordInput`     | Input with show/hide toggle for passwords         | [x]   |
 | `Label`             | Field label with optional helper text             | [ ]   |
 | `SectionHeader`     | Section title or page heading                     | [ ]   |
 | `Card`              | Wrapper for displaying report info or content     | [ ]   |
