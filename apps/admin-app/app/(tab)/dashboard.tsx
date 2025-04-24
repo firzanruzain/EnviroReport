@@ -1,9 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { getAuth } from '@react-native-firebase/auth'
+import supabase from 'utils/supabase';
 import { Button } from 'ui-core';
-
-const auth = getAuth();
 
 export default function dashboard() {
   return (
@@ -16,7 +14,7 @@ export default function dashboard() {
           </Text>
         }
         onPress={() => {
-          auth.signOut();
+          supabase.auth.signOut();
         }}
       />
     </View>

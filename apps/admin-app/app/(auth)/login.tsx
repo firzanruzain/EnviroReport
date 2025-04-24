@@ -1,7 +1,7 @@
 import { Login } from 'screens-core';
 
-export default function Index() {
+export default function login() {
   return (
-    <Login/>
+    <Login disabledSignUp/>
   );
 }

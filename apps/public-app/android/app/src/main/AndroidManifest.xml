@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="com.enviro.firebase"/>
+        <data android:scheme="exp+enviroreport"/>
       </intent-filter>
     </activity>
   </application>

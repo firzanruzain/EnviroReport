@@ -1,5 +1,4 @@
 import { View, Text, Button, StatusBar, TouchableOpacity, Image } from "react-native";
-import auth from "@react-native-firebase/auth";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,9 +7,9 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
 import Field from "@/components/Field";
 import images from "@/constants/images";
+import supabase from "utils/supabase";
 
 const Page = () => {
-  const user = auth().currentUser;
   const router = useRouter();
   const theme = useTheme();
 
@@ -44,7 +43,11 @@ const Page = () => {
 
         <View className="mx-2 p-2">
           <View className="items-center justify-center flex h-[12%] mb-2">
-            <Image className="h-full w-full" source={images.defaultdp} resizeMode="contain"></Image>
+            <Image
+              className="h-full w-full"
+              source={images.defaultdp}
+              resizeMode="contain"
+            ></Image>
           </View>
           <View className="bg-Secondary-Default flex-col gap-6 p-4 rounded-3xl my-1">
             <Field label="Name" />
@@ -54,7 +57,10 @@ const Page = () => {
             <Field label="Phone Number" />
           </View>
           <TouchableOpacity
-            onPress={() => auth().signOut()}
+            onPress={() => {
+              console.log("LogOut Pressed");
+              supabase.auth.signOut();
+            }}
             className="bg-primary-Default flex-col gap-6 p-4 rounded-xl my-2 items-center"
           >
             <Text className="font-pMedium text-Secondary-100 text-xl">

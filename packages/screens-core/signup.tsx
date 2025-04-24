@@ -6,20 +6,18 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "../ui-core/components/Button";
 import { useEffect, useState } from "react";
 import { Text, View, Image, ActivityIndicator } from "react-native";
-import { getAuth } from "@react-native-firebase/auth";
-import { FirebaseError } from "firebase/app";
 import { Link } from "expo-router";
 import images from "assets-core/images";
 import { RotatingImage } from "ui-core";
+import supabase from "utils/supabase";
 
-export default function login() {
+export default function signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [buttonEnabled, enableButton] = useState(false);
-  const auth = getAuth();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -35,15 +33,17 @@ export default function login() {
 
   const signUp = async () => {
     setLoading(true);
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      alert("Check your emails!");
-    } catch (e: any) {
-      const err = e as FirebaseError;
-      alert("Registration failed: " + err.message);
-    } finally {
-      setLoading(false);
-    }
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+    if (error) alert(error);
+    if (!session)
+      alert("Please check your inbox for email verification!");
+    setLoading(false);
   };
 
   return (
@@ -66,11 +66,7 @@ export default function login() {
         <Text className="text-[36px] font-pBold text-primary-Default self-center mb-10">
           Create Account
         </Text>
-        <Field
-          value={name}
-          onChangeText={setName}
-          placeholder="Name"
-        />
+        <Field value={name} onChangeText={setName} placeholder="Name" />
         <Field
           value={email}
           onChangeText={setEmail}

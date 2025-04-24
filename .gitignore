@@ -54,3 +54,12 @@ node_modules/
 *.expo/
 .expo/*
 .expo-shared/
+
+.env.local
+
+# Android
+# Android
+**/android/app/build
+**/android/.gradle
+**/android/local.properties
+**/android/gradle.properties

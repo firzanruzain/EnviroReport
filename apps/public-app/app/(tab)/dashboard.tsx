@@ -9,7 +9,6 @@ import { Link, useRouter } from 'expo-router';
 import { FAB, List } from 'react-native-paper';
 import CreateNewButton from '@/components/CreateNewButton';
 import loadDummyReports from '@/data/loadReports';
-import { Button } from 'shared-ui';
 type ListItemProp = {
   title: React.ReactNode,
   right: string
@@ -72,7 +71,6 @@ const dashboard = () => {
             <Text className="font-pBold text-primary-Default text-3xl">
               Firzan
             </Text>
-            <Button title='asd'/>
           </View>
           <View className=" w-[10%] m-2">
             <MaterialCommunityIcons

@@ -8,7 +8,9 @@
     "admin": "cd apps/admin-app && expo start --android",
     "public": "cd apps/public-app && expo start",
     "admin:clear": "cd apps/admin-app && expo start -c",
-    "public:clear": "cd apps/public-app && expo start -c"
+    "public:clear": "cd apps/public-app && expo start -c",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +22,16 @@
     "packages/*"
   ],
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "nativewind": "^4.1.23",
-    "tailwindcss": "^3.4.17"
+    "react-native-url-polyfill": "^2.0.0",
+    "tailwindcss": "^3.4.17",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo": "~52.0.46",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-maps": "1.18.0",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-reanimated": "~3.16.1"
   }
 }

@@ -5,20 +5,26 @@ import Field from "../ui-core/components/Field";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "../ui-core/components/Button";
 import { useEffect, useState } from "react";
-import { Text, View, Image, ActivityIndicator} from "react-native"
-import { getAuth } from "@react-native-firebase/auth";
-import { FirebaseError } from "firebase/app";
+import { Text, View, Image, ActivityIndicator, AppState } from "react-native";
 import { Link } from "expo-router";
 import images from "assets-core/images";
 import { RotatingImage } from "ui-core";
+import supabase from "utils/supabase";
 
-export default function login() {
+AppState.addEventListener("change", (state) => {
+  if (state === "active") {
+    supabase.auth.startAutoRefresh();
+  } else {
+    supabase.auth.stopAutoRefresh();
+  }
+});
+
+export default function login({disabledSignUp}: {disabledSignUp?: boolean}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [buttonEnabled, enableButton] = useState(false);
-  const auth = getAuth();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -34,14 +40,12 @@ export default function login() {
 
   const signIn = async () => {
     setLoading(true);
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-    } catch (e: any) {
-      const err = e as FirebaseError;
-      alert("Sign in failed: " + err.message);
-    } finally {
-      setLoading(false);
-    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+    if (error) alert(error.message);
+    setLoading(false);
   };
 
   return (
@@ -107,14 +111,15 @@ export default function login() {
                 </Text>
               }
             />
-
-            <Link
-              replace
-              href={"/signup"}
-              className="text-center underline font-pBold text-dark-Default"
-            >
-              Don't have an account? Sign Up
-            </Link>
+            {disabledSignUp ? null : (
+              <Link
+                replace
+                href={"/signup"}
+                className="text-center underline font-pBold text-dark-Default"
+              >
+                Don't have an account? Sign Up
+              </Link>
+            )}
           </>
         )}
       </View>
