@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Container({children, className}: {children?: React.ReactNode, className?: string}) {
   return (
-    <SafeAreaView className={`bg-Secondary-Default h-full flex-1 justify-center items-center ${className}`}>
+    <SafeAreaView className={`bg-Secondary-Default h-full flex-1 ${className}`}>
       <StatusBar
         translucent
         backgroundColor={"transparent"}
