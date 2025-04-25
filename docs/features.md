@@ -1,11 +1,13 @@
-# Environmental Incident Reporting and Management System - Feature Tracker
+# EnviroReport - Features
+
+---
 
 ## Public User App
 
 ### Authentication
 
-- [X] Sign Up
-- [X] Log In/Logout
+- [x] Sign Up
+- [x] Log In/Logout
 - [ ] Forgot Password
 
 ### Profile Management
@@ -28,15 +30,17 @@
 - [ ] View Report Details
 - [ ] Map View of submitted reports
 
+---
+
 ## Staff Division App
 
 ### Authentication
 
-- [X] Staff Login/Logout
+- [x] Staff Login/Logout
 
 ### Dashboard
 
-- [X] View Division Dashboard (shows report statistics)
+- [x] View Division Dashboard (shows report statistics)
 
 ### Report Management
 
@@ -59,16 +63,17 @@
 - [ ] Publish/Unpublish Form
 - [ ] Delete Form
 
+---
+
 ## Cross-Cutting Features
 
 - [ ] Notifications system
 - [ ] Data validation
 - [ ] Responsive UI for mobile
 
+---
+
 ## Implementation Status Legend
 
 - [ ] Not started
-- [X] Completed
-
-- [-] Partially completed
-- [!] Blocked/needs attention
+- [x] Completed
