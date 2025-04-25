@@ -1,4 +1,4 @@
-# EnviroReport - Features
+# Core Features
 
 ---
 
@@ -72,8 +72,3 @@
 - [ ] Responsive UI for mobile
 
 ---
-
-## Implementation Status Legend
-
-- [ ] Not started
-- [x] Completed

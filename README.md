@@ -77,7 +77,7 @@
   </ol>
 </details>
 
-
+---
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -88,7 +88,9 @@ EnviroReport is a full-stack mobile application developed as a final year projec
 
 This platform allows public users to submit detailed reports of environmental issues, while enabling staff and administrators to manage, review, and respond to these reports efficiently through a dedicated admin interface.
 
-## 🔧 Features
+---
+
+## 🔧 Requirements
 
 ### 👥 General (All Users)
 - User Registration & Login – Secure signup and login system for all users.
@@ -119,9 +121,9 @@ This platform allows public users to submit detailed reports of environmental is
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+---
 
-
-###  Built With
+##  Tech Stack
 
 * [![React Native][ReactNativeBadge]][ReactNative-url]
 * [![Expo][ExpoBadge]][Expo-url]
@@ -134,7 +136,7 @@ This platform allows public users to submit detailed reports of environmental is
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+---
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -169,7 +171,7 @@ This platform allows public users to submit detailed reports of environmental is
 -->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+---
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -182,7 +184,7 @@ This platform allows public users to submit detailed reports of environmental is
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
+---
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -190,27 +192,10 @@ This platform allows public users to submit detailed reports of environmental is
 This project is currently under active development. Below are the planned and in-progress features:
 
 ### Core Features
-- [x] User Registration and Authentication (Firebase)
-- [x] Role-based access (Public User, Staff)
-- [x] User Profile Management
-- [x] Submit Environmental Incident Reports
-- [x] Report Listing and Filtering (Public & Staff)
-- [x] Map View for Submitted Reports
-- [x] Staff Dashboard with Report Overview
-
-### Form Management System
-- [x] Create New Custom Forms (Drag & Drop)
-- [ ] Edit and Update Existing Forms
-- [ ] Delete Form Templates
-- [ ] Form Publishing and Visibility Control
-
-### Incident Handling Features
-- [x] Staff: Update Report Status (Open, Pending, Closed)
-- [ ] Staff: Provide Feedback on Reports
-- [ ] Real-time notifications for updates
+For a detailed breakdown of the core features, refer to the [Core Features Documentation](docs/features.md).
 
 ### Enhancements & Integrations
-- [ ] Push Notifications (via Firebase)
+- [x] Push Notifications (via Firebase)
 - [ ] Activity Timeline for Report History
 - [ ] KPI or Analytics Dashboard (Staff)
 - [ ] Offline Mode / Sync on Reconnect
@@ -239,6 +224,7 @@ Distributed under the project_license. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 -->
 
+---
 
 <!-- CONTACT -->
 ## Contact
