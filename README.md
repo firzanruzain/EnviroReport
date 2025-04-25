@@ -88,21 +88,21 @@ This platform allows public users to submit detailed reports of environmental is
 
 ---
 
-## 🔧 Requirements
+## Requirements
 
-### 👥 General (All Users)
+### General (All Users)
 
 - User Registration & Login – Secure signup and login system for all users.
 - Profile Management – Edit and update personal profile information.
 
-### 🌍 Public User
+### Public User
 
 - User Dashboard – View number of submitted reports and quick access to actions.
 - Submit Incident Report – Report environmental issues with details, category, and location pinning on a map.
 - Report History – View and track the status of submitted reports in both list and map views.
 - Report Details – View full details of individual reports, including attachments and status updates.
 
-### 🛠 Staff Division
+### Staff Division
 
 - Division Dashboard – Overview of reports relevant to the division, including unresolved reports and recent activity.
 - Report Management – View, filter, and update report statuses (e.g., Open, Pending, Closed).
@@ -113,7 +113,7 @@ This platform allows public users to submit detailed reports of environmental is
   - View Published & Existing Forms – Review all available form templates and manage publication status.
   - Form Feedback – Send feedback or comments on submitted reports.
 
-### 🗂 System Enhancements
+### System Enhancements
 
 - Dynamic Form Builder – Supports highly customizable templates for different incident types.
 - Real-time Status Updates – Reports update in real time for quick staff response.
