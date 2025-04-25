@@ -208,10 +208,11 @@ See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a
 
 The following documentation is available for this project:
 
-- [Core Features Documentation](docs/features.md)
+- [Core Features](docs/features.md)
+- [Components](docs/components.md)
+- [Structure](docs/components.md)
 - [Setup Guide](docs/setup.md)
 - [Deployment Guide](docs/deployment.md)
-- [API Documentation](docs/api.md)
 - [User Guide](docs/user-guide.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
