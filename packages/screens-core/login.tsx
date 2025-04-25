@@ -49,7 +49,7 @@ export default function login({disabledSignUp}: {disabledSignUp?: boolean}) {
   };
 
   return (
-    <Container className="px-14">
+    <Container className="px-14 justify-center items-center">
       <Image
         className="absolute bottom-[400px] left-[50px]"
         source={images.light}

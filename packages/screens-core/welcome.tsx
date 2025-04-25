@@ -9,7 +9,7 @@ import { RotatingImage } from 'ui-core'
 export default function welcome({title, showLogin=true}:{title?:string, showLogin?:boolean}) {
   const router = useRouter();
   return (
-    <Container className="relative px-8">
+    <Container className="relative px-8 justify-center items-center">
       <Image
         className="absolute bottom-[30rem] right-1"
         source={images.light}

@@ -39,6 +39,12 @@ export default function signup() {
     } = await supabase.auth.signUp({
       email: email,
       password: password,
+      options: {
+        data: {
+          name: name,
+        },
+      },
+
     });
     if (error) alert(error);
     if (!session)
@@ -47,7 +53,7 @@ export default function signup() {
   };
 
   return (
-    <Container className="px-14">
+    <Container className="px-14 justify-center items-center">
       <Image
         className="absolute bottom-[400px] left-[50px]"
         source={images.light}
