@@ -1,5 +1,7 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a id="readme-top"></a>
+
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
 *** that would make this better, please fork the repo and create a pull request
@@ -7,8 +9,6 @@
 *** Don't forget to give the project a star!
 *** Thanks again! Now go create something AMAZING! :D
 -->
-
-
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -20,13 +20,14 @@
 -->
 
 <!-- [![project_license][license-shield]][license-url] -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![wip-badge]][wip-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-<!-- PROJECT LOGO 
+<!-- PROJECT LOGO
 <br />
 <div align="center">
   <a href="https://github.com/firzanruzain/EnviroReport">
@@ -49,8 +50,6 @@
   </p>
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -70,16 +69,15 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <!-- <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li> -->
+    <li><a href="#documentation">Documentation</a></li>
     <li><a href="#contact">Contact</a></li>
-    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
 
 ---
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
@@ -93,16 +91,19 @@ This platform allows public users to submit detailed reports of environmental is
 ## 🔧 Requirements
 
 ### 👥 General (All Users)
+
 - User Registration & Login – Secure signup and login system for all users.
 - Profile Management – Edit and update personal profile information.
 
 ### 🌍 Public User
+
 - User Dashboard – View number of submitted reports and quick access to actions.
 - Submit Incident Report – Report environmental issues with details, category, and location pinning on a map.
 - Report History – View and track the status of submitted reports in both list and map views.
 - Report Details – View full details of individual reports, including attachments and status updates.
 
 ### 🛠 Staff Division
+
 - Division Dashboard – Overview of reports relevant to the division, including unresolved reports and recent activity.
 - Report Management – View, filter, and update report statuses (e.g., Open, Pending, Closed).
 - Form Management System
@@ -113,67 +114,46 @@ This platform allows public users to submit detailed reports of environmental is
   - Form Feedback – Send feedback or comments on submitted reports.
 
 ### 🗂 System Enhancements
+
 - Dynamic Form Builder – Supports highly customizable templates for different incident types.
 - Real-time Status Updates – Reports update in real time for quick staff response.
 - Map Integration – Location-based data shown visually for easier resource planning.
 - Notifications – Keep users informed on their report status (optional: via push/email, depending on implementation).
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
-##  Tech Stack
+## Tech Stack
 
-* [![React Native][ReactNativeBadge]][ReactNative-url]
-* [![Expo][ExpoBadge]][Expo-url]
-* [![TypeScript][TypeScriptBadge]][TypeScript-url]
-* [![NativeWind][TailwindBadge]][Tailwind-url]
-* [![Firebase][FirebaseBadge]][Firebase-url]
-* [![Supabase][SupabaseBadge]][Supabase-url]
-* [![Figma][FigmaBadge]][Figma-url]
-* [![GitHub][GitHubBadge]][GitHub-url]
+- [![React Native][ReactNativeBadge]][ReactNative-url]
+- [![Expo][ExpoBadge]][Expo-url]
+- [![TypeScript][TypeScriptBadge]][TypeScript-url]
+- [![NativeWind][TailwindBadge]][Tailwind-url]
+- [![Firebase][FirebaseBadge]][Firebase-url]
+- [![Supabase][SupabaseBadge]][Supabase-url]
+- [![Figma][FigmaBadge]][Figma-url]
+- [![GitHub][GitHubBadge]][GitHub-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
 <!-- GETTING STARTED -->
-## Getting Started
 
+## Getting Started
 
 🚧 _This section is currently under construction and will be updated soon._
 
 > Setup instructions and environment configuration details will be added here.
 > Stay tuned!
 
-<!--
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/firzanruzain/EnviroReport.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin firzanruzain/EnviroReport
-   git remote -v # confirm the changes
-   ```
--->
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 🚧 _This section is currently under construction and will be updated soon._
@@ -181,32 +161,36 @@ This platform allows public users to submit detailed reports of environmental is
 > Setup instructions and environment configuration details will be added here.
 > Stay tuned!
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
 <!-- ROADMAP -->
+
 ## Roadmap
 
 This project is currently under active development. Below are the planned and in-progress features:
 
 ### Core Features
+
 For a detailed breakdown of the core features, refer to the [Core Features Documentation](docs/features.md).
 
 ### Enhancements & Integrations
+
 - [x] Push Notifications (via Firebase)
 - [ ] Activity Timeline for Report History
 - [ ] KPI or Analytics Dashboard (Staff)
 - [ ] Offline Mode / Sync on Reconnect
 
 ### Testing & QA
+
 - [ ] Functional Testing (Manual)
 - [ ] CI/CD Setup (Expo EAS Build, GitHub Actions)
 - [ ] Bug Fixes and Refinement
 - [ ] Final UI Polish
 
 ### Documentation & Deployment
+
 - [ ] Complete Setup Guide (Getting Started)
 - [ ] Deployment Guide for Admins
 - [ ] Final Demo & Walkthrough Video
@@ -216,17 +200,26 @@ See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- LICENSE 
-## License
+---
 
-Distributed under the project_license. See `LICENSE.txt` for more information.
+<!-- DOCUMENTATION -->
+
+## Documentation
+
+The following documentation is available for this project:
+
+- [Core Features Documentation](docs/features.md)
+- [Setup Guide](docs/setup.md)
+- [Deployment Guide](docs/deployment.md)
+- [API Documentation](docs/api.md)
+- [User Guide](docs/user-guide.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
--->
 
 ---
 
 <!-- CONTACT -->
+
 ## Contact
 
 Muhammad Firzan Ruzain bin Firdus - firzanruzain@gmail.com
@@ -235,21 +228,9 @@ Project Link: [https://github.com/firzanruzain/EnviroReport](https://github.com/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- ACKNOWLEDGMENTS 
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
--->
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/firzanruzain/EnviroReport.svg?style=for-the-badge
 [contributors-url]: https://github.com/firzanruzain/EnviroReport/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/firzanruzain/EnviroReport.svg?style=for-the-badge
@@ -265,29 +246,22 @@ Project Link: [https://github.com/firzanruzain/EnviroReport](https://github.com/
 [product-screenshot]: images/screenshot.png
 
 <!-- Badge Icons & Links -->
+
 [ReactNativeBadge]: https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [ReactNative-url]: https://reactnative.dev/
-
 [ExpoBadge]: https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white
 [Expo-url]: https://expo.dev/
-
 [TypeScriptBadge]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
 [TypeScript-url]: https://www.typescriptlang.org/
-
 [TailwindBadge]: https://img.shields.io/badge/NativeWind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
 [Tailwind-url]: https://www.nativewind.dev/
-
 [FirebaseBadge]: https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black
 [Firebase-url]: https://firebase.google.com/
-
 [SupabaseBadge]: https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white
 [Supabase-url]: https://supabase.com/
-
 [FigmaBadge]: https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white
 [Figma-url]: https://figma.com/
-
 [GitHubBadge]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
 [GitHub-url]: https://github.com/
-
 [wip-badge]: https://img.shields.io/badge/Status-Work_in_Progress-yellow?style=for-the-badge
 [wip-url]: https://github.com/firzanruzain/EnviroReport
