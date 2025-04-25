@@ -190,22 +190,22 @@ This platform allows public users to submit detailed reports of environmental is
 This project is currently under active development. Below are the planned and in-progress features:
 
 ### Core Features
-- [x] User Registration and Authentication (Firebase)
+- [x] User Registration and Authentication (Supabase)
 - [x] Role-based access (Public User, Staff)
-- [x] User Profile Management
-- [x] Submit Environmental Incident Reports
-- [x] Report Listing and Filtering (Public & Staff)
-- [x] Map View for Submitted Reports
+- [ ] User Profile Management
+- [ ] Submit Environmental Incident Reports
+- [ ] Report Listing and Filtering (Public & Staff)
+- [ ] Map View for Submitted Reports
 - [x] Staff Dashboard with Report Overview
 
 ### Form Management System
-- [x] Create New Custom Forms (Drag & Drop)
+- [ ] Create New Custom Forms (Drag & Drop)
 - [ ] Edit and Update Existing Forms
 - [ ] Delete Form Templates
 - [ ] Form Publishing and Visibility Control
 
 ### Incident Handling Features
-- [x] Staff: Update Report Status (Open, Pending, Closed)
+- [ ] Staff: Update Report Status (Open, Pending, Closed)
 - [ ] Staff: Provide Feedback on Reports
 - [ ] Real-time notifications for updates
 
