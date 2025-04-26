@@ -126,14 +126,14 @@ This platform allows public users to submit detailed reports of environmental is
 
 ## Tech Stack
 
-- [![React Native][ReactNativeBadge]][ReactNative-url]
-- [![Expo][ExpoBadge]][Expo-url]
-- [![TypeScript][TypeScriptBadge]][TypeScript-url]
-- [![NativeWind][TailwindBadge]][Tailwind-url]
-- [![Firebase][FirebaseBadge]][Firebase-url]
-- [![Supabase][SupabaseBadge]][Supabase-url]
-- [![Figma][FigmaBadge]][Figma-url]
-- [![GitHub][GitHubBadge]][GitHub-url]
+[![React Native][ReactNativeBadge]][ReactNative-url]
+[![Expo][ExpoBadge]][Expo-url]
+[![TypeScript][TypeScriptBadge]][TypeScript-url]
+[![NativeWind][TailwindBadge]][Tailwind-url]
+[![Firebase][FirebaseBadge]][Firebase-url]
+[![Supabase][SupabaseBadge]][Supabase-url]
+[![Figma][FigmaBadge]][Figma-url]
+[![GitHub][GitHubBadge]][GitHub-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
