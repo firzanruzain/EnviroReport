@@ -134,13 +134,3 @@ Common screen templates used across apps (e.g., Login, Welcome)
 - `components/` → Specific components 
 
 ---
-
-## Best Practices
-
-✅ Use absolute imports with aliases (configured via `tsconfig.json`)  
-✅ Use shared packages to avoid duplication  
-✅ Models handle logic and API calls; hooks consume models  
-✅ Use Tailwind presets for consistent styling  
-✅ Keep all font and asset imports centralized
-
----

@@ -88,7 +88,7 @@ This platform allows public users to submit detailed reports of environmental is
 
 ---
 
-## 🔧 Requirements
+## Requirements
 
 ### General (All Users)
 
