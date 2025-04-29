@@ -131,6 +131,7 @@ This platform allows public users to submit detailed reports of environmental is
 [![TypeScript][TypeScriptBadge]][TypeScript-url]
 [![NativeWind][TailwindBadge]][Tailwind-url]
 [![Supabase][SupabaseBadge]][Supabase-url]
+[![Firebase][FirebaseBadge]][Firebase-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -174,7 +175,7 @@ For a detailed breakdown of the core features, refer to the [Core Features Docum
 
 ### Enhancements & Integrations
 
-- [x] Push Notifications (via Firebase)
+- [ ] Push Notifications (via Firebase)
 - [ ] Activity Timeline for Report History
 - [ ] KPI or Analytics Dashboard (Staff)
 - [ ] Offline Mode / Sync on Reconnect
