@@ -90,19 +90,19 @@ This platform allows public users to submit detailed reports of environmental is
 
 ## 🔧 Requirements
 
-### 👥 General (All Users)
+### General (All Users)
 
 - User Registration & Login – Secure signup and login system for all users.
 - Profile Management – Edit and update personal profile information.
 
-### 🌍 Public User
+### Public User
 
 - User Dashboard – View number of submitted reports and quick access to actions.
 - Submit Incident Report – Report environmental issues with details, category, and location pinning on a map.
 - Report History – View and track the status of submitted reports in both list and map views.
 - Report Details – View full details of individual reports, including attachments and status updates.
 
-### 🛠 Staff Division
+### Staff Division
 
 - Division Dashboard – Overview of reports relevant to the division, including unresolved reports and recent activity.
 - Report Management – View, filter, and update report statuses (e.g., Open, Pending, Closed).
@@ -113,7 +113,7 @@ This platform allows public users to submit detailed reports of environmental is
   - View Published & Existing Forms – Review all available form templates and manage publication status.
   - Form Feedback – Send feedback or comments on submitted reports.
 
-### 🗂 System Enhancements
+### System Enhancements
 
 - Dynamic Form Builder – Supports highly customizable templates for different incident types.
 - Real-time Status Updates – Reports update in real time for quick staff response.
@@ -133,7 +133,6 @@ This platform allows public users to submit detailed reports of environmental is
 - [![Firebase][FirebaseBadge]][Firebase-url]
 - [![Supabase][SupabaseBadge]][Supabase-url]
 - [![Figma][FigmaBadge]][Figma-url]
-- [![GitHub][GitHubBadge]][GitHub-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -171,30 +170,15 @@ This platform allows public users to submit detailed reports of environmental is
 
 This project is currently under active development. Below are the planned and in-progress features:
 
-### Core Features
 
 For a detailed breakdown of the core features, refer to the [Core Features Documentation](docs/features.md).
 
-### Enhancements & Integrations
-
-- [x] Push Notifications (via Firebase)
-- [ ] Activity Timeline for Report History
-- [ ] KPI or Analytics Dashboard (Staff)
-- [ ] Offline Mode / Sync on Reconnect
-
-### Testing & QA
-
-- [ ] Functional Testing (Manual)
-- [ ] CI/CD Setup (Expo EAS Build, GitHub Actions)
-- [ ] Bug Fixes and Refinement
-- [ ] Final UI Polish
-
-### Documentation & Deployment
-
-- [ ] Complete Setup Guide (Getting Started)
-- [ ] Deployment Guide for Admins
-- [ ] Final Demo & Walkthrough Video
-- [ ] Final Submission Package
+- [ ] Core Reporting Module
+- [ ] Authentication Module
+- [ ] Division Management
+- [ ] Offline Support
+- [ ] Push Notifications
+- [ ] Analytics and Reporting Dashboard
 
 See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a full list of proposed features and bugs.
 
@@ -208,9 +192,8 @@ See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a
 
 The following documentation is available for this project:
 
-- [Core Features](docs/features.md)
-- [Components](docs/components.md)
-- [Structure](docs/components.md)
+- [Architecture](docs/architecture.md)
+- [File Structure](docs/file-structure.md)
 - [Setup Guide](docs/setup.md)
 - [Deployment Guide](docs/deployment.md)
 - [User Guide](docs/user-guide.md)
