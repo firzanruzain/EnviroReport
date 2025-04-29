@@ -1,41 +1,30 @@
 import { useState, useEffect } from "react";
-import { User, Profile } from "models";
+import { User } from "models";
+import { supabase } from "@/packages/services";
 
-type UserFetcher<T = User | User[] | Profile> = () => Promise<T>;
-
-export default function useUser<T = User | User[] | Profile>(
-  fetcher: UserFetcher<T>,
-  options?: {
-    enabled?: boolean; // Optional flag to conditionally run the query
-  }
-) {
-  const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+export default function useUser() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (options?.enabled === false) {
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
+    const fetchUser = async () => {
       try {
-        const result = await fetcher();
-        setData(result);
-      } catch (err) {
-        setError(err as Error);
+        const { data, error } = await supabase.functions.invoke(
+          "get-current-user"
+        );
+
+        if (error) throw error;
+        setUser(data);
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
-    fetchData();
-  }, [fetcher, options?.enabled]);
 
-  return {
-    data,
-    isLoading,
-    error,
-    refetch: () => fetcher().then(setData),
-  };
+    fetchUser();
+  }, []);
+
+  return { user, isLoading, error };
 }

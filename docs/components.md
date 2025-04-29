@@ -1,13 +1,16 @@
+<p align="left"><a href="./application-architecture.md#ui-"><-- back to application architecture</a></p>
+
 # EnviroReport - Components
 
 <details>
 <summary>Table of Contents</summary>
 
-- [Shared UI Components](#shared-ui-components)
-- [App-Specific Components](#app-specific-components)
-- [Utility Components](#utility-components)
-- [Component Status](#component-status)
-- [Usage Examples](#usage-examples)
+- [EnviroReport - Components](#enviroreport---components)
+  - [Shared UI Components](#shared-ui-components)
+  - [App-Specific Components](#app-specific-components)
+  - [Utility Components](#utility-components)
+  - [Component Status](#component-status)
+  - [Usage Examples](#usage-examples)
 
 </details>
 

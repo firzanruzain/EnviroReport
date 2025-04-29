@@ -1,7 +1,6 @@
 import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
 import { Text, View } from "react-native";
 import { Link } from "expo-router";
-import {  ReportModel, DivisionModel, UserModel } from "models";
 import {  useReports, useUser, usePollution } from "modules";
 import { useCallback, useEffect } from "react";
 
@@ -10,19 +9,13 @@ const dashboard = () => {
     reports,
     isLoading: reportsLoading,
     error: reportsError,
-  } = useReports(ReportModel.getAll);
+  } = useReports();
 
   const {
-    data: currentUser,
+    user: currentUser,
     isLoading: userLoading,
     error: userError,
-  } = useUser(UserModel.getCurrent);
-
-  // Memoize the pollution fetcher to prevent unnecessary re-renders
-  const pollutionFetcher = useCallback(() => {
-  if (!currentUser?.division_id) return Promise.resolve([]); // Return an empty array as a resolved Promise
-  return DivisionModel.listPollutionTypes(currentUser.division_id);
-}, [currentUser?.division_id]);
+  } = useUser();
 
   const {
     data: pollutionTypes,

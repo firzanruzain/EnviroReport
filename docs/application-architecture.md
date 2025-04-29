@@ -1,16 +1,17 @@
-## Application Architecture & Design
+## System Architecture & Design
 
 <details>
   <summary>📚 Table of Contents</summary>
 
+- [System Architecture \& Design](#system-architecture--design)
 - [Overview](#overview)
-- [Modules](#modules)
-- [Models](#models)
-- [UI](#ui)
+- [Modules #](#modules-)
+- [Models #](#models-)
+- [UI #](#ui-)
 - [Assets](#assets)
-- [Sevices](#services)
-- [Back-End](#back-end-supabase-edge-functions)
-- [Design Principles](#key-design-principles)
+- [Services](#services)
+- [Back-end (Supabase Edge Functions) #](#back-end-supabase-edge-functions-)
+- [Key Design Principles](#key-design-principles)
 
 </details>
 
@@ -22,7 +23,7 @@ This project follows a modular and scalable architecture that organizes code by 
 
 ---
 
-## [Modules]()
+## Modules [#](modules.md)  
 
 Contains **[feature](features.md)-based** logic, organized per domain (e.g., `report`, `user`, `auth`).Each module includes its own:
 
@@ -39,7 +40,7 @@ Example:
 
 ---
 
-## [Models]()
+## Models [#](models.md)  
 
 Centralized repository of TypeScript types, interfaces, and schema definitions.
 Models are imported across hooks, screens, and components to maintain strict type safety and reduce duplication.
@@ -53,7 +54,7 @@ Example:
 
 ---
 
-## [UI]()
+## UI [#](components.md)
 
 Houses **shared, purely presentational [components](components.md) and views** that are reused across multiple features:
 
@@ -69,7 +70,7 @@ Example:
 
 ---
 
-## [Assets]()
+## Assets
 
 A collection of static files such as images, icons, fonts, and other design-related assets used throughout the application.
 
@@ -82,7 +83,7 @@ Example:
 
 ---
 
-## [Services]()
+## Services
 
 Contains core backend service instances and configuration helpers.
 
@@ -96,7 +97,7 @@ Example:
 
 ---
 
-## Back-end (Supabase Edge Functions)
+## Back-end (Supabase Edge Functions) [#](edge-functions.md)  
 
 The app uses [Supabase Edge Functions](https://supabase.com/docs/guides/functions) to implement server-side business logic.
 These functions expose secure HTTP API endpoints that the frontend consumes via feature-specific hooks, enabling clean separation between backend operations and UI.

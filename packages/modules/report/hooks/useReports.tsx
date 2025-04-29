@@ -1,31 +1,33 @@
 import { useState, useEffect } from "react";
 import { Report } from "models";
+import { supabase } from "@/packages/services";
 
-type ReportFetcher = () => Promise<Report[]>;
-
-export default function useReports (fetcher: ReportFetcher) {
+export default function useReports () {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchReports = async () => {
+      setIsLoading(true);
       try {
-        const data = await fetcher();
-        setReports(data);
-      } catch (err) {
+        const { data, error } = await supabase.functions.invoke("reports", {});
+        if (error) throw error;
+        setReports(data as Report[]);
+      }catch (err) {
+        
         setError(err as Error);
-      } finally {
+      }      finally {
         setIsLoading(false);
       }
-    };
+    }
+
     fetchReports();
-  }, [fetcher]); // Re-runs if fetcher changes
+  }, []); 
 
   return {
     reports,
     isLoading,
-    error,
-    refetch: () => fetcher().then(setReports),
+    error
   };
 };

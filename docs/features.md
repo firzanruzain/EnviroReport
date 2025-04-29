@@ -1,6 +1,8 @@
 # Core Features
 
----
+This page document and tracks full implementation of each features based on project's requirements which include all needed components (```modules```, ```models```, ```hooks```, ```edge functions```).
+
+
 
 ## Public User App
 
@@ -30,7 +32,7 @@
 - [ ] View Report Details
 - [ ] Map View of submitted reports
 
----
+
 
 ## Staff Division App
 
@@ -63,7 +65,7 @@
 - [ ] Publish/Unpublish Form
 - [ ] Delete Form
 
----
+
 
 ## Cross-Cutting Features
 
