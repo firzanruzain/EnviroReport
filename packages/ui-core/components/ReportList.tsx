@@ -1,6 +1,4 @@
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
 import { List } from "react-native-paper";
 import { Report } from "models-core";
 
@@ -8,14 +6,14 @@ type ListItemProp = {
   title: React.ReactNode;
   right: string;
   id: string;
+  onPress?: (id: string) => void;
 };
 
-const ListItem = ({ title, right, id }: ListItemProp) => {
-  const router = useRouter();
+const ListItem = ({ title, right, id, onPress }: ListItemProp) => {
   return (
     <View className="border-b-2  border-primary-300 ">
       <List.Item
-        // onPress={() => router.navigate(`/(admin)/report/${id}`)}
+        onPress={onPress ? () => onPress(id) : undefined}
         rippleColor="#32936f20"
         title={() => (
           <Text className="text-dark-Default font-pBold text-xl">{title}</Text>

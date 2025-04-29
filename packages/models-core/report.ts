@@ -16,7 +16,7 @@ export interface RawReport {
   user?: User;
 }
 
-// Transformed interface (used in the app)
+// Transformed interface (used in the app) with submission date as a Date object
 export interface Report extends Omit<RawReport, "submission_date"> {
   submission_date: Date; // Now a Date object
 }
@@ -80,36 +80,6 @@ export const ReportModel = {
       .single();
     if (error) console.error("Report status update error:", error);
     return data;
-  },
-
-  listByUser: async (userId: string): Promise<Report[]> => {
-    const { data, error } = await supabase
-      .from("report")
-      .select(
-        "*, form_template:form_template_id(*, pollution_type:pollution_type_id(*))"
-      )
-      .eq("auth_user_id", userId)
-      .order("submission_date", { ascending: false });
-    if (error) console.error("User reports fetch error:", error);
-    return data || [];
-  },
-
-  listByPollutionType: async (
-    pollutionTypeId: string,
-    status?: ReportStatus
-  ): Promise<Report[]> => {
-    let query = supabase
-      .from("report")
-      .select("*, form_template:form_template_id!inner(*)") // Inner join to ensure we get only reports with a valid form template
-      .eq("form_template.pollution_type_id", pollutionTypeId);
-
-    if (status) query = query.eq("report_status", status);
-
-    const { data, error } = await query.order("submission_date", {
-      ascending: false,
-    });
-    if (error) console.error("Pollution type reports error:", error);
-    return data || [];
   },
 
   addFeedback: async (
