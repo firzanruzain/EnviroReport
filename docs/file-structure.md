@@ -1,4 +1,4 @@
-# File Structure
+# Project Monorepo File & Package Structure
 
 <details>
   <summary>📚 Table of Contents</summary>
@@ -21,24 +21,24 @@ This document describes the organization of code files in a monorepo structure, 
 
 ```
 /apps
-  ├── admin-app
-  └── public-app
+  ├── admin-app        # App for internal users or admins
+  └── public-app       # Public-facing mobile app
 
 /packages
-  ├── modules
-      ├── report
-          ├── hooks
-          └── screens
-      ├── auth
-      ├── division
-      ├── form
-      └── user
-  ├── models
-  ├── assets
-      ├── images.js
-      └── fonts.js
-  ├── ui
-  └── services
+  ├── modules          # Feature-specific logic (hooks + screens)
+  │   ├── report
+  │   │   ├── hooks
+  │   │   └── screens
+  │   ├── auth
+  │   ├── division
+  │   ├── form
+  │   └── user
+  ├── models           # Global TypeScript types/interfaces
+  ├── assets           # Static assets
+  │   ├── images.js
+  │   └── fonts.js
+  ├── ui               # Shared UI components + views
+  └── services         # External service clients (e.g. Supabase)
 
 ```
 

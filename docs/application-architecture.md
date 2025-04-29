@@ -1,4 +1,4 @@
-## Architecture Overview
+## Application Architecture & Design
 
 <details>
   <summary>📚 Table of Contents</summary>
@@ -23,12 +23,14 @@ This project follows a modular and scalable architecture that organizes code by 
 ---
 
 ## [Modules]()
-Contains **feature-based** logic, organized per domain (e.g., `report`, `user`, `auth`).  
-Each module includes its own:
+
+Contains **[feature](features.md)-based** logic, organized per domain (e.g., `report`, `user`, `auth`).Each module includes its own:
+
 - `/hooks`: Data fetching, mutations, and business logic tied to the module
 - `/screens`: Feature-specific screens that combine hooks and UI for user flows
 
 Example:
+
 ```
 /modules/report/hooks
 /modules/report/screens
@@ -38,10 +40,12 @@ Example:
 ---
 
 ## [Models]()
-Centralized repository of TypeScript types, interfaces, and schema definitions.  
+
+Centralized repository of TypeScript types, interfaces, and schema definitions.
 Models are imported across hooks, screens, and components to maintain strict type safety and reduce duplication.
 
 Example:
+
 ```
 /models/report.ts
 /models/user.ts
@@ -50,12 +54,14 @@ Example:
 ---
 
 ## [UI]()
-Houses **shared, purely presentational components and views** that are reused across multiple features:
+
+Houses **shared, purely presentational [components](components.md) and views** that are reused across multiple features:
 
 - `/components`: Stateless UI elements like Button, Card, Input, etc.
 - `/screens`: Reusable, layout-driven screens that are mainly visual and prop-driven.
 
 Example:
+
 ```
 /ui/components/Button.tsx
 /ui/screens/ReportScreen.tsx
@@ -64,9 +70,11 @@ Example:
 ---
 
 ## [Assets]()
+
 A collection of static files such as images, icons, fonts, and other design-related assets used throughout the application.
 
 Example:
+
 ```
 /assets/logo.png
 /assets/icons/
@@ -75,11 +83,13 @@ Example:
 ---
 
 ## [Services]()
+
 Contains core backend service instances and configuration helpers.
 
 - `supabase.tsx`: Supabase client setup, providing a single shared connection instance across the app.
 
 Example:
+
 ```
 /services/supabase.tsx
 ```
@@ -87,12 +97,14 @@ Example:
 ---
 
 ## Back-end (Supabase Edge Functions)
-The app uses [Supabase Edge Functions](https://supabase.com/docs/guides/functions) to implement server-side business logic.  
+
+The app uses [Supabase Edge Functions](https://supabase.com/docs/guides/functions) to implement server-side business logic.
 These functions expose secure HTTP API endpoints that the frontend consumes via feature-specific hooks, enabling clean separation between backend operations and UI.
 
 ---
 
 ## Key Design Principles
+
 - **Feature-driven** module organization
 - **Centralized types** for maximum type safety
 - **Separation of concerns** between data, business logic, and presentation

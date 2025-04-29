@@ -192,8 +192,8 @@ See the [open issues](https://github.com/firzanruzain/EnviroReport/issues) for a
 
 The following documentation is available for this project:
 
-- [Architecture](docs/architecture.md)
-- [File Structure](docs/file-structure.md)
+- [Application Architecture & Design](docs/application-architecture.md)
+- [File & Package Structure](docs/file-structure.md)
 - [Setup Guide](docs/setup.md)
 - [Deployment Guide](docs/deployment.md)
 - [User Guide](docs/user-guide.md)
