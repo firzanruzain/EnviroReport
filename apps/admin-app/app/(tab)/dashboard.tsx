@@ -1,10 +1,8 @@
-import { MainScreenLayout } from "screens-core";
+import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
 import { Text, View } from "react-native";
-import { Heading, Header, Card } from "ui-core";
 import { Link } from "expo-router";
-import {  ReportModel, DivisionModel, UserModel } from "models-core";
-import {  useReports, usePollution, useUser } from "hooks";
-import { ReportList } from "ui-core";
+import {  ReportModel, DivisionModel, UserModel } from "models";
+import {  useReports, useUser, usePollution } from "modules";
 import { useCallback, useEffect } from "react";
 
 const dashboard = () => {

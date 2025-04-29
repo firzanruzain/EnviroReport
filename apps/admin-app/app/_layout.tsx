@@ -2,10 +2,9 @@ import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import "../global.css";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
-import { FirebaseAuthTypes, getAuth } from "@react-native-firebase/auth";
-import fonts from "assets-core/fonts";
+import { fonts } from "assets";
 import { Session } from "@supabase/supabase-js";
-import supabase  from "utils/supabase";
+import { supabase } from "services";
 
 export default function RootLayout() {
   // Show splash screen

@@ -1,4 +1,4 @@
-import Welcome from 'screens-core/welcome';
+import {Welcome} from 'ui'
 
 export default function Index() {
   return (
