@@ -19,7 +19,19 @@
 
 ## Overview
 
-This project follows a modular and scalable architecture that organizes code by domain features while centralizing shared resources. Here's a breakdown of the core layers and their purposes:
+This project follows a modular architecture with clear separation between:
+
+1. Presentation Layer (React Native UI)
+2. Business Logic (Edge Functions)
+3. Data Layer (PostgreSQL)
+
+Key characteristics:
+
+- Feature-first module organization
+- Type-safe models shared across layers
+- Isolated backend services via Supabase
+
+![test](./System%20Architecture%20diagram.drawio.png)
 
 ---
 
