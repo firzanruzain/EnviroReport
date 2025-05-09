@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react";
 import { User } from "models";
-import { supabase } from "@/packages/services";
+import { supabase } from "services";
 
-export default function useUser() {
+export default function useUser<T = User>() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
+      console.log("Fetching user data...");
       try {
         const { data, error } = await supabase.functions.invoke(
-          "get-current-user"
+          "fetch-current-user"
         );
-
+        console.log("User data:", data);
         if (error) throw error;
-        setUser(data);
+
+        setUser(data as User);
       } catch (err: any) {
-        setError(err.message || "Unknown error");
+        setError(err as Error);
       } finally {
         setLoading(false);
       }

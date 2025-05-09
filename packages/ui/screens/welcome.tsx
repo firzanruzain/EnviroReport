@@ -1,12 +1,18 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { Container } from 'ui-core'
-import { useRouter, Link } from 'expo-router'
-import images from 'assets-core/images'
-import { Button } from 'ui-core'
-import { RotatingImage } from 'ui-core'
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { Container } from "ui";
+import { useRouter, Link } from "expo-router";
+import {images} from "assets";
+import { Button } from "ui";
+import { RotatingImage } from "ui";
 
-export default function welcome({title, showLogin=true}:{title?:string, showLogin?:boolean}) {
+export default function welcome({
+  title,
+  showLogin = true,
+}: {
+  title?: string;
+  showLogin?: boolean;
+}) {
   const router = useRouter();
   return (
     <Container className="relative px-8 justify-center items-center">
@@ -34,7 +40,9 @@ export default function welcome({title, showLogin=true}:{title?:string, showLogi
               Get Started
             </Text>
           }
-          onPress={() => !showLogin ? router.replace("/login") : router.replace("/signup")}
+          onPress={() =>
+            !showLogin ? router.replace("/login") : router.replace("/signup")
+          }
         ></Button>
         {!showLogin ? null : (
           <>

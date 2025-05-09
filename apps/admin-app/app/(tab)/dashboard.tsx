@@ -1,8 +1,8 @@
 import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
 import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import {  useReports, useUser, usePollution } from "modules";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 const dashboard = () => {
   const {
@@ -17,23 +17,23 @@ const dashboard = () => {
     error: userError,
   } = useUser();
 
+  const divisionId = currentUser?.division_id;
+
   const {
-    data: pollutionTypes,
+    pollutionTypes: pollutionTypes,
     isLoading: pollutionLoading,
     error: pollutionError,
-  } = usePollution(pollutionFetcher);
+  } = usePollution(divisionId ?? "");
 
+
+  console.log(pollutionTypes);
   // Combined loading state
   const isLoading = reportsLoading || userLoading || pollutionLoading;
-
   // Combined error handling
   useEffect(() => {
     if (reportsError) console.error("Reports error:", reportsError);
     if (userError) console.error("User error:", userError);
-    if (pollutionError) console.error("Pollution error:", pollutionError);
-  }, [reportsError, userError, pollutionError]);
-
-  console.log(pollutionTypes)
+  }, [reportsError, userError]);
 
   const reportsByType = reports.reduce((acc: Record<string, { total: number; pending: number }>, report) => {
     const typeId = report.form_template?.pollution_type_id;
@@ -91,10 +91,14 @@ const dashboard = () => {
     );
   };
 
+  const handlePress = (reportId: string) => {
+    router.push(`/report/${reportId}`);
+  };
+
   return (
     <MainScreenLayout
       heading={<Heading className="mb-4" title={currentUser?.division?.division_name || ""} />}
-      header={<Header />}
+      header={<Header name={currentUser?.profile?.name} />}
     >
       <PollutionTypeCards />
 
@@ -110,7 +114,7 @@ const dashboard = () => {
           </Link>
         </View>
 
-        <ReportList reports={reports} loading={isLoading} />
+        <ReportList onPress={handlePress} reports={reports} loading={isLoading} />
       </Card>
     </MainScreenLayout>
   );

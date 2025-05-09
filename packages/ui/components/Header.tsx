@@ -1,10 +1,10 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { images } from "assets-core";
+import { images } from "assets"
 import { Link } from "expo-router";
 
-export default function Header() {
+export default function Header({name}:{name?:string}) {
   return (
     <View className="h-[15%] item mt-2 px-10">
       <View className=" h-full flex-row justify-center items-center gap-6 ">
@@ -18,7 +18,7 @@ export default function Header() {
             Welcome Back,
           </Text>
           <Text className="font-pBold text-primary-Default text-3xl">
-            Firzan
+            {name}
           </Text>
         </View>
         <View className=" w-[10%] ">

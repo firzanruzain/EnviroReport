@@ -1,7 +1,7 @@
-import { Login } from 'screens-core';
+import { signIn as SignIn } from "modules"
 
 export default function login() {
   return (
-    <Login disabledSignUp/>
+    <SignIn />
   );
 }

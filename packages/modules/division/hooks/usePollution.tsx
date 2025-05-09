@@ -1,31 +1,36 @@
 import { useEffect, useState } from 'react';
-import { PollutionType } from 'models-core'
+import { PollutionType } from 'models'
+import { supabase } from 'services';
 
-type PollutionFetcher<T = PollutionType[]> = () => Promise<T>;
-
-export default function usePollution<T = PollutionType[]>(fetcher: PollutionFetcher<T>) {
-   const [data, setData] = useState<T | null>(null);
+export default function usePollution(division_id: string) {
+   const [pollutionTypes, setData] = useState<PollutionType[] | null>(null);
    const [isLoading, setIsLoading] = useState(true);
    const [error, setError] = useState<Error | null>(null);
 
    useEffect(() => {
+    if (!division_id) return;
      const fetchData = async () => {
+      setIsLoading(true);
        try {
-         const result = await fetcher();
-         setData(result);
-       } catch (err) {
-         setError(err as Error);
-       } finally {
-         setIsLoading(false);
+        const { data, error } = await supabase.functions.invoke(
+          "fetch-pollutions",
+          { body: { division_id:  division_id  } }
+        );
+        if (error) throw error;
+        setData(data as PollutionType[])
+       } catch (err){
+        setError(err as Error)
+       } finally{
+        setIsLoading(false)
        }
      };
+
      fetchData();
-   }, [fetcher]);
+   }, [division_id]);
 
    return {
-     data,
+     pollutionTypes,
      isLoading,
      error,
-     refetch: () => fetcher().then(setData),
    };
 };

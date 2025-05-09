@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Report } from "models";
-import { supabase } from "@/packages/services";
+import { parseReport, Report } from "models";
+import { supabase } from "services";
 
-export default function useReports () {
+export default function useReports() {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -11,23 +11,25 @@ export default function useReports () {
     const fetchReports = async () => {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase.functions.invoke("reports", {});
+        const { data, error } = await supabase.functions.invoke(
+          "fetch-reports",
+          { body: { limit: 5 } }
+        );
         if (error) throw error;
-        setReports(data as Report[]);
-      }catch (err) {
-        
+        setReports(data.map(parseReport) as Report[]);
+      } catch (err) {
         setError(err as Error);
-      }      finally {
+      } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     fetchReports();
-  }, []); 
+  }, []);
 
   return {
     reports,
     isLoading,
-    error
+    error,
   };
-};
+}

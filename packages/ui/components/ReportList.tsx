@@ -1,6 +1,6 @@
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { List } from "react-native-paper";
-import { Report } from "models-core";
+import { Report } from "models";
 
 type ListItemProp = {
   title: React.ReactNode;
@@ -32,9 +32,11 @@ const ListItem = ({ title, right, id, onPress }: ListItemProp) => {
 export default function ReportList({
   reports,
   loading,
+  onPress,
 }: {
   reports: Report[];
   loading: boolean;
+  onPress?: (id: string) => void;
 }) {
   if (loading) return <ActivityIndicator size="large" />;
   if (!reports.length) return <Text>No reports found</Text>;
@@ -45,9 +47,10 @@ export default function ReportList({
       keyExtractor={(item) => item.report_id}
       renderItem={({ item }) => (
         <ListItem
+          onPress={onPress}
           id={item.report_id}
           title={item.form_template?.form_name}
-          right={item.submission_date.toString()}
+          right={item.submission_date.toLocaleString()}
         />
       )}
     />

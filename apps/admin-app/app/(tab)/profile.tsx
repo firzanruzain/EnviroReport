@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-import supabase from "utils/supabase";
+import { supabase } from "services"
 
 const Page = () => {
   const router = useRouter();

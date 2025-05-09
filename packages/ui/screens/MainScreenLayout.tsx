@@ -1,24 +1,23 @@
-import { Container } from "ui-core";
+import { Container } from "ui";
 import React, { useCallback, useMemo, useRef } from "react";
 import { View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { images } from "assets-core";
+import { images } from "assets";
 
 type Props = {
-    header?: React.ReactNode;
-    heading?: React.ReactNode;
-    children?: React.ReactNode;
-    onChange?: () => void;
-}
+  header?: React.ReactNode;
+  heading?: React.ReactNode;
+  children?: React.ReactNode;
+  onChange?: () => void;
+};
 
-const MainScreenLayout = ({header, heading, children, onChange}:Props) => {
+const MainScreenLayout = ({ header, heading, children, onChange }: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["90%", "100%"], []);
   // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
 
   return (
     <GestureHandlerRootView>
