@@ -23,6 +23,7 @@
     "@gorhom/bottom-sheet": "^5.1.2",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@supabase/supabase-js": "^2.49.4",
+    "dotenv": "^16.5.0",
     "expo": "~52.0.46",
     "nativewind": "^4.1.23",
     "react": "18.3.1",

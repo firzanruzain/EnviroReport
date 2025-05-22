@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { User } from "models";
 import { supabase } from "services";
 
-export default function useUser<T = User>() {
+export default function useUser() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

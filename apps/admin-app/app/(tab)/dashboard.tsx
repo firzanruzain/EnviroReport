@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import {  useReports, useUser, usePollution } from "modules";
 import { useEffect } from "react";
+import { ActivityIndicator } from "react-native-paper";
 
 const dashboard = () => {
   const {
@@ -20,21 +21,21 @@ const dashboard = () => {
   const divisionId = currentUser?.division_id;
 
   const {
-    pollutionTypes: pollutionTypes,
+    pollutionTypes,
     isLoading: pollutionLoading,
     error: pollutionError,
   } = usePollution(divisionId ?? "");
 
-
-  console.log(pollutionTypes);
   // Combined loading state
   const isLoading = reportsLoading || userLoading || pollutionLoading;
   // Combined error handling
   useEffect(() => {
     if (reportsError) console.error("Reports error:", reportsError);
     if (userError) console.error("User error:", userError);
-  }, [reportsError, userError]);
+    if (pollutionError) console.error("User error:", pollutionError);
+  }, [reportsError, userError, pollutionError]);
 
+  // Reduce reports into reportsByType object
   const reportsByType = reports.reduce((acc: Record<string, { total: number; pending: number }>, report) => {
     const typeId = report.form_template?.pollution_type_id;
     if (!typeId) return acc;
@@ -58,11 +59,7 @@ const dashboard = () => {
     if (!pollutionTypes || pollutionTypes.length === 0) {
       return null;
     }
-
-    if(pollutionLoading) {
-      
-      return <Text>Loading pollution types...</Text>;
-    }
+    if (pollutionLoading) return <ActivityIndicator size="large" />;
 
     return (
       <>
@@ -114,7 +111,7 @@ const dashboard = () => {
           </Link>
         </View>
 
-        <ReportList onPress={handlePress} reports={reports} loading={isLoading} />
+        <ReportList onPress={handlePress} reports={reports} loading={reportsLoading} />
       </Card>
     </MainScreenLayout>
   );
