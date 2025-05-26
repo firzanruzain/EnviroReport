@@ -3,6 +3,24 @@ import { User } from "./user";
 
 export type ReportStatus = "Pending" | "In Review" | "Closed";
 
+export interface ReportStore {
+  reports: Report[];
+  total: number;
+  limit: number;
+  offset: number;
+  isLoading: boolean;
+  hasMore: boolean;
+  error: string | null;
+  fetchReports: (options?: {
+    append?: boolean;
+    forDashboard?: boolean;
+  }) => Promise<void>;
+  resetReports: () => void;
+  getReportById: (id: string) => Report | undefined;
+  pollutionCounts: Record<string, { pending: number; total: number }>;
+  fetchPollutionCounts: () => Promise<void>;
+}
+
 export interface RawReport {
   report_id: string;
   auth_user_id: string;

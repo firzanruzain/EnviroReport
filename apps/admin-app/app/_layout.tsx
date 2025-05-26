@@ -3,8 +3,8 @@ import "../global.css";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { fonts } from "assets";
-import { Session } from "@supabase/supabase-js";
-import { supabase } from "services";
+import { useUserStore } from "modules/user";
+import { useAuth } from "modules/auth";
 
 export default function RootLayout() {
   // Show splash screen
@@ -13,42 +13,39 @@ export default function RootLayout() {
   // import all fonts here
   const [fontsLoaded, error] = useFonts(fonts);
 
+  // Set an initializing state whilst Firebase connects
+  const { session, loading: authLoading } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+  const { fetchUser, resetUser } = useUserStore();
+
   // hide splash screen when all fonts loaded
   useEffect(() => {
     if (error) throw error;
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded, error]);
 
-  // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [session, setSession] = useState<Session | null>(null);
-  const segments = useSegments();
-  const router = useRouter();
-
-  // Handle user state changes
+  // Fetch user data when session changes
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (initializing) setInitializing(false);
-    });
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (initializing) setInitializing(false);
-    });
-  }, []);
+    if (session?.user) {
+      fetchUser();
+    } else {
+      resetUser();
+    }
+  }, [session]);
 
-  // redirect after log in
+  // Handle routing based on auth state
   useEffect(() => {
-    if (initializing) return;
+    if (authLoading) return;
 
     const inAuthGroup = segments[0] === "(tab)";
 
-    if (session && session.user && !inAuthGroup) {
+    if (session && !inAuthGroup) {
       router.replace("/(tab)/dashboard");
     } else if (!session && inAuthGroup) {
       router.replace("/login");
     }
-  }, [session, initializing]);
+  }, [session, authLoading, segments]);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

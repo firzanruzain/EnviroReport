@@ -11,26 +11,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { List, TouchableRipple } from "react-native-paper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "react-native-paper";
-import { useReports } from "modules";
+import { useReportStore } from "modules/report";
 
 export default function ReportDetailsScreen() {
   const {
-    reports,
-    isLoading: reportsLoading,
-    error: reportsError,
-  } = useReports();
+      reports,
+      fetchReports,
+      resetReports,
+      isLoading: reportsLoading,
+      error: reportsError,
+      hasMore,
+    } = useReportStore();
+    
 
   const [expanded, setExpanded] = useState(true);
   const handlePress = () => setExpanded(!expanded);
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const theme = useTheme();
-  console.log(id);
   const report = reports.find((r) => r.report_id === id);
 
-  console.log(reportsLoading)
   if (!report && !reportsLoading) {
     return (
       <View className="flex-1 items-center justify-center">

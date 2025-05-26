@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native';
 type Props = {
   title: String,
   children?: any,
-  nav?: (event:GestureResponderEvent) => void,
+  nav?: () => void,
   textClassName?: string
   className?: string
 };

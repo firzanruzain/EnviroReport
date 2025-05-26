@@ -13,8 +13,8 @@ export default function usePollution(division_id: string) {
       setIsLoading(true);
        try {
         const { data, error } = await supabase.functions.invoke(
-          "fetch-pollutions",
-          { body: { division_id:  division_id  } }
+          `fetch-pollutions?division_id=${division_id}`,
+          { method: "GET"}
         );
         if (error) throw error;
         setData(data as PollutionType[])

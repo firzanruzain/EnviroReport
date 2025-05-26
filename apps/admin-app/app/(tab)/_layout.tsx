@@ -28,6 +28,7 @@ const _layout = () => {
   return (
     <Tabs
       screenOptions={{
+        animation: "shift",
         tabBarShowLabel: false,
         headerShown: false,
         tabBarActiveTintColor: "#603d29",
@@ -77,6 +78,14 @@ const _layout = () => {
       />
       <Tabs.Screen
         name="report"
+        listeners={({navigation}) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("report", {
+              screen: "index",
+            });
+          },
+        })}
         options={{
           title: "Reports",
           tabBarIcon: ({ color, focused }) => (
