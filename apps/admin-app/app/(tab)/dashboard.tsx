@@ -94,14 +94,14 @@ const dashboard = () => {
 
   return (
     <MainScreenLayout
+      header={<Header name={currentUser?.profile?.name} />}
       heading={
         <Heading
           nav={() => refreshAllData()}
-          className="mb-4"
+          className="mb-4 h-[10%]"
           title={currentUser?.division?.division_name || ""}
         />
       }
-      header={<Header name={currentUser?.profile?.name} />}
     >
       {isLoading ? (
         <ActivityIndicator size="large" />
@@ -109,7 +109,7 @@ const dashboard = () => {
         <>
           <PollutionTypeCards />
 
-          <Card className="">
+          <Card className="flex-1">
             <View className="flex-row w-full border-b-2 pb-2 border-primary-200">
               <Text className="flex-1 text-xl font-pBold text-dark-Default">
                 Latest Report

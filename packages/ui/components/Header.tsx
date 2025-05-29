@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 
 export default function Header({name}:{name?:string}) {
   return (
-    <View className="h-[15%] item mt-2 px-10">
+    <View className="h-[10%] item px-10">
       <View className=" h-full flex-row justify-center items-center gap-6 ">
         <Link href={"/profile"}>
           <View className="w-[15%] h-full items-center justify-center ">

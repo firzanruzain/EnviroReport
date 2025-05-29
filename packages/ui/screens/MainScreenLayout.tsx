@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { images } from "assets";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
   header?: React.ReactNode;
@@ -20,48 +21,48 @@ const MainScreenLayout = ({ header, heading, children, onChange }: Props) => {
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
   return (
-    <GestureHandlerRootView>
-      <Container>
-        <Image
-          className="absolute bottom-[400px] right-[50px]"
-          source={images.light}
-        ></Image>
-        {header}
+    <GestureHandlerRootView style={{flex:1}}>
+      <SafeAreaView className="bg-Secondary-Default flex-1" >
+        <Container>
+          <Image
+            className="absolute bottom-[400px] right-[50px]"
+            source={images.light}
+          ></Image>
+          {header}
 
-        <BottomSheet
-          backgroundStyle={{ backgroundColor: "transparent" }}
-          handleIndicatorStyle={{ backgroundColor: "transparent" }}
-          ref={bottomSheetRef}
-          index={0}
-          snapPoints={snapPoints}
-          enablePanDownToClose={false}
-          onChange={handleSheetChanges}
-        >
-          <BottomSheetView>
-            <LinearGradient
-              style={{
-                borderRadius: 45,
-                shadowColor: "green",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-                elevation: 50, // Required for Android
-              }}
-              className="h-full items-center"
-              colors={["#32936f", "#deedc8"]}
-            >
-              {/* This is the indicator for the bottom sheet */}
-              <View className="h-1 w-[20%] rounded-full bg-light mx-auto my-2 fixed" />
-
-              {/* Content */}
-              <View className="h-full w-full px-4 gap-4">
-                {heading}
-                {children}
-              </View>
-            </LinearGradient>
-          </BottomSheetView>
-        </BottomSheet>
-      </Container>
+          <BottomSheet
+            backgroundStyle={{ backgroundColor: "#32936f", borderRadius: 35 }}
+            handleIndicatorStyle={{ backgroundColor: "white", width: 90, height:6 }}
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            overDragResistanceFactor={0.3}
+            enableDynamicSizing={false}
+            topInset={0}
+          >
+            <BottomSheetView className="h-[90%]">
+              <LinearGradient
+                style={{
+                  shadowColor: "green",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4,
+                  elevation: 50,
+                }}
+                className="h-full items-center"
+                colors={["#32936f", "#deedc8"]}
+              >
+                {/* Content */}
+                <View className="h-full w-full px-4 gap-4 pb-10">
+                  {heading}
+                  {children}
+                </View>
+              </LinearGradient>
+            </BottomSheetView>
+          </BottomSheet>
+        </Container>
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 };

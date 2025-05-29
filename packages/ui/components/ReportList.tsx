@@ -1,6 +1,8 @@
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import { List } from "react-native-paper";
 import { Report } from "models";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
+import { LinearGradient } from "expo-linear-gradient";
 
 type ListItemProp = {
   title: React.ReactNode;
@@ -11,7 +13,7 @@ type ListItemProp = {
 
 const ListItem = ({ title, right, id, onPress }: ListItemProp) => {
   return (
-    <View className="border-b-2  border-primary-300 ">
+    <View className="border-b-2 border-primary-300">
       <List.Item
         onPress={onPress ? () => onPress(id) : undefined}
         rippleColor="#32936f20"
@@ -42,7 +44,20 @@ export default function ReportList({
   if (!reports.length) return <Text>No reports found</Text>;
 
   return (
-    <FlatList
+    // <FlatList
+    //   data={reports}
+    //   keyExtractor={(item) => item.report_id}
+    //   renderItem={({ item }) => (
+    //     <ListItem
+    //       onPress={onPress}
+    //       id={item.report_id}
+    //       title={item.form_template?.form_name}
+    //       right={item.submission_date.toLocaleString()}
+    //     />
+    //   )}
+    // />
+
+    <BottomSheetFlatList
       data={reports}
       keyExtractor={(item) => item.report_id}
       renderItem={({ item }) => (
