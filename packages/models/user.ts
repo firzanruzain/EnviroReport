@@ -1,3 +1,5 @@
+import { Division } from "./division";
+
 type UserRole = "Public User" | "Staff" | "Admin";
 type AccountStatus = "Pending" | "Verified" | "Rejected";
 
@@ -19,9 +21,4 @@ export interface Profile {
   phone_number?: string | null;
   address?: string | null;
   profile_pic?: string | null;
-}
-
-interface Division {
-  division_id: string;
-  division_name: string;
 }

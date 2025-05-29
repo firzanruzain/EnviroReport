@@ -11,6 +11,5 @@ export interface PollutionType {
   division_id: string;
   pollution_type_name: string;
   pollution_type_description: string;
-  division?: Division;
   form_templates?: FormTemplate[];
 }

@@ -1,11 +1,11 @@
 import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
 import { Text, View } from "react-native";
 import { Link, router } from "expo-router";
-import {  usePollution } from "modules";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { useReportStore } from "modules/report";
 import { useUserStore } from "modules/user";
+import React from "react";
 
 const dashboard = () => {
   
@@ -44,31 +44,22 @@ const dashboard = () => {
     refreshAllData();
   }, []);
 
-  const divisionId = currentUser?.division_id;
-
-  const {
-    pollutionTypes,
-    isLoading: pollutionLoading,
-    error: pollutionError,
-  } = usePollution(divisionId ?? "");
-
   // Combined loading state
-  const isLoading = reportsLoading || userLoading || pollutionLoading;
+  const isLoading = reportsLoading || userLoading 
+
+  const pollutionTypes = currentUser?.division?.pollution_types;
 
   // Combined error handling
   useEffect(() => {
     if (reportsError) console.error("Reports error:", reportsError);
     if (userError) console.error("User error:", userError);
-    if (pollutionError) console.error("User error:", pollutionError);
-  }, [reportsError, userError, pollutionError]);
+  }, [reportsError, userError]);
 
   const PollutionTypeCards = () => {
-    if (pollutionLoading) return <ActivityIndicator size="large" />;
 
     if (!pollutionTypes || pollutionTypes.length === 0) {
       return null;
     }
-
     return (
       <>
         {pollutionTypes.map((pollutionType) => {
