@@ -41,6 +41,8 @@ const _layout = () => {
           elevation: 50,
           bottom: 0,
           zIndex: 0,
+          borderColor: "#603d29",
+          borderTopWidth: 1
         },
         tabBarIconStyle: {
           flexGrow: 1,
