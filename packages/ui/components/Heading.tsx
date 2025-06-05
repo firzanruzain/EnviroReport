@@ -15,16 +15,14 @@ const Heading = ({title, children, nav, textClassName, className}:Props) => {
     <TouchableOpacity 
       onPress={nav}
       activeOpacity={nav ? 0.6 : 1}
-      className={`bg-Secondary-100 rounded-full p-4 items-center justify-center flex flex-row h-[8%] ${className}`}
+      className={`bg-Secondary-100 rounded-full justify-center items-center  h-[8%] ${className}`}
     >
       {children}
-      <View className="flex-1 justify-center items-center">
       <Text
         className={`font-pBold text-3xl text-dark-Default ${textClassName}`}
       >
         {title}
       </Text>
-      </View>
     </TouchableOpacity>
   );
 }

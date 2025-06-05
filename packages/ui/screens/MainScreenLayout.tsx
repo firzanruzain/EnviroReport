@@ -16,7 +16,7 @@ type Props = {
 
 const MainScreenLayout = ({ header, heading, children, onChange }: Props) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["90%", "100%"], []);
+  const snapPoints = useMemo(() => header ? ["90%", "100%"] : ["100%"], [header]);
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
