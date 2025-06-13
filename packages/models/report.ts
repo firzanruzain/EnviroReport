@@ -1,10 +1,12 @@
 import { FormTemplate } from "./form";
 import { User } from "./user";
+import { FormData } from './form';
 
 export type ReportStatus = "Pending" | "In Review" | "Closed";
 
 export interface ReportStore {
   reports: Report[];
+  latestReports: Report[];
   total: number;
   limit: number;
   offset: number;
@@ -13,12 +15,14 @@ export interface ReportStore {
   error: string | null;
   fetchReports: (options?: {
     append?: boolean;
-    forDashboard?: boolean;
   }) => Promise<void>;
+  fetchLatestReports: () => Promise<void>;
   resetReports: () => void;
+  resetLatestReports: () => void;
   getReportById: (id: string) => Report | undefined;
   pollutionCounts: Record<string, { pending: number; total: number }>;
   fetchPollutionCounts: () => Promise<void>;
+  setLimit: (newLimit: number) => void;
 }
 
 export interface RawReport {
@@ -27,7 +31,7 @@ export interface RawReport {
   form_template_id: string;
   submission_date: string; // ISO string from Supabase
   report_status: ReportStatus;
-  form_data: Record<string, any>;
+  form_data: FormData;
   form_template?: FormTemplate;
   feedback?: Feedback[];
   user?: User;

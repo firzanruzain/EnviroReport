@@ -5,8 +5,30 @@ import { useEffect, useState } from "react";
 import { fonts } from "assets";
 import { useUserStore } from "modules/user";
 import { useAuth } from "modules/auth";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
+import { configureReanimatedLogger } from "react-native-reanimated";
 
 export default function RootLayout() {
+  configureReanimatedLogger({
+    strict: false
+  });
+
+  const theme = {
+    ...DefaultTheme,
+    // Specify custom property
+    myOwnProperty: true,
+    // Specify custom property in nested object
+    colors: {
+      ...DefaultTheme.colors,
+      primary: "#32936f",
+      secondary: "#deedc8",
+      dark: "#603d29",
+      light: "#f7f5f3",
+      normal: "#5D576B",
+      primaryLight: "#32936f50",
+    },
+  };
+
   // Show splash screen
   SplashScreen.preventAutoHideAsync();
 
@@ -47,5 +69,9 @@ export default function RootLayout() {
     }
   }, [session, authLoading, segments]);
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <PaperProvider theme={theme}>
+      <Stack screenOptions={{ headerShown: false }} />
+    </PaperProvider>
+  );
 }

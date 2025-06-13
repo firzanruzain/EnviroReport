@@ -17,7 +17,7 @@ export default function Header({name}:{name?:string}) {
           <Text className="font-pSemiBold text-primary-Default text-xl">
             Welcome Back,
           </Text>
-          <Text className="font-pBold text-primary-Default text-3xl">
+          <Text className="font-pBold text-primary-Default text-2xl">
             {name}
           </Text>
         </View>

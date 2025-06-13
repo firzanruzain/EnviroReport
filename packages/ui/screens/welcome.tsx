@@ -6,7 +6,7 @@ import {images} from "assets";
 import { Button } from "ui";
 import { RotatingImage } from "ui";
 
-export default function welcome({
+export function Welcome({
   title,
   showLogin = true,
 }: {

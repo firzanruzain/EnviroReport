@@ -27,10 +27,20 @@ export const useUserStore = create<UserStoreState>()(
             "fetch-current-user"
           );
           console.log("Fetching current user");
-          if (error) throw error;
+          
+          if (error) {
+              const errorContext = error?.context
+              const errorMessage = `Error ${errorContext.status}: ${errorContext.statusText || "Unauthorized"}`;
+              throw new Error(errorMessage);
+          }
+
+          if (!data) {
+            throw new Error("No data returned from fetch-current-user");
+          }
+
           set({ user: data });
         } catch (err) {
-          set({ error: (err as Error) || "Failed to fetch user" });
+          set({ error: err instanceof Error ? err : new Error("Failed to fetch user") });
         } finally {
           set({ isLoading: false });
         }

@@ -1,8 +1,6 @@
 import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import { List } from "react-native-paper";
 import { Report } from "models";
-import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { LinearGradient } from "expo-linear-gradient";
 
 type ListItemProp = {
   title: React.ReactNode;
@@ -35,29 +33,18 @@ export default function ReportList({
   reports,
   loading,
   onPress,
+  onScroll,
 }: {
   reports: Report[];
   loading: boolean;
   onPress?: (id: string) => void;
+  onScroll?: (event: any) => void;
 }) {
   if (loading) return <ActivityIndicator size="large" />;
   if (!reports.length) return <Text>No reports found</Text>;
 
   return (
-    // <FlatList
-    //   data={reports}
-    //   keyExtractor={(item) => item.report_id}
-    //   renderItem={({ item }) => (
-    //     <ListItem
-    //       onPress={onPress}
-    //       id={item.report_id}
-    //       title={item.form_template?.form_name}
-    //       right={item.submission_date.toLocaleString()}
-    //     />
-    //   )}
-    // />
-
-    <BottomSheetFlatList
+    <FlatList
       data={reports}
       keyExtractor={(item) => item.report_id}
       renderItem={({ item }) => (
@@ -68,6 +55,8 @@ export default function ReportList({
           right={item.submission_date.toLocaleString()}
         />
       )}
+      onMomentumScrollBegin={onScroll}
+      scrollEventThrottle={16}
     />
   );
 }

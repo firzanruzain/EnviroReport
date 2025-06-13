@@ -46,11 +46,12 @@ This page document and tracks full implementation of each features based on proj
 
 ### Report Management
 
-- [ ] View Division Submitted Reports
+- [x] View Division Submitted Reports
   - [ ] Filter by pollution type
 - [ ] Update Report Status (Pending/In Review/Closed)
 - [ ] Send Form Feedback
-- [ ] View Report Details with timeline
+- [x] View Report Details
+  - [ ] timeline view of reports
 
 ### Form Management
 
