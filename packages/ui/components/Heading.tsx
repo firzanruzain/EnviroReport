@@ -8,21 +8,25 @@ type Props = {
   nav?: () => void,
   textClassName?: string
   className?: string
+  left?: React.ReactNode
+  right?: React.ReactNode 
 };
 
-const Heading = ({title, children, nav, textClassName, className}:Props) => {
+const Heading = ({title, children, nav, textClassName, className, left, right}:Props) => {
   return (
     <TouchableOpacity 
       onPress={nav}
       activeOpacity={nav ? 0.6 : 1}
-      className={`bg-Secondary-100 rounded-full justify-center items-center  h-[8%] ${className}`}
+      className={`bg-Secondary-100 rounded-full justify-center items-center p-5 flex-row ${className}`}
     >
       {children}
+      {left}
       <Text
-        className={`font-pBold text-3xl text-dark-Default ${textClassName}`}
+        className={`font-pBold text-2xl text-dark-Default flex-1 text-center ${textClassName}`}
       >
         {title}
       </Text>
+      {right}
     </TouchableOpacity>
   );
 }

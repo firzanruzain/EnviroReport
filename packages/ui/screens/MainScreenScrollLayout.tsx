@@ -1,6 +1,6 @@
 import { Container } from "ui";
 import React, { useCallback, useMemo, useRef, forwardRef, useImperativeHandle } from "react";
-import { View, Image } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView, BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -14,12 +14,12 @@ type Props = {
   onChange?: () => void;
 };
 
-export type MainScreenLayoutRef = {
+export type MainScreenScrollLayoutRef = {
   expandSheet: () => void;
   collapseSheet: () => void;
 };
 
-const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(({ header, heading, children, onChange }, ref) => {
+const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(({ header, heading, children, onChange }, ref) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => header ? ["90%", "100%"] : ["100%"], [header]);
 
@@ -73,7 +73,9 @@ const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(({ header, headi
               >
                 <View className="h-full w-full px-4 gap-4 pb-10">
                   {heading}
+                  <ScrollView>
                   {children}
+                  </ScrollView>
                 </View>
               </LinearGradient>
             </BottomSheetView>
@@ -84,4 +86,4 @@ const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(({ header, headi
   );
 });
 
-export default MainScreenLayout;
+export default MainScreenScrollLayout;

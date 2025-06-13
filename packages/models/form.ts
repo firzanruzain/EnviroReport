@@ -21,15 +21,24 @@ export interface FormField {
   configuration?: FieldConfig;
 }
 
-interface FieldType {
+export interface FieldType {
   field_type_id: string;
   field_type: string;
   configuration_schema: Record<string, any>;
 }
 
-interface FieldConfig {
+export interface FieldConfig {
   configuration_id: string;
   form_field_id: string;
   field_type_id: string;
   configuration_data: Record<string, any>;
+}
+
+export interface FormFieldValue {
+  value: string | number;
+  field_type_id: string;
+}
+
+export interface FormData {
+  [key: string]: FormFieldValue;
 }

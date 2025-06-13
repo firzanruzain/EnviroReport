@@ -1,2 +1,5 @@
-export {default as Welcome} from "./welcome"
+export * from "./welcome"
 export {default as MainScreenLayout} from "./MainScreenLayout"
+export { default as MainScreenScrollLayout } from "./MainScreenScrollLayout"
+export {MainScreenLayoutRef} from "./MainScreenLayout"
+export {default as ReportPage} from  "./ReportPage"

@@ -1,23 +1,26 @@
 import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
 import { Text, View } from "react-native";
 import { Link, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { useReportStore } from "modules/report";
 import { useUserStore } from "modules/user";
 import React from "react";
+import type { MainScreenLayoutRef } from "ui";
+import { supabase } from "services";
 
 const dashboard = () => {
-  
+  const layoutRef = useRef<MainScreenLayoutRef>(null);
   const [refreshing, setRefreshing] = useState(false);
   const {
-    reports,
-    fetchReports,
-    resetReports,
+    latestReports,
+    fetchLatestReports,
+    resetLatestReports,
     isLoading: reportsLoading,
     error: reportsError,
     fetchPollutionCounts,
     pollutionCounts,
+    reports
   } = useReportStore();
 
   const {
@@ -31,8 +34,8 @@ const dashboard = () => {
     setRefreshing(true);
     try {
       await Promise.all([
-        resetReports(),
-        fetchReports({ append: false, forDashboard: true }),
+        resetLatestReports(),
+        fetchLatestReports(),
         fetchPollutionCounts(),
       ]);
     } finally {
@@ -45,30 +48,31 @@ const dashboard = () => {
   }, []);
 
   // Combined loading state
-  const isLoading = reportsLoading || userLoading 
+  const isLoading = reportsLoading || userLoading;
 
   const pollutionTypes = currentUser?.division?.pollution_types;
 
   // Combined error handling
   useEffect(() => {
     if (reportsError) console.error("Reports error:", reportsError);
-    if (userError) console.error("User error:", userError);
+    if (userError) {
+      console.error("User error:", userError);
+      supabase.auth.refreshSession();
+    }
   }, [reportsError, userError]);
 
   const PollutionTypeCards = () => {
-
     if (!pollutionTypes || pollutionTypes.length === 0) {
       return null;
     }
     return (
       <>
         {pollutionTypes.map((pollutionType) => {
-          // Get counts directly from pollutionCounts instead of calculating
           const typeName = pollutionType.pollution_type_name;
           const stats = pollutionCounts[typeName] || { total: 0, pending: 0 };
 
           return (
-            <Card key={pollutionType.pollution_type_id}>
+            <Card key={pollutionType.pollution_type_id} className="p-6">
               <View className="flex-row w-full">
                 <Text className="flex-1 text-xl font-pBold text-dark-Default">
                   {typeName}
@@ -92,13 +96,22 @@ const dashboard = () => {
     router.push(`/report/${reportId}`);
   };
 
+  const handleScroll = useCallback((event: any) => {
+    const { velocity } = event.nativeEvent;
+    if (velocity.y < 0) {
+      layoutRef.current?.expandSheet();
+    } else {
+      layoutRef.current?.collapseSheet();
+    }
+  }, []);
+
   return (
     <MainScreenLayout
+      ref={layoutRef}
       header={<Header name={currentUser?.profile?.name} />}
       heading={
         <Heading
           nav={() => refreshAllData()}
-          className="mb-4 h-[10%]"
           title={currentUser?.division?.division_name || ""}
         />
       }
@@ -109,7 +122,7 @@ const dashboard = () => {
         <>
           <PollutionTypeCards />
 
-          <Card className="flex-1">
+          <Card className="flex-1 p-6">
             <View className="flex-row w-full border-b-2 pb-2 border-primary-200">
               <Text className="flex-1 text-xl font-pBold text-dark-Default">
                 Latest Report
@@ -123,8 +136,9 @@ const dashboard = () => {
 
             <ReportList
               onPress={handlePress}
-              reports={reports}
+              reports={latestReports}
               loading={reportsLoading}
+              onScroll={handleScroll}
             />
           </Card>
         </>

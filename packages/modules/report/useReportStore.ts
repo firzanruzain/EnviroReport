@@ -2,23 +2,60 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "services";
-import { parseReport, Report, ReportStore } from "models/report";
+import { parseReport, Report, ReportStore, RawReport } from "models/report";
 
-const DEFAULT_LIMIT = 5;
+const DEFAULT_LIMIT = 10;
+const DASHBOARD_LIMIT = 5;
+const STORE_VERSION = 1;
+
+// Helper function to parse stored reports
+const parseStoredReports = (storedData: any) => {
+  if (!storedData) return null;
+  
+  try {
+    // Parse the stored data
+    const parsed = JSON.parse(storedData);
+    
+    // Check version
+    if (parsed.version !== STORE_VERSION) {
+      return null; // Force fresh data if version mismatch
+    }
+    
+    // Convert dates in reports
+    if (parsed.state?.reports) {
+      parsed.state.reports = parsed.state.reports.map((raw: RawReport) => parseReport(raw));
+    }
+    
+    // Convert dates in latestReports
+    if (parsed.state?.latestReports) {
+      parsed.state.latestReports = parsed.state.latestReports.map((raw: RawReport) => parseReport(raw));
+    }
+    
+    return parsed;
+  } catch (error) {
+    console.error('Error parsing stored reports:', error);
+    return null;
+  }
+};
 
 export const useReportStore = create<ReportStore>()(
   persist(
     (set, get) => ({
       reports: [],
+      latestReports: [],
       total: 0,
       limit: DEFAULT_LIMIT,
       offset: 0,
       isLoading: false,
       hasMore: true,
       error: null,
-      pollutionCounts: {}, // Initialize empty counts
+      pollutionCounts: {},
 
-      // New method for fetching pollution stats
+      setLimit: (newLimit: number) => {
+        set({ limit: newLimit, offset: 0, reports: [] });
+        get().fetchReports({ append: false });
+      },
+
       fetchPollutionCounts: async () => {
         set({ isLoading: true, error: null });
 
@@ -27,7 +64,6 @@ export const useReportStore = create<ReportStore>()(
             "fetch-reports-count",
             { method: "GET" }
           );
-            console.log("Fetching pollution counts:", data);
           if (error) throw error;
 
           set({
@@ -42,35 +78,72 @@ export const useReportStore = create<ReportStore>()(
         }
       },
 
-      fetchReports: async ({ append = true, forDashboard = false } = {}) => {
-        const { offset, limit, reports, isLoading } = get();
-        if (isLoading) return; // Prevent multiple simultaneous fetches
-        if (!get().hasMore) return; // No more reports to fetch
+      fetchLatestReports: async () => {
+        const { isLoading } = get();
+        if (isLoading) return;
+
         try {
           set({ isLoading: true, error: null });
           const params = new URLSearchParams({
-            offset: forDashboard ? "0" : offset.toString(),
-            limit: forDashboard ? "5" : limit.toString(),
-            dashboard: forDashboard.toString(),
+            offset: "0",
+            limit: DASHBOARD_LIMIT.toString(),
+            dashboard: "true",
           });
 
           const { data, error } = await supabase.functions.invoke(
             `fetch-reports?${params}`,
             { method: "GET" }
           );
-          console.log(
-            `Querying reports (offset: ${offset}, limit: ${limit}) for dashboard: ${forDashboard}`
+          if (error) throw error;
+
+          const newReports = data.data.map((raw: RawReport) => parseReport(raw));
+          set({ latestReports: newReports });
+        } catch (err: any) {
+          set({ error: err.message || "Failed to fetch latest reports" });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      fetchReports: async ({ append = true } = {}) => {
+        const { offset, limit, reports, isLoading } = get();
+        if (isLoading) return;
+        if (!get().hasMore) return;
+
+        try {
+          set({ isLoading: true, error: null });
+          const params = new URLSearchParams({
+            offset: offset.toString(),
+            limit: limit.toString(),
+            dashboard: "false",
+          });
+
+          const { data, error } = await supabase.functions.invoke(
+            `fetch-reports?${params}`,
+            { method: "GET" }
           );
           if (error) throw error;
 
-          const newReports = data.data.map(parseReport);
+          const newReports = data.data.map((raw: RawReport) => parseReport(raw));
           const total = data.total;
+          const newOffset = append ? offset + newReports.length : newReports.length;
+
+          // Check if there are more reports available beyond the current offset
+          const hasMoreReports = total > newOffset;
 
           set({
             reports: append ? [...reports, ...newReports] : newReports,
-            offset: offset + newReports.length,
+            offset: newOffset,
             total: total,
-            hasMore: offset + newReports.length < total,
+            hasMore: hasMoreReports,
+          });
+
+          console.log("Fetch reports state:", {
+            newOffset,
+            total,
+            hasMoreReports,
+            newReportsLength: newReports.length,
+            currentReportsLength: reports.length
           });
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch reports" });
@@ -83,6 +156,7 @@ export const useReportStore = create<ReportStore>()(
         get().reports.find((r: Report) => r.report_id === id),
 
       resetReports: () => {
+        console.log("Resetting reports state");
         set({
           reports: [],
           total: 0,
@@ -90,24 +164,58 @@ export const useReportStore = create<ReportStore>()(
           limit: DEFAULT_LIMIT,
           hasMore: true,
           error: null,
+          isLoading: false
+        });
+      },
+
+      resetLatestReports: () => {
+        set({
+          latestReports: [],
         });
       },
     }),
-
     {
       name: "report-store-paginated",
+      version: STORE_VERSION,
       storage: {
         getItem: async (name) => {
-          const value = await AsyncStorage.getItem(name);
-          return value ? JSON.parse(value) : null;
+          try {
+            const value = await AsyncStorage.getItem(name);
+            return parseStoredReports(value);
+          } catch (error) {
+            console.error('Error reading from storage:', error);
+            return null;
+          }
         },
         setItem: async (name, value) => {
-          await AsyncStorage.setItem(name, JSON.stringify(value));
+          try {
+            // Add version to stored data
+            const dataToStore = {
+              ...value,
+              version: STORE_VERSION
+            };
+            await AsyncStorage.setItem(name, JSON.stringify(dataToStore));
+          } catch (error) {
+            console.error('Error writing to storage:', error);
+          }
         },
         removeItem: async (name) => {
-          await AsyncStorage.removeItem(name);
+          try {
+            await AsyncStorage.removeItem(name);
+          } catch (error) {
+            console.error('Error removing from storage:', error);
+          }
         },
       },
+      // Only persist essential data
+      partialize: (state) => ({
+        ...state,
+        reports: state.reports.slice(0, DEFAULT_LIMIT), // Only store first page
+        offset: DEFAULT_LIMIT, // Reset offset to match stored reports
+        hasMore: state.total > DEFAULT_LIMIT, // Set hasMore based on total reports
+        isLoading: false,
+        error: null,
+      }),
     }
   )
 );
