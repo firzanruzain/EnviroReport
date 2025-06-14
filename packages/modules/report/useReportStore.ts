@@ -98,6 +98,11 @@ export const useReportStore = create<ReportStore>()(
             dashboard: "true",
           });
 
+          console.log("Fetching Latest Reports", {
+            isLoading,
+            params: params,
+          });
+
           const { data, error } = await supabase.functions.invoke(
             `fetch-reports?${params}`,
             { method: "GET" }
@@ -161,6 +166,42 @@ export const useReportStore = create<ReportStore>()(
           });
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch reports" });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      fetchReportDetails: async (reportId: string) => {
+        try {
+          set({ isLoading: true, error: null });
+          const params = new URLSearchParams({
+            report_id: reportId,
+          });
+
+          const { data, error } = await supabase.functions.invoke(
+            `fetch-report-details?${params}`,
+            { method: "GET" }
+          );
+          if (error) throw error;
+
+          // Update the report in both reports and latestReports arrays
+          const updatedReport = parseReport(data);
+          set((state) => {
+            const updateReportInArray = (reports: Report[]) =>
+              reports.map((report) =>
+                report.report_id === reportId ? updatedReport : report
+              );
+
+            return {
+              reports: updateReportInArray(state.reports),
+              latestReports: updateReportInArray(state.latestReports),
+            };
+          });
+
+          return updatedReport;
+        } catch (err: any) {
+          set({ error: err.message || "Failed to fetch report details" });
+          throw err;
         } finally {
           set({ isLoading: false });
         }
