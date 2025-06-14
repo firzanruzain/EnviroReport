@@ -1,15 +1,17 @@
 import { Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { images } from "assets";
+import { Link, useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Collapsible } from "@/components/Collapsible";
-import { MainScreenLayout, Header } from "ui";
+import { LinearGradient } from "expo-linear-gradient";
+import { CollapsibleCard, Header, MainScreenLayout } from "ui";
 
 const index = () => {
   const router = useRouter();
   return (
-    <MainScreenLayout header={<Header name="test" />}>
-      <Collapsible title="Water pollution">
+    <MainScreenLayout enableContentPanningGesture header={<Header />}>
+      <CollapsibleCard title="Water pollution">
         <TouchableOpacity className="bg-primary-300 flex-row items-center p-2 rounded-lg gap-2 my-2">
           <MaterialCommunityIcons name="form-select" size={30} />
           <Text className="font-pSemiBold flex-1 text-dark-Default text-xl">
@@ -33,8 +35,8 @@ const index = () => {
             Manage
           </Text>
         </TouchableOpacity>
-      </Collapsible>
-      <Collapsible title="Marine Oil Spill Pollution">
+      </CollapsibleCard>
+      <CollapsibleCard title="Marine Oil Spill Pollution">
         <TouchableOpacity className="bg-primary-300 flex-row items-center p-2 rounded-lg gap-2 my-2">
           <MaterialCommunityIcons name="form-select" size={30} />
           <Text className="font-pSemiBold flex-1 text-dark-Default text-xl">
@@ -56,7 +58,7 @@ const index = () => {
             Manage
           </Text>
         </TouchableOpacity>
-      </Collapsible>
+      </CollapsibleCard>
     </MainScreenLayout>
   );
 };

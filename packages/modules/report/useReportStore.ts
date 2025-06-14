@@ -11,29 +11,33 @@ const STORE_VERSION = 1;
 // Helper function to parse stored reports
 const parseStoredReports = (storedData: any) => {
   if (!storedData) return null;
-  
+
   try {
     // Parse the stored data
     const parsed = JSON.parse(storedData);
-    
+
     // Check version
     if (parsed.version !== STORE_VERSION) {
       return null; // Force fresh data if version mismatch
     }
-    
+
     // Convert dates in reports
     if (parsed.state?.reports) {
-      parsed.state.reports = parsed.state.reports.map((raw: RawReport) => parseReport(raw));
+      parsed.state.reports = parsed.state.reports.map((raw: RawReport) =>
+        parseReport(raw)
+      );
     }
-    
+
     // Convert dates in latestReports
     if (parsed.state?.latestReports) {
-      parsed.state.latestReports = parsed.state.latestReports.map((raw: RawReport) => parseReport(raw));
+      parsed.state.latestReports = parsed.state.latestReports.map(
+        (raw: RawReport) => parseReport(raw)
+      );
     }
-    
+
     return parsed;
   } catch (error) {
-    console.error('Error parsing stored reports:', error);
+    console.error("Error parsing stored reports:", error);
     return null;
   }
 };
@@ -66,13 +70,17 @@ export const useReportStore = create<ReportStore>()(
           );
           if (error) throw error;
 
+          console.log(data);
           set({
             pollutionCounts: data.counts,
             isLoading: false,
           });
         } catch (err) {
           set({
-            error: (err instanceof Error ? err.message : "Failed to load pollution counts"),
+            error:
+              err instanceof Error
+                ? err.message
+                : "Failed to load pollution counts",
             isLoading: false,
           });
         }
@@ -96,7 +104,9 @@ export const useReportStore = create<ReportStore>()(
           );
           if (error) throw error;
 
-          const newReports = data.data.map((raw: RawReport) => parseReport(raw));
+          const newReports = data.data.map((raw: RawReport) =>
+            parseReport(raw)
+          );
           set({ latestReports: newReports });
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch latest reports" });
@@ -124,9 +134,13 @@ export const useReportStore = create<ReportStore>()(
           );
           if (error) throw error;
 
-          const newReports = data.data.map((raw: RawReport) => parseReport(raw));
+          const newReports = data.data.map((raw: RawReport) =>
+            parseReport(raw)
+          );
           const total = data.total;
-          const newOffset = append ? offset + newReports.length : newReports.length;
+          const newOffset = append
+            ? offset + newReports.length
+            : newReports.length;
 
           // Check if there are more reports available beyond the current offset
           const hasMoreReports = total > newOffset;
@@ -143,7 +157,7 @@ export const useReportStore = create<ReportStore>()(
             total,
             hasMoreReports,
             newReportsLength: newReports.length,
-            currentReportsLength: reports.length
+            currentReportsLength: reports.length,
           });
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch reports" });
@@ -164,7 +178,7 @@ export const useReportStore = create<ReportStore>()(
           limit: DEFAULT_LIMIT,
           hasMore: true,
           error: null,
-          isLoading: false
+          isLoading: false,
         });
       },
 
@@ -183,7 +197,7 @@ export const useReportStore = create<ReportStore>()(
             const value = await AsyncStorage.getItem(name);
             return parseStoredReports(value);
           } catch (error) {
-            console.error('Error reading from storage:', error);
+            console.error("Error reading from storage:", error);
             return null;
           }
         },
@@ -192,18 +206,18 @@ export const useReportStore = create<ReportStore>()(
             // Add version to stored data
             const dataToStore = {
               ...value,
-              version: STORE_VERSION
+              version: STORE_VERSION,
             };
             await AsyncStorage.setItem(name, JSON.stringify(dataToStore));
           } catch (error) {
-            console.error('Error writing to storage:', error);
+            console.error("Error writing to storage:", error);
           }
         },
         removeItem: async (name) => {
           try {
             await AsyncStorage.removeItem(name);
           } catch (error) {
-            console.error('Error removing from storage:', error);
+            console.error("Error removing from storage:", error);
           }
         },
       },

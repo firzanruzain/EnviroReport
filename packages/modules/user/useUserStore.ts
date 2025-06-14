@@ -9,6 +9,7 @@ type UserStoreState = {
   isLoading: boolean;
   error: Error | null;
   fetchUser: () => Promise<void>;
+  setUser: (user: User | null) => void;
   getUserName: () => string | null;
   resetUser: () => void;
 };
@@ -20,6 +21,10 @@ export const useUserStore = create<UserStoreState>()(
       isLoading: false,
       error: null,
 
+      setUser: (user: User | null) => {
+        set({ user, error: null });
+      },
+
       fetchUser: async () => {
         set({ isLoading: true, error: null });
         try {
@@ -27,26 +32,33 @@ export const useUserStore = create<UserStoreState>()(
             "fetch-current-user"
           );
           console.log("Fetching current user");
-          
+
           if (error) {
-              const errorContext = error?.context
-              const errorMessage = `Error ${errorContext.status}: ${errorContext.statusText || "Unauthorized"}`;
-              throw new Error(errorMessage);
+            const errorContext = error?.context;
+            const errorMessage = `Error ${errorContext.status}: ${
+              errorContext.statusText || "Unauthorized"
+            }`;
+            throw new Error(errorMessage);
           }
 
           if (!data) {
-            throw new Error("No data returned from fetch-current-user");
+            set({ user: null });
+            return;
           }
 
           set({ user: data });
         } catch (err) {
-          set({ error: err instanceof Error ? err : new Error("Failed to fetch user") });
+          set({
+            error:
+              err instanceof Error ? err : new Error("Failed to fetch user"),
+          });
+          set({ user: null });
         } finally {
           set({ isLoading: false });
         }
       },
 
-      getUserName : () => {
+      getUserName: () => {
         const { user } = get();
         if (!user) return null;
         return user.profile?.name || null;
@@ -58,7 +70,7 @@ export const useUserStore = create<UserStoreState>()(
           isLoading: false,
           error: null,
         });
-      }
+      },
     }),
     {
       name: "user-storage",

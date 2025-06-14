@@ -8,6 +8,8 @@ import { useNavigation, useFocusEffect } from "expo-router";
 export default function index() {
   const layoutRef = useRef<MainScreenLayoutRef>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isReportListScrollable, setIsReportListScrollable] = useState(false);
+  const flatListRef = useRef<any>(null);
   const navigation = useNavigation();
   const {
     reports,
@@ -17,7 +19,7 @@ export default function index() {
     error: reportsError,
     hasMore,
     total,
-    offset
+    offset,
   } = useReportStore();
 
   const refreshData = useCallback(async () => {
@@ -37,7 +39,7 @@ export default function index() {
 
       const loadData = async () => {
         if (!isActive) return;
-        
+
         // Always fetch fresh data when the screen is focused
         if (reports.length === 0) {
           // If no data, do a full reset and fetch
@@ -61,7 +63,7 @@ export default function index() {
     const { velocity } = event.nativeEvent;
     if (velocity.y < 0) {
       layoutRef.current?.expandSheet();
-    } 
+    }
   }, []);
 
   const onRefresh = useCallback(() => {
@@ -69,8 +71,8 @@ export default function index() {
   }, [refreshData]);
 
   useEffect(() => {
-    if (reportsError) console.log("Reports Error: ", reportsError)
-  }, [reportsError])
+    if (reportsError) console.log("Reports Error: ", reportsError);
+  }, [reportsError]);
 
   const loadMore = useCallback(() => {
     console.log("loadMore triggered", {
@@ -78,15 +80,31 @@ export default function index() {
       hasMore,
       total,
       offset,
-      currentReportsCount: reports.length
+      currentReportsCount: reports.length,
     });
-    
+
     // Only check if we're not currently loading and there's more data to load
     if (!reportsLoading && hasMore) {
       console.log("Fetching more reports...");
       fetchReports({ append: true });
     }
   }, [reportsLoading, hasMore, total, offset, fetchReports, reports.length]);
+
+  const handleContentSizeChange = useCallback(
+    (contentWidth: number, contentHeight: number) => {
+      if (flatListRef.current) {
+        const scrollView = flatListRef.current.getNativeScrollRef();
+        if (scrollView) {
+          scrollView.measure(
+            (x: number, y: number, width: number, height: number) => {
+              setIsReportListScrollable(contentHeight > height);
+            }
+          );
+        }
+      }
+    },
+    []
+  );
 
   // Prevent this screen from being added to the navigation stack
   useEffect(() => {
@@ -107,8 +125,13 @@ export default function index() {
   }
 
   return (
-    <MainScreenLayout ref={layoutRef} header={<Header />}>
-      <ReportCardList 
+    <MainScreenLayout
+      ref={layoutRef}
+      header={<Header />}
+      enableContentPanningGesture={!isReportListScrollable}
+    >
+      <ReportCardList
+        ref={flatListRef}
         reports={reports}
         onStartReached={() => layoutRef.current?.collapseSheet()}
         onMomentumScrollBegin={handleScroll}
@@ -116,6 +139,7 @@ export default function index() {
         onRefresh={onRefresh}
         onEndReached={loadMore}
         onEndReachedThreshold={0.2}
+        onContentSizeChange={handleContentSizeChange}
         ListFooterComponent={
           reportsLoading && hasMore ? (
             <View className="py-4">

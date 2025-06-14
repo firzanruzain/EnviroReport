@@ -95,13 +95,15 @@ INSERT INTO public.division (division_id, division_name) VALUES
 INSERT INTO public.user_account (auth_user_id, user_type, division_id, status, created_at) VALUES
     ('b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'Public User', NULL, 'Verified', NOW() - INTERVAL '30 days'),
     ('1c2f4118-4692-4f71-afab-de4dc49b947a', 'Staff', 'DIV_WATER_MARINE', 'Verified', NOW() - INTERVAL '25 days'),
-    ('e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'Admin', 'DIV_HAZMAT', 'Verified', NOW() - INTERVAL '20 days');
+    ('e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'Admin', 'DIV_HAZMAT', 'Verified', NOW() - INTERVAL '20 days'),
+    ('25c9824a-9c8c-40d0-9efe-35a84372ab14', 'Public User', NULL, 'Verified', NOW() - INTERVAL '15 days');
 
 -- Insert Profile Details
 INSERT INTO public.profile_details (auth_user_id, name, identity_card_num, age, phone_number, address, profile_pic) VALUES
     ('1c2f4118-4692-4f71-afab-de4dc49b947a', 'Ahmad bin Abdullah', '900101-01-1234', 35, '0123456789', '123 Jalan Merdeka, Kuala Lumpur', 'https://example.com/profiles/ahmad.jpg'),
     ('b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'Siti binti Mohamed', '880202-02-5678', 40, '0123456780', '456 Taman Seri, Petaling Jaya', 'https://example.com/profiles/siti.jpg'),
-    ('e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'Raj Kumar', '870303-03-9012', 45, '0123456781', '789 Jalan Utama, Shah Alam', 'https://example.com/profiles/raj.jpg');
+    ('e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'Raj Kumar', '870303-03-9012', 45, '0123456781', '789 Jalan Utama, Shah Alam', 'https://example.com/profiles/raj.jpg'),
+    ('25c9824a-9c8c-40d0-9efe-35a84372ab14', 'Lim Wei Chen', '920404-04-3456', 32, '0123456782', '321 Taman Indah, Johor Bahru', 'https://example.com/profiles/lim.jpg');
 
 -- Insert pollution types
 INSERT INTO public.pollution_type (pollution_type_id, division_id, pollution_type_name, pollution_type_description) VALUES
@@ -330,7 +332,7 @@ INSERT INTO public.form_field (form_field_id, form_template_id, field_type_id, f
 -- Insert Reports
 INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission_date, report_status, form_data) VALUES
 -- Water Pollution Reports (5 fields)
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_WATER', NOW() - INTERVAL '20 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '20 days', 'Pending', '{
   "location": {"value": "Sungai Klang, Kuala Lumpur", "field_type_id": "FT_TEXT"},
   "description": {"value": "Suspected chemical waste discharge causing water discoloration", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
@@ -344,14 +346,14 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "water_source": {"value": "Lake", "field_type_id": "FT_TEXT"},
   "pollution_category": {"value": "Biological", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_WATER', NOW() - INTERVAL '15 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '15 days', 'Closed', '{
   "location": {"value": "Sungai Gombak, Selangor", "field_type_id": "FT_TEXT"},
   "description": {"value": "Industrial waste discharge affecting water quality", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 5, "field_type_id": "FT_NUMBER"},
   "water_source": {"value": "River", "field_type_id": "FT_TEXT"},
   "pollution_category": {"value": "Chemical", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_WATER', NOW() - INTERVAL '12 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '12 days', 'Pending', '{
   "location": {"value": "Sungai Langat, Selangor", "field_type_id": "FT_TEXT"},
   "description": {"value": "Suspected sewage discharge into river", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
@@ -365,12 +367,12 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "description": {"value": "Oil slick observed near cargo terminal", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 500, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_MARINE', NOW() - INTERVAL '16 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_MARINE', NOW() - INTERVAL '16 days', 'Closed', '{
   "location": {"value": "Langkawi Island, Kedah", "field_type_id": "FT_TEXT"},
   "description": {"value": "Small oil spill from fishing vessel", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_MARINE', NOW() - INTERVAL '13 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_MARINE', NOW() - INTERVAL '13 days', 'Pending', '{
   "location": {"value": "Penang Port, Penang", "field_type_id": "FT_TEXT"},
   "description": {"value": "Oil sheen observed in harbor area", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
@@ -382,13 +384,13 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
 }'),
 
 -- Air Pollution Reports (4 fields)
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_AIR', NOW() - INTERVAL '17 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '17 days', 'Closed', '{
   "location": {"value": "Industrial Area, Shah Alam", "field_type_id": "FT_TEXT"},
   "description": {"value": "Strong chemical odor from factory", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 150, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_AIR', NOW() - INTERVAL '14 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '14 days', 'Pending', '{
   "location": {"value": "Brickfields, Kuala Lumpur", "field_type_id": "FT_TEXT"},
   "description": {"value": "Heavy smoke from construction site", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Construction", "field_type_id": "FT_SELECT"},
@@ -400,7 +402,7 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 120, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_AIR', NOW() - INTERVAL '8 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '8 days', 'Closed', '{
   "location": {"value": "Klang Valley Industrial Park", "field_type_id": "FT_TEXT"},
   "description": {"value": "Unusual odor from chemical plant", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
@@ -408,7 +410,7 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
 }'),
 
 -- Scheduled Waste Reports (4 fields)
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_WASTE', NOW() - INTERVAL '15 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '15 days', 'Pending', '{
   "location": {"value": "Kajang Industrial Estate", "field_type_id": "FT_TEXT"},
   "description": {"value": "Illegal dumping of electronic waste", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Electronic", "field_type_id": "FT_SELECT"},
@@ -420,13 +422,13 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "waste_category": {"value": "Medical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 75.2, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_WASTE', NOW() - INTERVAL '9 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '9 days', 'Closed', '{
   "location": {"value": "Chemical Plant, Pasir Gudang", "field_type_id": "FT_TEXT"},
   "description": {"value": "Hazardous chemical waste storage issue", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Chemical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 500.0, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_WASTE', NOW() - INTERVAL '6 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '6 days', 'Pending', '{
   "location": {"value": "Industrial Zone, Ipoh", "field_type_id": "FT_TEXT"},
   "description": {"value": "Suspected hazardous waste dumping", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Hazardous", "field_type_id": "FT_SELECT"},
@@ -439,12 +441,12 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "description": {"value": "Excessive noise from construction equipment", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 85, "field_type_id": "FT_DECIBEL"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_NOISE', NOW() - INTERVAL '10 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_NOISE', NOW() - INTERVAL '10 days', 'Closed', '{
   "location": {"value": "Night Market, Petaling Jaya", "field_type_id": "FT_TEXT"},
   "description": {"value": "Loud music from entertainment venues", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 90, "field_type_id": "FT_DECIBEL"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_NOISE', NOW() - INTERVAL '7 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_NOISE', NOW() - INTERVAL '7 days', 'Pending', '{
   "location": {"value": "Industrial Area, Subang Jaya", "field_type_id": "FT_TEXT"},
   "description": {"value": "Factory machinery noise exceeding limits", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 95, "field_type_id": "FT_DECIBEL"}
@@ -456,13 +458,13 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
 }'),
 
 -- Vibration Reports (4 fields)
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_VIB', NOW() - INTERVAL '11 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '11 days', 'Closed', '{
   "location": {"value": "Construction Site, Damansara", "field_type_id": "FT_TEXT"},
   "description": {"value": "Heavy machinery causing ground vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 45, "field_type_id": "FT_VIBRATION"},
   "vibration_source": {"value": "Construction", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_VIB', NOW() - INTERVAL '8 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '8 days', 'Pending', '{
   "location": {"value": "Industrial Zone, Puchong", "field_type_id": "FT_TEXT"},
   "description": {"value": "Factory equipment causing structural vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 35, "field_type_id": "FT_VIBRATION"},
@@ -474,7 +476,7 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "vibration_level": {"value": 50, "field_type_id": "FT_VIBRATION"},
   "vibration_source": {"value": "Industrial", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_VIB', NOW() - INTERVAL '2 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '2 days', 'Closed', '{
   "location": {"value": "Construction Site, Mont Kiara", "field_type_id": "FT_TEXT"},
   "description": {"value": "Pile driving causing excessive vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 40, "field_type_id": "FT_VIBRATION"},
@@ -482,7 +484,7 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
 }'),
 
 -- Land Oil Spill Reports
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_OIL', NOW() - INTERVAL '9 days', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '9 days', 'Pending', '{
   "location": {"value": "Industrial Park, Shah Alam", "field_type_id": "FT_TEXT"},
   "description": {"value": "Oil spill from storage tank", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
@@ -492,12 +494,12 @@ INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission
   "description": {"value": "Hydraulic oil leak from machinery", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 50, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'e0047d39-7a72-48ba-a74d-a00a2e36b2fd', 'FT_OIL', NOW() - INTERVAL '3 days', 'Closed', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '3 days', 'Closed', '{
   "location": {"value": "Workshop Area, Petaling Jaya", "field_type_id": "FT_TEXT"},
   "description": {"value": "Engine oil spill in workshop", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 30, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '1c2f4118-4692-4f71-afab-de4dc49b947a', 'FT_OIL', NOW() - INTERVAL '1 day', 'Pending', '{
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '1 day', 'Pending', '{
   "location": {"value": "Service Station, Subang Jaya", "field_type_id": "FT_TEXT"},
   "description": {"value": "Fuel spill during refueling", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
