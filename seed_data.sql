@@ -37,9 +37,6 @@ ALTER TABLE public.pollution_type
   ALTER COLUMN pollution_type_name TYPE text,
   ALTER COLUMN pollution_type_description TYPE text;
 
-ALTER TABLE public.form_field_type 
-  ALTER COLUMN field_type TYPE text;
-
 ALTER TABLE public.form_template 
   ALTER COLUMN form_name TYPE text,
   ALTER COLUMN description TYPE text;
@@ -87,9 +84,9 @@ ALTER SEQUENCE IF EXISTS public.form_field_configuration_configuration_id_seq RE
 
 -- Insert divisions
 INSERT INTO public.division (division_id, division_name) VALUES
-    ('DIV_WATER_MARINE', 'Water and Marine Division'),
-    ('DIV_AIR', 'Air Division'),
-    ('DIV_HAZMAT', 'Hazardous Materials Division');
+    ('DIV_WATER_MARINE', 'Water and Marine'),
+    ('DIV_AIR', 'Air'),
+    ('DIV_HAZMAT', 'Hazardous Materials');
 
 -- Insert User Accounts
 INSERT INTO public.user_account (auth_user_id, user_type, division_id, status, created_at) VALUES
@@ -116,391 +113,405 @@ INSERT INTO public.pollution_type (pollution_type_id, division_id, pollution_typ
     ('PT_OIL', 'DIV_HAZMAT', 'Land Oil Spill', 'Oil spills on land');
 
 -- Insert Form Field Types
-INSERT INTO public.form_field_type (field_type_id, field_type, configuration_schema) VALUES
-('FT_TEXT', 'text', '{
-  "type": "object",
-  "description": "A single-line text input field for short text entries like names, locations, or identifiers",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the input field"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "minLength": {
-      "type": "number",
-      "description": "Minimum length of the text"
-    },
-    "maxLength": {
-      "type": "number",
-      "description": "Maximum length of the text"
-    },
-    "pattern": {
-      "type": "string",
-      "description": "Regex pattern for validation"
-    }
-  }
-}'),
-('FT_TEXTAREA', 'textarea', '{
-  "type": "object",
-  "description": "A multi-line text input field for longer text entries like descriptions, comments, or detailed observations",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the textarea"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "minLength": {
-      "type": "number",
-      "description": "Minimum length of the text"
-    },
-    "maxLength": {
-      "type": "number",
-      "description": "Maximum length of the text"
-    },
-    "rows": {
-      "type": "number",
-      "description": "Number of visible rows"
-    }
-  }
-}'),
-('FT_NUMBER', 'number', '{
-  "type": "object",
-  "description": "A numeric input field for quantitative measurements, counts, or ratings with optional unit specifications",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the number input"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "min": {
-      "type": "number",
-      "description": "Minimum allowed value"
-    },
-    "max": {
-      "type": "number",
-      "description": "Maximum allowed value"
-    },
-    "step": {
-      "type": "number",
-      "description": "Step increment for the number input"
-    },
-    "unit": {
-      "type": "string",
-      "description": "Unit of measurement (e.g., kg, L, etc.)"
-    }
-  }
-}'),
-('FT_SELECT', 'select', '{
-  "type": "object",
-  "description": "A dropdown selection field for choosing from predefined options, supporting single or multiple selections",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the select input"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "options": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Array of options for the select input"
-    },
-    "multiple": {
-      "type": "boolean",
-      "description": "Whether multiple selections are allowed"
-    }
-  }
-}'),
-('FT_DECIBEL', 'decibel', '{
-  "type": "object",
-  "description": "A specialized number input field for noise level measurements in decibels (dB), with predefined ranges for environmental noise monitoring",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the decibel input"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "min": {
-      "type": "number",
-      "description": "Minimum allowed decibel value"
-    },
-    "max": {
-      "type": "number",
-      "description": "Maximum allowed decibel value"
-    },
-    "unit": {
-      "type": "string",
-      "description": "Unit of measurement (dB)"
-    }
-  }
-}'),
-('FT_VIBRATION', 'vibration', '{
-  "type": "object",
-  "description": "A specialized number input field for vibration measurements in Hertz (Hz), with predefined ranges for environmental vibration monitoring",
-  "properties": {
-    "placeholder": {
-      "type": "string",
-      "description": "Placeholder text for the vibration input"
-    },
-    "required": {
-      "type": "boolean",
-      "description": "Whether the field is required"
-    },
-    "min": {
-      "type": "number",
-      "description": "Minimum allowed vibration value"
-    },
-    "max": {
-      "type": "number",
-      "description": "Maximum allowed vibration value"
-    },
-    "unit": {
-      "type": "string",
-      "description": "Unit of measurement (Hz)"
-    }
-  }
-}');
+INSERT INTO public.form_field_type (field_type_id, configuration_schema, label, icon) VALUES
+('FT_TEXT', 
+ '{"type":"object","description":"A single-line text input field for short text entries like names, locations, or identfiers","properties":{"placeholder":{"type":"string","description":"Placeholder text for the input field"},"minLength":{"type":"number","description":"Minimum length of the text"},"maxLength":{"type":"number","description":"Maximum length of the text"},"pattern":{"type":"string","description":"Regex pattern for validation"}}}',
+ 'text', 'format-text'),
+('FT_TEXTAREA',  
+ '{"type":"object","description":"A multi-line text input field for longer text entries like descriptions, comments, or detailed observations","properties":{"placeholder":{"type":"string","description":"Placeholder text for the textarea"},"minLength":{"type":"number","description":"Minimum length of the text"},"maxLength":{"type":"number","description":"Maximum length of the text"},"rows":{"type":"number","description":"Number of visible rows"}}}',
+ 'textarea', 'text-box-multiple'),
+('FT_NUMBER', 
+ '{"type":"object","description":"A numeric input field for numbers","properties":{"placeholder":{"type":"string","description":"Placeholder text for the input field"},"min":{"type":"number","description":"Minimum value"},"max":{"type":"number","description":"Maximum value"},"step":{"type":"number","description":"Step increment"},"unit":{"type":"string","description":"Unit of measurement"}}}',
+ 'number', 'numeric'),
+('FT_SELECT', 
+ '{"type":"object","description":"A dropdown select field for choosing from predefined options","properties":{"placeholder":{"type":"string","description":"Placeholder text for the select field"},"options":{"type":"array","description":"Array of options","items":{"type":"object","properties":{"label":{"type":"string"},"value":{"type":"string"}}}}}}',
+ 'select', 'format-list-bulleted'),
+('FT_DATE', 
+ '{"type":"object","description":"A date input field","properties":{"placeholder":{"type":"string","description":"Placeholder text for the input field"},"minDate":{"type":"string","description":"Minimum date"},"maxDate":{"type":"string","description":"Maximum date"},"format":{"type":"string","description":"Date format"}}}',
+ 'date', 'calendar'),
+('FT_TIME',  
+ '{"type":"object","description":"A time input field","properties":{"placeholder":{"type":"string","description":"Placeholder text for the input field"},"format":{"type":"string","description":"Time format"},"interval":{"type":"number","description":"Time interval in minutes"}}}',
+ 'time', 'clock-outline'),
+('FT_LOCATION',  
+ '{"type":"object","description":"A location input field for selecting coordinates","properties":{"placeholder":{"type":"string","description":"Placeholder text for the input field"},"radius":{"type":"number","description":"Search radius in meters"},"allowCurrentLocation":{"type":"boolean","description":"Allow using current location"}}}',
+ 'location', 'map-marker');
+
+-- Add format schemas for each field type
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "string"
+}' 
+WHERE field_type_id = 'FT_TEXT';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "string"
+}' 
+WHERE field_type_id = 'FT_TEXTAREA';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "number"
+}' 
+WHERE field_type_id = 'FT_NUMBER';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "string"
+}' 
+WHERE field_type_id = 'FT_SELECT';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "date",
+  "format": "toLocaleDateString"
+}' 
+WHERE field_type_id = 'FT_DATE';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{value}",
+  "transform": "date",
+  "format": "toLocaleTimeString"
+}' 
+WHERE field_type_id = 'FT_TIME';
+
+UPDATE public.form_field_type 
+SET format_schema = '{
+  "template": "{latitude}, {longitude}",
+  "transform": "object",
+  "fallback": "Location not specified"
+}' 
+WHERE field_type_id = 'FT_LOCATION';
 
 -- Insert Form Templates
 INSERT INTO public.form_template (form_template_id, form_name, description, pollution_type_id, status) VALUES
-    ('FT_WATER', 'Water Pollution Report', 'Form for reporting water pollution incidents', 'PT_WATER', 'Active'),
-    ('FT_MARINE', 'Marine Oil Spill Report', 'Form for reporting marine oil spill incidents', 'PT_MARINE', 'Active'),
-    ('FT_AIR', 'Air Pollution Report', 'Form for reporting air pollution incidents', 'PT_AIR', 'Active'),
-    ('FT_WASTE', 'Scheduled Waste Report', 'Form for reporting scheduled waste incidents', 'PT_WASTE', 'Active'),
-    ('FT_NOISE', 'Noise Pollution Report', 'Form for reporting noise pollution incidents', 'PT_NOISE', 'Active'),
-    ('FT_VIB', 'Vibration Report', 'Form for reporting vibration incidents', 'PT_VIB', 'Active'),
-    ('FT_OIL', 'Land Oil Spill Report', 'Form for reporting land oil spill incidents', 'PT_OIL', 'Active');
+    -- Water Pollution Templates
+    ('FT_water_pollution_1', 'Water Pollution Report', 'Form for reporting water pollution incidents', 'PT_WATER', 'Active'),
+    ('FT_water_pollution_2', 'Water Quality Assessment', 'Detailed water quality assessment form', 'PT_WATER', 'Inactive'),
+    
+    -- Marine Oil Spill Templates
+    ('FT_marine_oil_spill_1', 'Marine Oil Spill Report', 'Form for reporting marine oil spill incidents', 'PT_MARINE', 'Active'),
+    ('FT_marine_oil_spill_2', 'Marine Pollution Assessment', 'Comprehensive marine pollution assessment form', 'PT_MARINE', 'Inactive'),
+    
+    -- Air Pollution Templates
+    ('FT_air_pollution_1', 'Air Pollution Report', 'Form for reporting air pollution incidents', 'PT_AIR', 'Active'),
+    ('FT_air_pollution_2', 'Air Quality Monitoring', 'Detailed air quality monitoring form', 'PT_AIR', 'Inactive'),
+    
+    -- Scheduled Waste Templates
+    ('FT_scheduled_waste_1', 'Scheduled Waste Report', 'Form for reporting scheduled waste incidents', 'PT_WASTE', 'Active'),
+    ('FT_scheduled_waste_2', 'Hazardous Waste Assessment', 'Comprehensive hazardous waste assessment form', 'PT_WASTE', 'Inactive'),
+    
+    -- Noise Pollution Templates
+    ('FT_noise_pollution_1', 'Noise Pollution Report', 'Form for reporting noise pollution incidents', 'PT_NOISE', 'Active'),
+    ('FT_noise_pollution_2', 'Noise Level Monitoring', 'Detailed noise level monitoring form', 'PT_NOISE', 'Inactive'),
+    
+    -- Vibration Templates
+    ('FT_vibration_1', 'Vibration Report', 'Form for reporting vibration incidents', 'PT_VIB', 'Active'),
+    ('FT_vibration_2', 'Vibration Impact Assessment', 'Comprehensive vibration impact assessment form', 'PT_VIB', 'Inactive'),
+    
+    -- Land Oil Spill Templates
+    ('FT_land_oil_spill_1', 'Land Oil Spill Report', 'Form for reporting land oil spill incidents', 'PT_OIL', 'Active'),
+    ('FT_land_oil_spill_2', 'Land Contamination Assessment', 'Detailed land contamination assessment form', 'PT_OIL', 'Inactive');
 
 -- Insert Form Fields
 INSERT INTO public.form_field (form_field_id, form_template_id, field_type_id, field_label, is_required, field_order) VALUES
-    -- Water Pollution Form Fields (5 fields)
-    (gen_random_uuid(), 'FT_WATER', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_WATER', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_WATER', 'FT_NUMBER', 'Severity Level', true, 3),
-    (gen_random_uuid(), 'FT_WATER', 'FT_TEXT', 'Water Source', true, 4),
-    (gen_random_uuid(), 'FT_WATER', 'FT_SELECT', 'Pollution Category', true, 5),
+    -- Water Pollution Form Fields (7 fields)
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_NUMBER', 'Severity Level', true, 5),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_LOCATION', 'Water Source', true, 6),
+    (gen_random_uuid(), 'FT_water_pollution_1', 'FT_SELECT', 'Pollution Category', true, 7),
 
-    -- Marine Oil Spill Form Fields (3 fields - unchanged)
-    (gen_random_uuid(), 'FT_MARINE', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_MARINE', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_MARINE', 'FT_NUMBER', 'Estimated Volume', true, 3),
+    -- Water Pollution Alternative Form Fields (8 fields)
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_NUMBER', 'pH Level', true, 5),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_NUMBER', 'Turbidity', true, 6),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_NUMBER', 'Dissolved Oxygen', true, 7),
+    (gen_random_uuid(), 'FT_water_pollution_2', 'FT_SELECT', 'Water Quality Index', true, 8),
 
-    -- Air Pollution Form Fields (4 fields)
-    (gen_random_uuid(), 'FT_AIR', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_AIR', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_AIR', 'FT_SELECT', 'Emission Type', true, 3),
-    (gen_random_uuid(), 'FT_AIR', 'FT_NUMBER', 'Air Quality Index', true, 4),
+    -- Marine Oil Spill Form Fields (5 fields)
+    (gen_random_uuid(), 'FT_marine_oil_spill_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_marine_oil_spill_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_marine_oil_spill_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_marine_oil_spill_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_marine_oil_spill_1', 'FT_NUMBER', 'Estimated Volume', true, 5),
 
-    -- Scheduled Waste Form Fields (4 fields)
-    (gen_random_uuid(), 'FT_WASTE', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_WASTE', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_WASTE', 'FT_SELECT', 'Waste Category', true, 3),
-    (gen_random_uuid(), 'FT_WASTE', 'FT_NUMBER', 'Estimated Weight', true, 4),
+    -- Marine Oil Spill Alternative Form Fields (7 fields)
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_NUMBER', 'Oil Thickness', true, 5),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_NUMBER', 'Affected Area', true, 6),
+    (gen_random_uuid(), 'FT_marine_oil_spill_2', 'FT_SELECT', 'Oil Type', true, 7),
 
-    -- Noise Pollution Form Fields (3 fields - unchanged)
-    (gen_random_uuid(), 'FT_NOISE', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_NOISE', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_NOISE', 'FT_DECIBEL', 'Noise Level', true, 3),
+    -- Air Pollution Form Fields (6 fields)
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_SELECT', 'Emission Type', true, 5),
+    (gen_random_uuid(), 'FT_air_pollution_1', 'FT_NUMBER', 'Air Quality Index', true, 6),
 
-    -- Vibration Form Fields (4 fields)
-    (gen_random_uuid(), 'FT_VIB', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_VIB', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_VIB', 'FT_VIBRATION', 'Vibration Level', true, 3),
-    (gen_random_uuid(), 'FT_VIB', 'FT_SELECT', 'Vibration Source', true, 4),
+    -- Air Pollution Alternative Form Fields (8 fields)
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_NUMBER', 'PM2.5 Level', true, 5),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_NUMBER', 'PM10 Level', true, 6),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_NUMBER', 'Ozone Level', true, 7),
+    (gen_random_uuid(), 'FT_air_pollution_2', 'FT_SELECT', 'Air Quality Category', true, 8),
 
-    -- Land Oil Spill Form Fields (3 fields - unchanged)
-    (gen_random_uuid(), 'FT_OIL', 'FT_TEXT', 'Location', true, 1),
-    (gen_random_uuid(), 'FT_OIL', 'FT_TEXTAREA', 'Description', true, 2),
-    (gen_random_uuid(), 'FT_OIL', 'FT_NUMBER', 'Estimated Volume', true, 3);
+    -- Scheduled Waste Form Fields (6 fields)
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_SELECT', 'Waste Category', true, 5),
+    (gen_random_uuid(), 'FT_scheduled_waste_1', 'FT_NUMBER', 'Estimated Weight', true, 6),
+
+    -- Scheduled Waste Alternative Form Fields (8 fields)
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_SELECT', 'Hazard Level', true, 5),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_NUMBER', 'Volume', true, 6),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_SELECT', 'Storage Condition', true, 7),
+    (gen_random_uuid(), 'FT_scheduled_waste_2', 'FT_SELECT', 'Disposal Method', true, 8),
+
+    -- Noise Pollution Form Fields (5 fields)
+    (gen_random_uuid(), 'FT_noise_pollution_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_noise_pollution_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_noise_pollution_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_noise_pollution_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_noise_pollution_1', 'FT_NUMBER', 'Noise Level', true, 5),
+
+    -- Noise Pollution Alternative Form Fields (7 fields)
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_NUMBER', 'Daytime Level', true, 5),
+    (gen_random_uuid(), 'FT_noise_pollution_2', 'FT_NUMBER', 'Nighttime Level', true, 6),
+
+    -- Vibration Form Fields (6 fields)
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_NUMBER', 'Vibration Level', true, 5),
+    (gen_random_uuid(), 'FT_vibration_1', 'FT_SELECT', 'Vibration Source', true, 6),
+
+    -- Vibration Alternative Form Fields (8 fields)
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_NUMBER', 'Peak Level', true, 5),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_NUMBER', 'Average Level', true, 6),
+    (gen_random_uuid(), 'FT_vibration_2', 'FT_NUMBER', 'Duration', true, 7),
+
+    -- Land Oil Spill Form Fields (5 fields)
+    (gen_random_uuid(), 'FT_land_oil_spill_1', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_land_oil_spill_1', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_land_oil_spill_1', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_land_oil_spill_1', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_land_oil_spill_1', 'FT_NUMBER', 'Estimated Volume', true, 5),
+
+    -- Land Oil Spill Alternative Form Fields (7 fields)
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_LOCATION', 'Location', true, 1),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_DATE', 'Incident Date', true, 2),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_TIME', 'Incident Time', true, 3),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_TEXTAREA', 'Description', true, 4),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_NUMBER', 'Contaminated Area', true, 5),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_SELECT', 'Soil Type', true, 6),
+    (gen_random_uuid(), 'FT_land_oil_spill_2', 'FT_SELECT', 'Contamination Level', true, 7);
 
 -- Insert Reports
 INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission_date, report_status, form_data) VALUES
 -- Water Pollution Reports (5 fields)
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '20 days', 'Pending', '{
-  "location": {"value": "Sungai Klang, Kuala Lumpur", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '20 days', 'Pending', '{
+  "location": {"value": "Sungai Klang, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Suspected chemical waste discharge causing water discoloration", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_TEXT"},
+  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Chemical", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_WATER', NOW() - INTERVAL '18 days', 'In Review', '{
-  "location": {"value": "Taman Tasik Titiwangsa, Kuala Lumpur", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_water_pollution_1', NOW() - INTERVAL '18 days', 'In Review', '{
+  "location": {"value": "Taman Tasik Titiwangsa, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Algae bloom observed in the lake, possible nutrient pollution", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 3, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "Lake", "field_type_id": "FT_TEXT"},
+  "water_source": {"value": "Lake", "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Biological", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '15 days', 'Closed', '{
-  "location": {"value": "Sungai Gombak, Selangor", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '15 days', 'Closed', '{
+  "location": {"value": "Sungai Gombak, Selangor", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Industrial waste discharge affecting water quality", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 5, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_TEXT"},
+  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Chemical", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WATER', NOW() - INTERVAL '12 days', 'Pending', '{
-  "location": {"value": "Sungai Langat, Selangor", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '12 days', 'Pending', '{
+  "location": {"value": "Sungai Langat, Selangor", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Suspected sewage discharge into river", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_TEXT"},
+  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Biological", "field_type_id": "FT_SELECT"}
 }'),
 
 -- Marine Oil Spill Reports
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_MARINE', NOW() - INTERVAL '19 days', 'In Review', '{
-  "location": {"value": "Port Klang, Selangor", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_marine_oil_spill_1', NOW() - INTERVAL '19 days', 'In Review', '{
+  "location": {"value": "Port Klang, Selangor", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Oil slick observed near cargo terminal", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 500, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_MARINE', NOW() - INTERVAL '16 days', 'Closed', '{
-  "location": {"value": "Langkawi Island, Kedah", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_marine_oil_spill_1', NOW() - INTERVAL '16 days', 'Closed', '{
+  "location": {"value": "Langkawi Island, Kedah", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Small oil spill from fishing vessel", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_MARINE', NOW() - INTERVAL '13 days', 'Pending', '{
-  "location": {"value": "Penang Port, Penang", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_marine_oil_spill_1', NOW() - INTERVAL '13 days', 'Pending', '{
+  "location": {"value": "Penang Port, Penang", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Oil sheen observed in harbor area", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_MARINE', NOW() - INTERVAL '10 days', 'In Review', '{
-  "location": {"value": "Kuantan Port, Pahang", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_marine_oil_spill_1', NOW() - INTERVAL '10 days', 'In Review', '{
+  "location": {"value": "Kuantan Port, Pahang", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Minor oil spill from cargo ship", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 300, "field_type_id": "FT_NUMBER"}
 }'),
 
 -- Air Pollution Reports (4 fields)
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '17 days', 'Closed', '{
-  "location": {"value": "Industrial Area, Shah Alam", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '17 days', 'Closed', '{
+  "location": {"value": "Industrial Area, Shah Alam", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Strong chemical odor from factory", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 150, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '14 days', 'Pending', '{
-  "location": {"value": "Brickfields, Kuala Lumpur", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '14 days', 'Pending', '{
+  "location": {"value": "Brickfields, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Heavy smoke from construction site", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Construction", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 180, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_AIR', NOW() - INTERVAL '11 days', 'In Review', '{
-  "location": {"value": "Petaling Jaya Industrial Zone", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_air_pollution_1', NOW() - INTERVAL '11 days', 'In Review', '{
+  "location": {"value": "Petaling Jaya Industrial Zone", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Dust particles from manufacturing plant", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 120, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_AIR', NOW() - INTERVAL '8 days', 'Closed', '{
-  "location": {"value": "Klang Valley Industrial Park", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '8 days', 'Closed', '{
+  "location": {"value": "Klang Valley Industrial Park", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Unusual odor from chemical plant", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
 
 -- Scheduled Waste Reports (4 fields)
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '15 days', 'Pending', '{
-  "location": {"value": "Kajang Industrial Estate", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '15 days', 'Pending', '{
+  "location": {"value": "Kajang Industrial Estate", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Illegal dumping of electronic waste", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Electronic", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 250.5, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_WASTE', NOW() - INTERVAL '12 days', 'In Review', '{
-  "location": {"value": "Hospital Area, Kuala Lumpur", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_scheduled_waste_1', NOW() - INTERVAL '12 days', 'In Review', '{
+  "location": {"value": "Hospital Area, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Improper disposal of medical waste", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Medical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 75.2, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '9 days', 'Closed', '{
-  "location": {"value": "Chemical Plant, Pasir Gudang", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '9 days', 'Closed', '{
+  "location": {"value": "Chemical Plant, Pasir Gudang", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Hazardous chemical waste storage issue", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Chemical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 500.0, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_WASTE', NOW() - INTERVAL '6 days', 'Pending', '{
-  "location": {"value": "Industrial Zone, Ipoh", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '6 days', 'Pending', '{
+  "location": {"value": "Industrial Zone, Ipoh", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Suspected hazardous waste dumping", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Hazardous", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 150.8, "field_type_id": "FT_NUMBER"}
 }'),
 
 -- Noise Pollution Reports
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_NOISE', NOW() - INTERVAL '13 days', 'In Review', '{
-  "location": {"value": "Construction Site, Bangsar", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_noise_pollution_1', NOW() - INTERVAL '13 days', 'In Review', '{
+  "location": {"value": "Construction Site, Bangsar", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Excessive noise from construction equipment", "field_type_id": "FT_TEXTAREA"},
-  "noise_level": {"value": 85, "field_type_id": "FT_DECIBEL"}
+  "noise_level": {"value": 85, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_NOISE', NOW() - INTERVAL '10 days', 'Closed', '{
-  "location": {"value": "Night Market, Petaling Jaya", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_noise_pollution_1', NOW() - INTERVAL '10 days', 'Closed', '{
+  "location": {"value": "Night Market, Petaling Jaya", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Loud music from entertainment venues", "field_type_id": "FT_TEXTAREA"},
-  "noise_level": {"value": 90, "field_type_id": "FT_DECIBEL"}
+  "noise_level": {"value": 90, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_NOISE', NOW() - INTERVAL '7 days', 'Pending', '{
-  "location": {"value": "Industrial Area, Subang Jaya", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_noise_pollution_1', NOW() - INTERVAL '7 days', 'Pending', '{
+  "location": {"value": "Industrial Area, Subang Jaya", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Factory machinery noise exceeding limits", "field_type_id": "FT_TEXTAREA"},
-  "noise_level": {"value": 95, "field_type_id": "FT_DECIBEL"}
+  "noise_level": {"value": 95, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_NOISE', NOW() - INTERVAL '4 days', 'In Review', '{
-  "location": {"value": "Residential Area, Cheras", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_noise_pollution_1', NOW() - INTERVAL '4 days', 'In Review', '{
+  "location": {"value": "Residential Area, Cheras", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Noise from air conditioning units", "field_type_id": "FT_TEXTAREA"},
-  "noise_level": {"value": 75, "field_type_id": "FT_DECIBEL"}
+  "noise_level": {"value": 75, "field_type_id": "FT_NUMBER"}
 }'),
 
 -- Vibration Reports (4 fields)
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '11 days', 'Closed', '{
-  "location": {"value": "Construction Site, Damansara", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '11 days', 'Closed', '{
+  "location": {"value": "Construction Site, Damansara", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Heavy machinery causing ground vibration", "field_type_id": "FT_TEXTAREA"},
-  "vibration_level": {"value": 45, "field_type_id": "FT_VIBRATION"},
+  "vibration_level": {"value": 45, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Construction", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '8 days', 'Pending', '{
-  "location": {"value": "Industrial Zone, Puchong", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '8 days', 'Pending', '{
+  "location": {"value": "Industrial Zone, Puchong", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Factory equipment causing structural vibration", "field_type_id": "FT_TEXTAREA"},
-  "vibration_level": {"value": 35, "field_type_id": "FT_VIBRATION"},
+  "vibration_level": {"value": 35, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Industrial", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_VIB', NOW() - INTERVAL '5 days', 'In Review', '{
-  "location": {"value": "Mining Area, Rawang", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_vibration_1', NOW() - INTERVAL '5 days', 'In Review', '{
+  "location": {"value": "Mining Area, Rawang", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Blasting operations causing ground vibration", "field_type_id": "FT_TEXTAREA"},
-  "vibration_level": {"value": 50, "field_type_id": "FT_VIBRATION"},
+  "vibration_level": {"value": 50, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Industrial", "field_type_id": "FT_SELECT"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_VIB', NOW() - INTERVAL '2 days', 'Closed', '{
-  "location": {"value": "Construction Site, Mont Kiara", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '2 days', 'Closed', '{
+  "location": {"value": "Construction Site, Mont Kiara", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Pile driving causing excessive vibration", "field_type_id": "FT_TEXTAREA"},
-  "vibration_level": {"value": 40, "field_type_id": "FT_VIBRATION"},
+  "vibration_level": {"value": 40, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Construction", "field_type_id": "FT_SELECT"}
 }'),
 
 -- Land Oil Spill Reports
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '9 days', 'Pending', '{
-  "location": {"value": "Industrial Park, Shah Alam", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '9 days', 'Pending', '{
+  "location": {"value": "Industrial Park, Shah Alam", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Oil spill from storage tank", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_OIL', NOW() - INTERVAL '6 days', 'In Review', '{
-  "location": {"value": "Factory Area, Klang", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_land_oil_spill_1', NOW() - INTERVAL '6 days', 'In Review', '{
+  "location": {"value": "Factory Area, Klang", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Hydraulic oil leak from machinery", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 50, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '3 days', 'Closed', '{
-  "location": {"value": "Workshop Area, Petaling Jaya", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '3 days', 'Closed', '{
+  "location": {"value": "Workshop Area, Petaling Jaya", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Engine oil spill in workshop", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 30, "field_type_id": "FT_NUMBER"}
 }'),
-(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_OIL', NOW() - INTERVAL '1 day', 'Pending', '{
-  "location": {"value": "Service Station, Subang Jaya", "field_type_id": "FT_TEXT"},
+(uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '1 day', 'Pending', '{
+  "location": {"value": "Service Station, Subang Jaya", "field_type_id": "FT_LOCATION"},
   "description": {"value": "Fuel spill during refueling", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
 }');
@@ -513,68 +524,215 @@ INSERT INTO public.feedback (feedback_id, report_id, auth_user_id, feedback_text
 -- Insert Form Field Configurations
 INSERT INTO public.form_field_configuration (configuration_id, field_type_id, configuration_data, form_field_id) VALUES
     -- Water Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WATER' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WATER' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter severity level (1-5)", "required": true, "min": 1, "max": 5, "step": 1}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WATER' AND field_order = 3)),
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter water source", "required": true, "minLength": 3, "maxLength": 50}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WATER' AND field_order = 4)),
-    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select pollution category", "required": true, "options": ["Chemical", "Biological", "Physical", "Thermal"]}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WATER' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter severity level (1-5)", "min": 1, "max": 5, "step": 1}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter water source", "allowCurrentLocation": true, "radius": 5000, "mapType": "hybrid"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select pollution category", "options": [{"label": "Chemical", "value": "chemical"}, {"label": "Biological", "value": "biological"}, {"label": "Physical", "value": "physical"}, {"label": "Thermal", "value": "thermal"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 7)),
+
+    -- Water Pollution Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter pH level", "min": 0, "max": 14, "step": 0.1, "unit": "pH"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter turbidity", "min": 0, "max": 1000, "step": 1, "unit": "NTU"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter dissolved oxygen", "min": 0, "max": 20, "step": 0.1, "unit": "mg/L"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 7)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select water quality index", "options": [{"label": "Excellent", "value": "excellent"}, {"label": "Good", "value": "good"}, {"label": "Fair", "value": "fair"}, {"label": "Poor", "value": "poor"}, {"label": "Very Poor", "value": "very_poor"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 8)),
 
     -- Marine Oil Spill Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_MARINE' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_MARINE' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter estimated volume in liters", "required": true, "min": 0, "max": 1000000, "step": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_MARINE' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter estimated volume", "min": 0, "max": 10000, "step": 1, "unit": "liters"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 5)),
+
+    -- Marine Oil Spill Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter oil thickness", "min": 0, "max": 100, "step": 0.1, "unit": "mm"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter affected area", "min": 0, "max": 1000000, "step": 1, "unit": "m²"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select oil type", "options": [{"label": "Crude Oil", "value": "crude_oil"}, {"label": "Diesel", "value": "diesel"}, {"label": "Petrol", "value": "petrol"}, {"label": "Lubricating Oil", "value": "lubricating_oil"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 7)),
 
     -- Air Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_AIR' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_AIR' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select emission type", "required": true, "options": ["Industrial", "Vehicle", "Construction", "Other"]}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_AIR' AND field_order = 3)),
-    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter AQI (0-500)", "required": true, "min": 0, "max": 500, "step": 1}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_AIR' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select emission type", "options": [{"label": "Industrial", "value": "industrial"}, {"label": "Vehicle", "value": "vehicle"}, {"label": "Construction", "value": "construction"}, {"label": "Agricultural", "value": "agricultural"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter air quality index", "min": 0, "max": 500, "step": 1}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 6)),
+
+    -- Air Pollution Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter PM2.5 level", "min": 0, "max": 500, "step": 1, "unit": "μg/m³"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter PM10 level", "min": 0, "max": 1000, "step": 1, "unit": "μg/m³"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter ozone level", "min": 0, "max": 500, "step": 1, "unit": "ppb"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 7)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select air quality category", "options": [{"label": "Good", "value": "good"}, {"label": "Moderate", "value": "moderate"}, {"label": "Unhealthy", "value": "unhealthy"}, {"label": "Very Unhealthy", "value": "very_unhealthy"}, {"label": "Hazardous", "value": "hazardous"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 8)),
 
     -- Scheduled Waste Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WASTE' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WASTE' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select waste category", "required": true, "options": ["Chemical", "Biological", "Radioactive", "Other"]}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WASTE' AND field_order = 3)),
-    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter weight in kg", "required": true, "min": 0, "max": 10000, "step": 0.1}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_WASTE' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select waste category", "options": [{"label": "Electronic", "value": "electronic"}, {"label": "Medical", "value": "medical"}, {"label": "Chemical", "value": "chemical"}, {"label": "Hazardous", "value": "hazardous"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter estimated weight", "min": 0, "max": 10000, "step": 0.1, "unit": "kg"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 6)),
+
+    -- Scheduled Waste Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select hazard level", "options": [{"label": "Low", "value": "low"}, {"label": "Medium", "value": "medium"}, {"label": "High", "value": "high"}, {"label": "Very High", "value": "very_high"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter volume", "min": 0, "max": 1000, "step": 0.1, "unit": "m³"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select storage condition", "options": [{"label": "Contained", "value": "contained"}, {"label": "Exposed", "value": "exposed"}, {"label": "Partially Contained", "value": "partially_contained"}, {"label": "Unknown", "value": "unknown"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 7)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select disposal method", "options": [{"label": "Landfill", "value": "landfill"}, {"label": "Incineration", "value": "incineration"}, {"label": "Recycling", "value": "recycling"}, {"label": "Treatment", "value": "treatment"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 8)),
 
     -- Noise Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_NOISE' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_NOISE' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_DECIBEL', '{"placeholder": "Enter noise level in dB", "required": true, "min": 0, "max": 150, "unit": "dB"}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_NOISE' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter noise level", "min": 0, "max": 120, "step": 1, "unit": "dB"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 5)),
+
+    -- Noise Pollution Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter daytime level", "min": 0, "max": 120, "step": 1, "unit": "dB"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter nighttime level", "min": 0, "max": 120, "step": 1, "unit": "dB"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select noise source type", "options": [{"label": "Construction", "value": "construction"}, {"label": "Industrial", "value": "industrial"}, {"label": "Transportation", "value": "transportation"}, {"label": "Entertainment", "value": "entertainment"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 7)),
 
     -- Vibration Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_VIB' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_VIB' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_VIBRATION', '{"placeholder": "Enter vibration level in Hz", "required": true, "min": 0, "max": 100, "unit": "Hz"}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_VIB' AND field_order = 3)),
-    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select vibration source", "required": true, "options": ["Construction", "Industrial", "Transportation", "Other"]}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_VIB' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter vibration level", "min": 0, "max": 100, "step": 0.1, "unit": "mm/s"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select vibration source", "options": [{"label": "Construction", "value": "construction"}, {"label": "Industrial", "value": "industrial"}, {"label": "Transportation", "value": "transportation"}, {"label": "Natural", "value": "natural"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 6)),
+
+    -- Vibration Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter peak level", "min": 0, "max": 100, "step": 0.1, "unit": "mm/s"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter average level", "min": 0, "max": 100, "step": 0.1, "unit": "mm/s"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter duration", "min": 0, "max": 24, "step": 0.5, "unit": "hours"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 7)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select impact category", "options": [{"label": "Low", "value": "low"}, {"label": "Medium", "value": "medium"}, {"label": "High", "value": "high"}, {"label": "Very High", "value": "very_high"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 8)),
 
     -- Land Oil Spill Form Fields Configurations
-    (gen_random_uuid(), 'FT_TEXT', '{"placeholder": "Enter location", "required": true, "minLength": 5, "maxLength": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_OIL' AND field_order = 1)),
-    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "required": true, "minLength": 10, "maxLength": 500, "rows": 4}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_OIL' AND field_order = 2)),
-    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter estimated volume in liters", "required": true, "min": 0, "max": 1000000, "step": 100}', 
-        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_OIL' AND field_order = 3));
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter estimated volume", "min": 0, "max": 10000, "step": 1, "unit": "liters"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 5)),
 
+    -- Land Oil Spill Alternative Form Fields Configurations
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 1)),
+    (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 2)),
+    (gen_random_uuid(), 'FT_TIME', '{"placeholder": "Select incident time", "format": "24h", "interval": 15}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 3)),
+    (gen_random_uuid(), 'FT_TEXTAREA', '{"placeholder": "Describe the incident", "minLength": 10, "maxLength": 500, "rows": 4}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 4)),
+    (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter contaminated area", "min": 0, "max": 1000000, "step": 1, "unit": "m²"}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 5)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select soil type", "options": [{"label": "Clay", "value": "clay"}, {"label": "Silt", "value": "silt"}, {"label": "Sand", "value": "sand"}, {"label": "Loam", "value": "loam"}, {"label": "Other", "value": "other"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 6)),
+    (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select contamination level", "options": [{"label": "Low", "value": "low"}, {"label": "Medium", "value": "medium"}, {"label": "High", "value": "high"}, {"label": "Very High", "value": "very_high"}]}', 
+        (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 7));

@@ -129,7 +129,7 @@ const dashboard = () => {
       heading={
         <Heading
           nav={() => refreshAllData()}
-          title={currentUser?.division?.division_name || ""}
+          title={currentUser?.division?.division_name + " Division" || ""}
         />
       }
       enableContentPanningGesture={!isReportListScrollable}

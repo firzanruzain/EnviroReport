@@ -23,10 +23,10 @@ export default function index() {
   } = useReportStore();
 
   const refreshData = useCallback(async () => {
+    console.log("Refreshing reports");
     setRefreshing(true);
     try {
-      resetReports();
-      await fetchReports({ append: true });
+      await Promise.all([resetReports(), fetchReports({ append: true })]);
     } finally {
       setRefreshing(false);
     }
