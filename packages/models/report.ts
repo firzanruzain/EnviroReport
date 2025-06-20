@@ -4,6 +4,16 @@ import { FormData } from "./form";
 
 export type ReportStatus = "Pending" | "In Review" | "Closed";
 
+export type EventType = "submitted" | "status_updated" | "feedback_added";
+
+export interface ReportLog {
+  log_id: string;
+  created_at: Date;
+  created_by: string;
+  event_type: EventType;
+  event_description: string;
+}
+
 export interface ReportStore {
   reports: Report[];
   latestReports: Report[];
@@ -33,6 +43,7 @@ export interface RawReport {
   form_template?: FormTemplate;
   feedback?: Feedback[];
   user?: User;
+  report_logs?: ReportLog[];
 }
 
 // Transformed interface (used in the app) with submission date as a Date object
@@ -44,6 +55,12 @@ export interface Report extends Omit<RawReport, "submission_date"> {
 export const parseReport = (raw: RawReport): Report => ({
   ...raw,
   submission_date: new Date(raw.submission_date),
+  report_logs: raw.report_logs
+    ? raw.report_logs.map((log) => ({
+        ...log,
+        created_at: new Date(log.created_at),
+      }))
+    : [],
 });
 
 export interface Feedback {

@@ -31,6 +31,7 @@ export function useReportDetails(reportId: string | undefined) {
 
         const parsedReport = parseReport(data);
         setReport(parsedReport);
+        console.log(JSON.stringify(report, null, 2));
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch report details"

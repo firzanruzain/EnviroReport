@@ -736,3 +736,37 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 6)),
     (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select contamination level", "options": [{"label": "Low", "value": "low"}, {"label": "Medium", "value": "medium"}, {"label": "High", "value": "high"}, {"label": "Very High", "value": "very_high"}]}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 7));
+
+-- Insert a "submitted" log for each report
+INSERT INTO public.report_log (log_id, created_at, report_id, event_type, event_description, created_by)
+SELECT
+    gen_random_uuid(),
+    submission_date,
+    report_id,
+    'submitted',
+    'Report submitted',
+    auth_user_id
+FROM public.report;
+
+-- Insert a "status_updated" log for reports that are not 'Pending'
+INSERT INTO public.report_log (log_id, created_at, report_id, event_type, event_description, created_by)
+SELECT
+    gen_random_uuid(),
+    submission_date + INTERVAL '1 day',
+    report_id,
+    'status_updated',
+    'Status changed to ' || report_status,
+    auth_user_id
+FROM public.report
+WHERE report_status <> 'Pending';
+
+-- Insert a "feedback_added" log for each feedback
+INSERT INTO public.report_log (log_id, created_at, report_id, event_type, event_description, created_by)
+SELECT
+    gen_random_uuid(),
+    f.created_at,
+    f.report_id,
+    'feedback_added',
+    'Feedback added: ' || f.feedback_text,
+    f.auth_user_id
+FROM public.feedback f;

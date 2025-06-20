@@ -34,21 +34,26 @@ This page document and tracks full implementation of each features based on proj
 
 ### Authentication
 
-- [x] Staff Login/Logout
+- [ ] Staff Login/Logout
 
 ### Dashboard
 
 - [x] View Division Dashboard (shows report statistics)
 
+### Profile Management
+
+- [ ] View Profile
+- [ ] Edit Profile
+
 ### Report Management
 
 - [x] View Division Submitted Reports
-  - [ ] add report id in report details
+  - [x] add report id in report details
   - [ ] Filter by pollution type
 - [ ] Update Report Status (Pending/In Review/Closed)
 - [ ] Send Form Feedback
 - [x] View Report Details
-  - [ ] timeline view of reports
+  - [x] timeline view of reports
 
 ### Form Management
 
