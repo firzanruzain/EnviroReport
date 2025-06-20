@@ -7,13 +7,7 @@ import {
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-  CollapsibleCard,
-  Header,
-  MainScreenLayout,
-  MainScreenScrollLayout,
-  MainScreenScrollView,
-} from "ui";
+import { CollapsibleCard, Header, MainScreenLayout } from "ui";
 import { useFormStore, useUserStore } from "modules";
 import type { MainScreenLayoutRef } from "ui";
 
@@ -59,7 +53,15 @@ const index = () => {
             key={typeId}
             title={typeName}
           >
-            <TouchableOpacity className="bg-primary-300 flex-row items-center p-2 rounded-lg gap-2 my-2">
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: "/form/edit",
+                  params: { formId: activeForm.form_template_id },
+                })
+              }
+              className="bg-primary-300 flex-row items-center p-2 rounded-lg gap-2 my-2"
+            >
               <MaterialCommunityIcons name="form-select" size={30} />
               <Text className="font-pSemiBold flex-1 text-dark-Default text-xl">
                 {activeForm?.form_name || "No active form"}

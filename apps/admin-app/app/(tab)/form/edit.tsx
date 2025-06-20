@@ -1,6 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { MainScreenLayout } from "ui";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { DeleteDialog, Heading, MainScreenLayout } from "ui";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useFormStore } from "modules";
 import { FormTemplate, FormField, FieldType } from "models/form";
@@ -15,6 +21,7 @@ import Reanimated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { ConfirmDialog, ConfirmDialogRef } from "ui";
 
 interface SchemaProperty {
   type: string;
@@ -42,6 +49,9 @@ export default function Edit() {
     getFieldTypeDefinition,
     getDefaultFieldConfig,
     createFormField,
+    updateFormTemplate,
+    deleteFormTemplate,
+    setFormTemplateActive,
   } = useFormStore();
   const [form, setForm] = useState<FormTemplate>();
   const [loading, setLoading] = useState(true);
@@ -53,14 +63,50 @@ export default function Edit() {
   // Modal states
   const [isAddFieldModalVisible, setAddFieldModalVisible] = useState(false);
   const [isEditFieldModalVisible, setEditFieldModalVisible] = useState(false);
+  const [isEditFormModalVisible, setEditFormModalVisible] = useState(false);
   const [selectedField, setSelectedField] = useState<FormField | null>(null);
   const [newFieldType, setNewFieldType] = useState<string>("FT_TEXT");
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldRequired, setNewFieldRequired] = useState(true);
   const [fieldConfig, setFieldConfig] = useState<Record<string, any>>({});
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  // New state for editing form name/description
+  const [editFormName, setEditFormName] = useState("");
+  const [editFormDescription, setEditFormDescription] = useState("");
+
+  // Track original values for comparison
+  const originalFormName = form?.form_name || "";
+  const originalFormDescription = form?.description || "";
+
+  // Only enable save if there are changes
+  const isFormTemplateChanged =
+    editFormName.trim() !== originalFormName.trim() ||
+    editFormDescription.trim() !== originalFormDescription.trim();
 
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  const confirmDialogRef = useRef<ConfirmDialogRef>(null);
+  const [confirmDialogConfig, setConfirmDialogConfig] = useState<{
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    loading: boolean;
+    error: string | null;
+    buttonText: string;
+    showConfirmButton: boolean;
+  }>({
+    title: "",
+    message: "",
+    onConfirm: () => {},
+    loading: false,
+    error: null,
+    buttonText: "",
+    showConfirmButton: true,
+  });
 
   const loadForm = useCallback(async () => {
     try {
@@ -80,7 +126,6 @@ export default function Edit() {
   const loadFieldTypes = useCallback(async () => {
     try {
       const types = await fetchFieldTypes();
-      console.log("Loaded field types:", JSON.stringify(types));
       setFieldTypes(types);
     } catch (error) {
       console.error("Error loading field types:", error);
@@ -91,6 +136,14 @@ export default function Edit() {
     loadForm();
     loadFieldTypes();
   }, [loadForm, loadFieldTypes]);
+
+  // Sync edit modal fields with form data when opening
+  useEffect(() => {
+    if (isEditFormModalVisible && form) {
+      setEditFormName(form.form_name || "");
+      setEditFormDescription(form.description || "");
+    }
+  }, [isEditFormModalVisible, form]);
 
   const handleDragEnd = ({ data }: { data: FormField[] }) => {
     const updatedFields = data.map((field, index) => ({
@@ -118,17 +171,10 @@ export default function Edit() {
   };
 
   const handleEditField = (field: FormField) => {
-    console.log("Editing field:", JSON.stringify(field));
     const fieldType = getFieldTypeDefinition(field.field_type_id);
-    console.log("Field type definition:", fieldType);
-
     // Initialize with existing config data if available, otherwise use default config
     const existingConfig = field.config?.configuration_data;
-    console.log("Existing config:", field.config);
-
     const defaultConfig = getDefaultFieldConfig(field.field_type_id);
-    console.log("Default config:", defaultConfig);
-
     setSelectedField(field);
     setFieldConfig(existingConfig || defaultConfig);
     setEditFieldModalVisible(true);
@@ -158,44 +204,31 @@ export default function Edit() {
     try {
       setIsSaving(true);
       setError(null);
-
       // Validate form data
       if (!form) {
         throw new Error("Form data is missing");
       }
-
       if (!form.pollution_type_id) {
         throw new Error("Form pollution type is missing");
       }
-
       if (!form.form_name) {
         throw new Error("Form name is missing");
       }
-
       if (!form.status) {
         throw new Error("Form status is missing");
       }
-
       if (fields.length === 0) {
         throw new Error("Form must have at least one field");
       }
-
       // Validate all field labels
       const invalidField = fields.find((field) => !field.field_label.trim());
       if (invalidField) {
         throw new Error("All fields must have a label");
       }
-
-      console.log("Updating form fields:", fields);
-
       // Update form fields
       await updateFormTemplateFields(formId, fields);
-
       // Reload the form to ensure we have the latest data
       await loadForm();
-
-      // Navigate back on success
-      //   router.back();
     } catch (error) {
       console.error("Error saving form:", error);
       setError(
@@ -256,22 +289,13 @@ export default function Edit() {
   };
 
   const renderConfigOptions = (fieldType: FieldType) => {
-    console.log("Rendering config options for field type:", fieldType);
-    console.log("Configuration schema:", fieldType?.configuration_schema);
-
     if (!fieldType?.configuration_schema?.properties) {
-      console.log("No configuration schema properties found");
       return null;
     }
-
     const properties = (fieldType.configuration_schema as ConfigurationSchema)
       .properties;
-    console.log("Schema properties:", JSON.stringify(properties));
-
     return Object.entries(properties).map(([key, schema]) => {
-      console.log("Rendering config for key:", key, "schema:", schema);
       const value = fieldConfig[key] ?? schema.default;
-
       switch (schema.type) {
         case "number":
           return (
@@ -447,7 +471,6 @@ export default function Edit() {
           }
           return null;
         default:
-          console.log("Unhandled schema type:", schema.type);
           return null;
       }
     });
@@ -473,6 +496,7 @@ export default function Edit() {
       >
         <TouchableOpacity
           onLongPress={drag}
+          onPress={() => handleEditField(item)}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -517,26 +541,148 @@ export default function Edit() {
     );
   };
 
+  const handleSaveFormTemplate = async () => {
+    try {
+      setIsSaving(true);
+      setError(null);
+      if (!formId || !editFormName.trim()) {
+        throw new Error("Form name is required");
+      }
+      console.log("Saving Form Template: ", {
+        name: editFormName,
+        description: editFormDescription,
+      });
+      await updateFormTemplate(
+        formId,
+        editFormName.trim(),
+        editFormDescription.trim()
+      );
+      await loadForm();
+      setEditFormModalVisible(false);
+    } catch (error) {
+      console.error("Error updating form template:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while updating the form template"
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSetFormAsActive = async () => {
+    setEditFormModalVisible(false);
+    setConfirmDialogConfig({
+      title: "Set as Active",
+      message: `Setting this form as active will deactivate current active for this pollution type. \n\n Confirm this action?`,
+      onConfirm: async () => {
+        if (!form) return;
+        setConfirmDialogConfig((prev) => ({
+          ...prev,
+          loading: true,
+          error: null,
+        }));
+        try {
+          const result = await setFormTemplateActive(
+            form.pollution_type_id,
+            form.form_template_id
+          );
+          setConfirmDialogConfig((prev) => ({
+            ...prev,
+            loading: false,
+            error: null,
+            message: result.message,
+            showConfirmButton: false,
+          }));
+          alert(result.message);
+          await loadForm();
+        } catch (err: any) {
+          setConfirmDialogConfig((prev) => ({
+            ...prev,
+            loading: false,
+            error: err?.message || "Failed to set form as active.",
+          }));
+        }
+      },
+      loading: false,
+      error: null,
+      buttonText: "Confirm",
+      showConfirmButton: true,
+    });
+    confirmDialogRef.current?.open();
+  };
+
+  const handleDeleteForm = async () => {
+    setEditFormModalVisible(false);
+    if (form?.status === "Active") {
+      setConfirmDialogConfig({
+        title: "Delete Form",
+        message: "You cannot delete an Active form",
+        onConfirm: () => {},
+        loading: false,
+        error: null,
+        buttonText: "Delete",
+        showConfirmButton: false,
+      });
+      confirmDialogRef.current?.open();
+      return;
+    }
+    setConfirmDialogConfig({
+      title: "Delete Form",
+      message: "Are you sure you want to delete this form template?",
+      onConfirm: async () => {
+        if (!form) return;
+        setConfirmDialogConfig((prev) => ({
+          ...prev,
+          loading: true,
+          error: null,
+        }));
+        try {
+          await deleteFormTemplate(form.form_template_id);
+          router.back();
+        } catch (err: any) {
+          setConfirmDialogConfig((prev) => ({
+            ...prev,
+            error: err?.message || "Failed to delete form template.",
+            loading: false,
+          }));
+        } finally {
+          setConfirmDialogConfig((prev) => ({ ...prev, loading: false }));
+        }
+      },
+      loading: false,
+      error: null,
+      buttonText: "Delete",
+      showConfirmButton: true,
+    });
+    confirmDialogRef.current?.open();
+  };
+
   if (loading) {
     return (
       <MainScreenLayout>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color="#32936F" />
         </View>
       </MainScreenLayout>
     );
   }
 
   return (
-    <MainScreenLayout>
+    <MainScreenLayout
+      heading={
+        <Heading
+          title={form?.form_name || ""}
+          enableBackButton
+          option={() => setEditFormModalVisible(true)}
+        />
+      }
+    >
       <GestureHandlerRootView style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
-            {form?.form_name}
-          </Text>
-
           <DraggableFlatList
             data={fields}
             keyExtractor={(item) => item.field_order.toString()}
@@ -776,14 +922,127 @@ export default function Edit() {
                     >
                       Cancel
                     </Button>
-                    <Button mode="contained" onPress={handleSaveField}>
+                    <Button
+                      mode="contained"
+                      onPress={handleSaveField}
+                      style={{ marginRight: 8 }}
+                    >
                       Save Changes
+                    </Button>
+                    <Button
+                      mode="contained"
+                      buttonColor={theme.colors.error}
+                      textColor={theme.colors.onError}
+                      onPress={() => {
+                        if (selectedField) {
+                          // Remove the selected field from fields
+                          const updatedFields = fields
+                            .filter(
+                              (field) =>
+                                field.field_order !== selectedField.field_order
+                            )
+                            .map((field, idx) => ({
+                              ...field,
+                              field_order: idx + 1,
+                            }));
+                          setFields(updatedFields);
+                          setEditFieldModalVisible(false);
+                          setSelectedField(null);
+                          setFieldConfig({});
+                        }
+                      }}
+                    >
+                      Delete
                     </Button>
                   </View>
                 </ScrollView>
               )}
             </Modal>
           </Portal>
+
+          {/* Edit Form Modal */}
+          <Portal>
+            <Modal
+              visible={isEditFormModalVisible}
+              onDismiss={() => setEditFormModalVisible(false)}
+            >
+              <ScrollView
+                keyboardShouldPersistTaps="always"
+                className="bg-white p-5 m-5 rounded-xl"
+              >
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 16 }}
+                >
+                  Edit Form Template
+                </Text>
+                <TextInput
+                  label="Form Name"
+                  value={editFormName}
+                  onChangeText={setEditFormName}
+                  style={{ marginBottom: 16 }}
+                />
+                <TextInput
+                  label="Description"
+                  value={editFormDescription}
+                  onChangeText={setEditFormDescription}
+                  style={{ marginBottom: 16 }}
+                  multiline
+                  numberOfLines={3}
+                />
+                <View className="flex-row-reverse mb-10 gap-10">
+                  {form?.status !== "Active" && (
+                    <Button
+                      mode="contained"
+                      buttonColor={theme.colors.primary}
+                      style={{ flex: 1 }}
+                      onPress={handleSetFormAsActive}
+                    >
+                      Set as Active
+                    </Button>
+                  )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    gap: 10,
+                  }}
+                >
+                  <Button onPress={() => setEditFormModalVisible(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    mode="contained"
+                    buttonColor="red"
+                    style={{ flex: 1 }}
+                    onPress={handleDeleteForm}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    mode="contained"
+                    onPress={handleSaveFormTemplate}
+                    disabled={!isFormTemplateChanged || isSaving}
+                    style={{ marginRight: 8 }}
+                  >
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </Button>
+                </View>
+              </ScrollView>
+            </Modal>
+          </Portal>
+
+          {/* Delete Confirmation Dialog (now ConfirmDialog) */}
+          <ConfirmDialog
+            ref={confirmDialogRef}
+            title={confirmDialogConfig.title}
+            message={confirmDialogConfig.message}
+            confirm={confirmDialogConfig.onConfirm}
+            loading={confirmDialogConfig.loading}
+            error={confirmDialogConfig.error}
+            buttonText={confirmDialogConfig.buttonText}
+            showConfirmButton={confirmDialogConfig.showConfirmButton}
+          />
 
           {/* Error Snackbar */}
           <Snackbar

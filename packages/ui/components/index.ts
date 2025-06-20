@@ -8,6 +8,9 @@ export { default as Card } from "./Card";
 export { default as ReportList } from "./ReportList";
 export { default as CardList } from "./CardList";
 export { default as ReportCardList } from "./ReportCardList";
-export {default as CollapsibleCard} from "./CollapsibleCard"
-export {default as ReportDetails} from "./ReportDetails"
-export {default as StatusTag} from "./StatusTag"
+export { default as CollapsibleCard } from "./CollapsibleCard";
+export { default as ReportDetails } from "./ReportDetails";
+export { default as StatusTag } from "./StatusTag";
+export { default as CreateNewButton } from "./CreateNewButton";
+export { default as DeleteDialog } from "./DeleteDialog";
+export * from "./ConfirmDialog";

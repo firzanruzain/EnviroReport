@@ -1,4 +1,11 @@
-import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
+import {
+  MainScreenLayout,
+  Heading,
+  Header,
+  Card,
+  ReportList,
+  CreateNewButton,
+} from "ui";
 import { Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import { useEffect, useState, useCallback, useRef } from "react";

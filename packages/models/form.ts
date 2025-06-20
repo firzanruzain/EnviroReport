@@ -74,7 +74,6 @@ export interface UpdateFormTemplateParams {
 
 export interface FormStore {
   forms: FormTemplate[];
-  isLoading: boolean;
   fieldTypes: FieldType[];
   fetchActiveForm: (pollution_type_id: string) => Promise<FormTemplateMetadata>;
   fetchForms: (
@@ -112,4 +111,23 @@ export interface FormStore {
     typeId: string,
     config: Record<string, any>
   ) => string;
+  updateFormTemplate: (
+    form_template_id: string,
+    form_name: string,
+    description: string
+  ) => Promise<void>;
+  createNewForm: (
+    pollution_type_id: string,
+    form_name: string,
+    description: string
+  ) => Promise<FormTemplate | null>;
+  deleteFormTemplate: (form_template_id: string) => Promise<boolean>;
+  setFormTemplateActive: (
+    pollution_type_id: string,
+    form_template_id: string
+  ) => Promise<{
+    message: string;
+    form_template_id: string;
+    pollution_type_id: string;
+  }>;
 }

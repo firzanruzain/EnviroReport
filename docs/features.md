@@ -1,8 +1,6 @@
 # Core Features
 
-This page document and tracks full implementation of each features based on project's requirements which include all needed components (```modules```, ```models```, ```hooks```, ```edge functions```).
-
-
+This page document and tracks full implementation of each features based on project's requirements which include all needed components (`modules`, `models`, `hooks`, `edge functions`).
 
 ## Public User App
 
@@ -32,8 +30,6 @@ This page document and tracks full implementation of each features based on proj
 - [ ] View Report Details
 - [ ] Map View of submitted reports
 
-
-
 ## Staff Division App
 
 ### Authentication
@@ -47,6 +43,7 @@ This page document and tracks full implementation of each features based on proj
 ### Report Management
 
 - [x] View Division Submitted Reports
+  - [ ] add report id in report details
   - [ ] Filter by pollution type
 - [ ] Update Report Status (Pending/In Review/Closed)
 - [ ] Send Form Feedback
@@ -55,18 +52,17 @@ This page document and tracks full implementation of each features based on proj
 
 ### Form Management
 
-- [ ] Create New Form
-  - [ ] From scratch
+- [x] Create New Form
+  - [x] From scratch
   - [ ] From template library
-- [ ] View Existing Forms
-- [ ] View Published Form
-- [ ] Edit Form
-  - [ ] Add/remove fields
-  - [ ] Reorder fields
-- [ ] Publish/Unpublish Form
-- [ ] Delete Form
-
-
+- [x] View Existing Forms
+- [x] View Published Form
+- [x] Edit Form
+  - [x] Add/remove fields
+  - [x] Reorder fields
+  - [x] save form
+- [x] Publish/Unpublish Form
+- [x] Delete Form
 
 ## Cross-Cutting Features
 

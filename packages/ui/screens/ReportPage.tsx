@@ -20,21 +20,7 @@ export default function ReportPage({ reportId }: ReportPageProps) {
       heading={
         <Heading
           title={report?.form_template?.form_name || ""}
-          left={
-            <MaterialCommunityIcons
-              color={theme.colors.primary}
-              name="chevron-left"
-              size={30}
-              onPress={() => router.back()}
-            />
-          }
-          right={
-            <MaterialCommunityIcons
-              color={theme.colors.primary}
-              name="dots-vertical"
-              size={30}
-            />
-          }
+          enableBackButton
         />
       }
     >

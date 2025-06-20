@@ -18,7 +18,6 @@ export interface FetchFormsResponse {
 
 export const useFormStore = create<FormStore>((set, get) => ({
   forms: [],
-  isLoading: false,
   fieldTypes: [] as FieldType[],
 
   fetchFieldTypes: async () => {
@@ -203,6 +202,122 @@ export const useFormStore = create<FormStore>((set, get) => ({
       }
     } catch (error) {
       console.error("Error updating form fields:", error);
+      throw error;
+    }
+  },
+
+  deleteFormTemplate: async (form_template_id: string) => {
+    try {
+      console.log("Deleting form template:", form_template_id);
+      const { error } = await supabase.functions.invoke(
+        "delete-form-template",
+        {
+          method: "DELETE",
+          body: { form_template_id },
+        }
+      );
+      if (error) throw error;
+      // Remove from local state
+      set((state) => ({
+        forms: state.forms.filter(
+          (f) => f.form_template_id !== form_template_id
+        ),
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error deleting form template:", error);
+      throw error;
+    }
+  },
+
+  updateFormTemplate: async (
+    form_template_id: string,
+    form_name: string,
+    description: string
+  ) => {
+    try {
+      const { error } = await supabase.functions.invoke(
+        "update-form-template",
+        {
+          body: {
+            form_template_id,
+            form_name,
+            description,
+          },
+        }
+      );
+      if (error) throw error;
+
+      // Refresh the form data
+      const updatedForm = await get().fetchFormTemplate(form_template_id);
+      if (updatedForm) {
+        set((state) => ({
+          forms: state.forms.map((form) =>
+            form.form_template_id === form_template_id ? updatedForm : form
+          ),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating form template:", error);
+      throw error;
+    }
+  },
+
+  createNewForm: async (
+    pollution_type_id: string,
+    form_name: string,
+    description: string
+  ) => {
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "create-new-form",
+        {
+          body: {
+            pollution_type_id,
+            form_name,
+            description,
+          },
+        }
+      );
+      if (error as Error) throw error;
+
+      // add NewForm to state Forms
+      const newForm = await get().fetchFormTemplate(data.form_template_id);
+      if (newForm) {
+        set((state) => ({
+          forms: [...state.forms, newForm],
+        }));
+      }
+      return newForm;
+    } catch (error) {
+      console.error("Error creating form template:", error);
+      throw error;
+    }
+  },
+
+  setFormTemplateActive: async (
+    pollution_type_id: string,
+    form_template_id: string
+  ) => {
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "update-form-template-active",
+        {
+          method: "PATCH",
+          body: {
+            pollution_type_id,
+            form_template_id,
+          },
+        }
+      );
+      if (error) throw error;
+      return data as {
+        message: string;
+        form_template_id: string;
+        pollution_type_id: string;
+      };
+    } catch (error) {
+      console.error("Error setting form template as active:", error);
       throw error;
     }
   },

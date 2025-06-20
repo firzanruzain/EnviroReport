@@ -16,7 +16,12 @@ export default function Card({
   onLongPress,
 }: Props) {
   const content = onPress ? (
-    <TouchableRipple onLongPress={onLongPress} onPress={onPress}>
+    <TouchableRipple
+      className="rounded-3xl"
+      borderless
+      onLongPress={onLongPress}
+      onPress={onPress}
+    >
       {children}
     </TouchableRipple>
   ) : (
