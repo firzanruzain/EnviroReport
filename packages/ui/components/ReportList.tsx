@@ -1,6 +1,7 @@
 import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import { List } from "react-native-paper";
 import { Report } from "models";
+import React, { forwardRef } from "react";
 
 type ListItemProp = {
   title: React.ReactNode;
@@ -29,22 +30,22 @@ const ListItem = ({ title, right, id, onPress }: ListItemProp) => {
   );
 };
 
-export default function ReportList({
-  reports,
-  loading,
-  onPress,
-  onScroll,
-}: {
-  reports: Report[];
-  loading: boolean;
-  onPress?: (id: string) => void;
-  onScroll?: (event: any) => void;
-}) {
+const ReportList = forwardRef<
+  FlatList,
+  {
+    reports: Report[];
+    loading: boolean;
+    onPress?: (id: string) => void;
+    onScroll?: (event: any) => void;
+    onContentSizeChange?: (width: number, height: number) => void;
+  }
+>(({ reports, loading, onPress, onScroll, onContentSizeChange }, ref) => {
   if (loading) return <ActivityIndicator size="large" />;
   if (!reports.length) return <Text>No reports found</Text>;
 
   return (
     <FlatList
+      ref={ref}
       data={reports}
       keyExtractor={(item) => item.report_id}
       renderItem={({ item }) => (
@@ -57,6 +58,9 @@ export default function ReportList({
       )}
       onMomentumScrollBegin={onScroll}
       scrollEventThrottle={16}
+      onContentSizeChange={onContentSizeChange}
     />
   );
-}
+});
+
+export default ReportList;

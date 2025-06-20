@@ -6,7 +6,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { View, Image, ScrollView } from "react-native";
+import { View, Image, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, {
@@ -21,24 +21,26 @@ type Props = {
   heading?: React.ReactNode;
   children?: React.ReactNode;
   onChange?: () => void;
-  refreshControl?: React.ReactElement;
   enableContentPanningGesture?: boolean;
+  refreshControl?: React.ReactElement;
 };
 
-export type MainScreenScrollLayoutRef = {
+export type MainScreenLayoutRef = {
   expandSheet: () => void;
   collapseSheet: () => void;
 };
 
-const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
+const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(
   (
     {
       header,
       heading,
       children,
       onChange,
-      refreshControl,
       enableContentPanningGesture = false,
+      refreshControl,
+      isRefreshing,
+      handleRefresh,
     },
     ref
   ) => {
@@ -92,26 +94,32 @@ const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
               enableDynamicSizing={false}
               topInset={0}
             >
-              <BottomSheetView className="h-[90%]">
-                <LinearGradient
-                  style={{
-                    shadowColor: "green",
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 4,
-                    elevation: 50,
-                  }}
-                  className="h-full items-center"
-                  colors={["#32936f", "#deedc8"]}
-                >
-                  <View className="h-full w-full px-4 gap-4 pb-10">
-                    {heading}
-                    <ScrollView refreshControl={refreshControl}>
+              <BottomSheetScrollView
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+                refreshControl={refreshControl}
+                contentContainerStyle={{ flexGrow: 1 }}
+                className="mt-2 bg-white"
+              >
+                <View className="h-[90%] w-full">
+                  <LinearGradient
+                    style={{
+                      shadowColor: "green",
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 4,
+                      elevation: 50,
+                    }}
+                    className="flex-1"
+                    colors={["#32936f", "#deedc8"]}
+                  >
+                    <View className="h-max w-full px-4 gap-4 pb-10">
+                      {heading}
                       {children}
-                    </ScrollView>
-                  </View>
-                </LinearGradient>
-              </BottomSheetView>
+                    </View>
+                  </LinearGradient>
+                </View>
+              </BottomSheetScrollView>
             </BottomSheet>
           </Container>
         </SafeAreaView>
@@ -120,4 +128,4 @@ const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
   }
 );
 
-export default MainScreenScrollLayout;
+export default MainScreenLayout;

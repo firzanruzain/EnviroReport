@@ -1,6 +1,6 @@
 import { FormTemplate } from "./form";
 import { User } from "./user";
-import { FormData } from './form';
+import { FormData } from "./form";
 
 export type ReportStatus = "Pending" | "In Review" | "Closed";
 
@@ -13,9 +13,7 @@ export interface ReportStore {
   isLoading: boolean;
   hasMore: boolean;
   error: string | null;
-  fetchReports: (options?: {
-    append?: boolean;
-  }) => Promise<void>;
+  fetchReports: (options?: { append?: boolean }) => Promise<void>;
   fetchLatestReports: () => Promise<void>;
   resetReports: () => void;
   resetLatestReports: () => void;

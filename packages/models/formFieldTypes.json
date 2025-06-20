@@ -1,0 +1,294 @@
+{
+  "fieldTypes": {
+    "FT_TEXT": {
+      "label": "Text Input",
+      "icon": "text",
+      "defaultConfig": {
+        "placeholder": "Enter text",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "maxLength": {
+          "type": "number",
+          "optional": true
+        },
+        "minLength": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_TEXTAREA": {
+      "label": "Text Area",
+      "icon": "text-box",
+      "defaultConfig": {
+        "placeholder": "Enter text",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "maxLength": {
+          "type": "number",
+          "optional": true
+        },
+        "minLength": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_NUMBER": {
+      "label": "Number",
+      "icon": "numeric",
+      "defaultConfig": {
+        "placeholder": "Enter number",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "min": {
+          "type": "number",
+          "optional": true
+        },
+        "max": {
+          "type": "number",
+          "optional": true
+        },
+        "step": {
+          "type": "number",
+          "optional": true
+        },
+        "unit": {
+          "type": "string",
+          "optional": true
+        }
+      }
+    },
+    "FT_DECIBEL": {
+      "label": "Decibel",
+      "icon": "volume-high",
+      "defaultConfig": {
+        "placeholder": "Enter decibel value",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "min": {
+          "type": "number",
+          "optional": true
+        },
+        "max": {
+          "type": "number",
+          "optional": true
+        },
+        "step": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_VIBRATION": {
+      "label": "Vibration",
+      "icon": "vibrate",
+      "defaultConfig": {
+        "placeholder": "Enter vibration value",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "min": {
+          "type": "number",
+          "optional": true
+        },
+        "max": {
+          "type": "number",
+          "optional": true
+        },
+        "step": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_SELECT": {
+      "label": "Select",
+      "icon": "menu-down",
+      "defaultConfig": {
+        "placeholder": "Select an option",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": ["string", "number"]
+              }
+            }
+          }
+        },
+        "multiple": {
+          "type": "boolean",
+          "optional": true
+        }
+      }
+    },
+    "FT_DATE": {
+      "label": "Date",
+      "icon": "calendar",
+      "defaultConfig": {
+        "placeholder": "Select date",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "minDate": {
+          "type": "string",
+          "optional": true
+        },
+        "maxDate": {
+          "type": "string",
+          "optional": true
+        },
+        "format": {
+          "type": "string",
+          "optional": true
+        }
+      }
+    },
+    "FT_TIME": {
+      "label": "Time",
+      "icon": "clock",
+      "defaultConfig": {
+        "placeholder": "Select time",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "format": {
+          "type": "string",
+          "enum": ["12h", "24h"],
+          "optional": true
+        },
+        "interval": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_LOCATION": {
+      "label": "Location",
+      "icon": "map-marker",
+      "defaultConfig": {
+        "placeholder": "Select location",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "radius": {
+          "type": "number",
+          "optional": true
+        },
+        "allowCurrentLocation": {
+          "type": "boolean",
+          "optional": true
+        }
+      }
+    },
+    "FT_DOCUMENT": {
+      "label": "Document",
+      "icon": "file-document",
+      "defaultConfig": {
+        "placeholder": "Upload document",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "allowedTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "maxSize": {
+          "type": "number",
+          "optional": true
+        },
+        "maxFiles": {
+          "type": "number",
+          "optional": true
+        }
+      }
+    },
+    "FT_STATE": {
+      "label": "State",
+      "icon": "map",
+      "defaultConfig": {
+        "placeholder": "Select state",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "FT_AREA": {
+      "label": "Area",
+      "icon": "map-marker-radius",
+      "defaultConfig": {
+        "placeholder": "Select area",
+        "validation": {
+          "required": false
+        }
+      },
+      "configSchema": {
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

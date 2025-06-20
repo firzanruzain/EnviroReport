@@ -14,21 +14,23 @@ type CardListProp = {
   ListFooterComponent?: React.ReactElement | null;
 };
 
-const CardList = ({ 
-  data, 
-  renderItem, 
-  onScroll, 
-  refreshing, 
+const CardList = ({
+  data,
+  renderItem,
+  onScroll,
+  refreshing,
   onRefresh,
   onEndReached,
   onEndReachedThreshold,
-  ListFooterComponent
+  ListFooterComponent,
 }: CardListProp) => {
   return (
     <BottomSheetFlatList
       data={data}
       renderItem={({ item }) => (
-        <Card className="mb-3 p-0">{renderItem ? renderItem(item) : item}</Card>
+        <Card className="mb-3 p-0 overflow-hidden">
+          {renderItem ? renderItem(item) : item}
+        </Card>
       )}
       onMomentumScrollBegin={onScroll}
       refreshing={refreshing}

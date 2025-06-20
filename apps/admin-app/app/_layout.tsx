@@ -10,7 +10,7 @@ import { configureReanimatedLogger } from "react-native-reanimated";
 
 export default function RootLayout() {
   configureReanimatedLogger({
-    strict: false
+    strict: false,
   });
 
   const theme = {
@@ -54,7 +54,7 @@ export default function RootLayout() {
     } else {
       resetUser();
     }
-  }, [session]);
+  }, [session?.user?.id]); // Only re-run when the user ID changes
 
   // Handle routing based on auth state
   useEffect(() => {

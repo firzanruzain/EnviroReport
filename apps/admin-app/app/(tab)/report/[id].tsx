@@ -1,21 +1,12 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useReportStore } from "modules/report";
+import { useLocalSearchParams } from "expo-router";
 import { ReportPage } from "ui";
 
 export default function Report() {
-  const {
-    reports,
-    fetchReports
-  } = useReportStore();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-  if (reports.length == 0){
-    fetchReports();
+  if (!id) {
+    return null; // or some error state
   }
 
-  const { id } = useLocalSearchParams();
-  const report = reports.find((r) => r.report_id === id);
-
-  return (
-    <ReportPage report={report}/>
-  );
+  return <ReportPage reportId={id} />;
 }

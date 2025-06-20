@@ -1,5 +1,5 @@
 import { View, Text, Image } from "react-native";
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -42,7 +42,7 @@ const _layout = () => {
           bottom: 0,
           zIndex: 0,
           borderColor: "#603d29",
-          borderTopWidth: 1
+          borderTopWidth: 1,
         },
         tabBarIconStyle: {
           flexGrow: 1,
@@ -80,12 +80,22 @@ const _layout = () => {
       />
       <Tabs.Screen
         name="report"
-        listeners={({navigation}) => ({
+        listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate("report", {
-              screen: "index",
-            });
+            // Check if current path is under /report, then dismissTo, else replace
+            const currentPath =
+              navigation.getState?.()?.routes?.[navigation.getState().index]
+                ?.name || "";
+            if (currentPath.startsWith("report")) {
+              if (router.canDismiss()) {
+                router.dismissTo({ pathname: "/(tab)/report" });
+              } else {
+                router.replace({ pathname: "/(tab)/report" });
+              }
+            } else {
+              router.replace({ pathname: "/(tab)/report" });
+            }
           },
         })}
         options={{

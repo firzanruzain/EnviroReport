@@ -1,4 +1,11 @@
-import { MainScreenLayout, Heading, Header, Card, ReportList } from "ui";
+import {
+  MainScreenLayout,
+  Heading,
+  Header,
+  Card,
+  ReportList,
+  CreateNewButton,
+} from "ui";
 import { Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -12,6 +19,8 @@ import { supabase } from "services";
 const dashboard = () => {
   const layoutRef = useRef<MainScreenLayoutRef>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isReportListScrollable, setIsReportListScrollable] = useState(false);
+  const flatListRef = useRef<any>(null);
   const {
     latestReports,
     fetchLatestReports,
@@ -20,7 +29,6 @@ const dashboard = () => {
     error: reportsError,
     fetchPollutionCounts,
     pollutionCounts,
-    reports
   } = useReportStore();
 
   const {
@@ -105,6 +113,22 @@ const dashboard = () => {
     }
   }, []);
 
+  const handleContentSizeChange = useCallback(
+    (contentWidth: number, contentHeight: number) => {
+      if (flatListRef.current) {
+        const scrollView = flatListRef.current.getNativeScrollRef();
+        if (scrollView) {
+          scrollView.measure(
+            (x: number, y: number, width: number, height: number) => {
+              setIsReportListScrollable(contentHeight > height);
+            }
+          );
+        }
+      }
+    },
+    []
+  );
+
   return (
     <MainScreenLayout
       ref={layoutRef}
@@ -112,9 +136,10 @@ const dashboard = () => {
       heading={
         <Heading
           nav={() => refreshAllData()}
-          title={currentUser?.division?.division_name || ""}
+          title={currentUser?.division?.division_name + " Division" || ""}
         />
       }
+      enableContentPanningGesture={!isReportListScrollable}
     >
       {isLoading ? (
         <ActivityIndicator size="large" />
@@ -122,7 +147,7 @@ const dashboard = () => {
         <>
           <PollutionTypeCards />
 
-          <Card className="flex-1 p-6">
+          <Card className="p-6 flex-shrink">
             <View className="flex-row w-full border-b-2 pb-2 border-primary-200">
               <Text className="flex-1 text-xl font-pBold text-dark-Default">
                 Latest Report
@@ -135,10 +160,12 @@ const dashboard = () => {
             </View>
 
             <ReportList
+              ref={flatListRef}
               onPress={handlePress}
               reports={latestReports}
               loading={reportsLoading}
               onScroll={handleScroll}
+              onContentSizeChange={handleContentSizeChange}
             />
           </Card>
         </>

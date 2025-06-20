@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PollutionType } from 'models';
-import { supabase } from 'services';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PollutionType } from "models";
+import { supabase } from "services";
 
 interface PollutionState {
   pollutionTypes: PollutionType[] | null;
@@ -19,31 +19,31 @@ export const usePollutionStore = create<PollutionState>()(
       error: null,
       fetchPollutions: async (division_id: string) => {
         if (!division_id) return;
-        
+
         set({ isLoading: true, error: null });
-        
+
         try {
           const { data, error } = await supabase.functions.invoke(
             `fetch-pollutions?division_id=${division_id}`,
             { method: "GET" }
           );
-          
+
           if (error) throw error;
-          
-          set({ 
+
+          set({
             pollutionTypes: data as PollutionType[],
-            isLoading: false 
+            isLoading: false,
           });
         } catch (err) {
-          set({ 
+          set({
             error: err as Error,
-            isLoading: false 
+            isLoading: false,
           });
         }
       },
     }),
     {
-      name: 'pollution-storage',
+      name: "pollution-storage",
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         pollutionTypes: state.pollutionTypes,
