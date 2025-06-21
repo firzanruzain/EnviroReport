@@ -126,6 +126,7 @@ const CardList = ({
       )}
       <BottomSheetFlatList
         data={data}
+        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
         renderItem={({ item }) => (
           <Card className="mb-3 p-0 overflow-hidden">
             {renderItem ? renderItem(item, openMenu, isNavigating) : item}
