@@ -7,6 +7,7 @@ import { useUserStore } from "modules/user";
 import { useAuth } from "modules/auth";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { configureReanimatedLogger } from "react-native-reanimated";
+import { useFormStore } from "modules/form";
 
 export default function RootLayout() {
   configureReanimatedLogger({
@@ -40,6 +41,12 @@ export default function RootLayout() {
   const segments = useSegments();
   const router = useRouter();
   const { fetchUser, resetUser, user } = useUserStore();
+  const { fetchFieldTypes } = useFormStore();
+
+  // Refresh fieldTypes in the background on app load
+  useEffect(() => {
+    fetchFieldTypes();
+  }, []);
 
   // hide splash screen when all fonts loaded
   useEffect(() => {

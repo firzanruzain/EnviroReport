@@ -342,176 +342,232 @@ INSERT INTO public.form_field (form_field_id, form_template_id, field_type_id, f
 
 -- Insert Reports
 INSERT INTO public.report (report_id, auth_user_id, form_template_id, submission_date, report_status, form_data) VALUES
--- Water Pollution Reports (5 fields)
+-- Water Pollution Reports (7 fields)
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '20 days', 'Pending', '{
-  "location": {"value": "Sungai Klang, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.139, "longitude": 101.6869}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-01", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "14:00", "field_type_id": "FT_TIME"},
   "description": {"value": "Suspected chemical waste discharge causing water discoloration", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
+  "water_source": {"value": {"latitude": 3.140, "longitude": 101.700}, "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Chemical", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_water_pollution_1', NOW() - INTERVAL '18 days', 'In Review', '{
-  "location": {"value": "Taman Tasik Titiwangsa, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.174, "longitude": 101.709}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-03", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "10:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Algae bloom observed in the lake, possible nutrient pollution", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 3, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "Lake", "field_type_id": "FT_LOCATION"},
+  "water_source": {"value": {"latitude": 3.175, "longitude": 101.710}, "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Biological", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '15 days', 'Closed', '{
-  "location": {"value": "Sungai Gombak, Selangor", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.162, "longitude": 101.698}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-06", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "09:15", "field_type_id": "FT_TIME"},
   "description": {"value": "Industrial waste discharge affecting water quality", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 5, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
+  "water_source": {"value": {"latitude": 3.163, "longitude": 101.699}, "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Chemical", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_water_pollution_1', NOW() - INTERVAL '12 days', 'Pending', '{
-  "location": {"value": "Sungai Langat, Selangor", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 2.995, "longitude": 101.789}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-09", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "16:45", "field_type_id": "FT_TIME"},
   "description": {"value": "Suspected sewage discharge into river", "field_type_id": "FT_TEXTAREA"},
   "severity_level": {"value": 4, "field_type_id": "FT_NUMBER"},
-  "water_source": {"value": "River", "field_type_id": "FT_LOCATION"},
+  "water_source": {"value": {"latitude": 2.996, "longitude": 101.790}, "field_type_id": "FT_LOCATION"},
   "pollution_category": {"value": "Biological", "field_type_id": "FT_SELECT"}
 }'),
 
 -- Marine Oil Spill Reports
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_marine_oil_spill_1', NOW() - INTERVAL '19 days', 'In Review', '{
-  "location": {"value": "Port Klang, Selangor", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.003, "longitude": 101.367}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-02", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "11:20", "field_type_id": "FT_TIME"},
   "description": {"value": "Oil slick observed near cargo terminal", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 500, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_marine_oil_spill_1', NOW() - INTERVAL '16 days', 'Closed', '{
-  "location": {"value": "Langkawi Island, Kedah", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 6.326, "longitude": 99.849}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-05", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "13:10", "field_type_id": "FT_TIME"},
   "description": {"value": "Small oil spill from fishing vessel", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_marine_oil_spill_1', NOW() - INTERVAL '13 days', 'Pending', '{
-  "location": {"value": "Penang Port, Penang", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 5.402, "longitude": 100.347}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-08", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "15:00", "field_type_id": "FT_TIME"},
   "description": {"value": "Oil sheen observed in harbor area", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_marine_oil_spill_1', NOW() - INTERVAL '10 days', 'In Review', '{
-  "location": {"value": "Kuantan Port, Pahang", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.977, "longitude": 103.427}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-11", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "08:40", "field_type_id": "FT_TIME"},
   "description": {"value": "Minor oil spill from cargo ship", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 300, "field_type_id": "FT_NUMBER"}
 }'),
 
--- Air Pollution Reports (4 fields)
+-- Air Pollution Reports (6 fields)
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '17 days', 'Closed', '{
-  "location": {"value": "Industrial Area, Shah Alam", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.073, "longitude": 101.518}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-04", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "13:00", "field_type_id": "FT_TIME"},
   "description": {"value": "Strong chemical odor from factory", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 150, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '14 days', 'Pending', '{
-  "location": {"value": "Brickfields, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.132, "longitude": 101.686}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-07", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "09:45", "field_type_id": "FT_TIME"},
   "description": {"value": "Heavy smoke from construction site", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Construction", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 180, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_air_pollution_1', NOW() - INTERVAL '11 days', 'In Review', '{
-  "location": {"value": "Petaling Jaya Industrial Zone", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.107, "longitude": 101.606}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-10", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "15:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Dust particles from manufacturing plant", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 120, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_air_pollution_1', NOW() - INTERVAL '8 days', 'Closed', '{
-  "location": {"value": "Klang Valley Industrial Park", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.043, "longitude": 101.449}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-13", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "11:10", "field_type_id": "FT_TIME"},
   "description": {"value": "Unusual odor from chemical plant", "field_type_id": "FT_TEXTAREA"},
   "emission_type": {"value": "Industrial", "field_type_id": "FT_SELECT"},
   "air_quality_index": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
 
--- Scheduled Waste Reports (4 fields)
+-- Scheduled Waste Reports (6 fields)
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '15 days', 'Pending', '{
-  "location": {"value": "Kajang Industrial Estate", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 2.993, "longitude": 101.790}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-06", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "10:20", "field_type_id": "FT_TIME"},
   "description": {"value": "Illegal dumping of electronic waste", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Electronic", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 250.5, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_scheduled_waste_1', NOW() - INTERVAL '12 days', 'In Review', '{
-  "location": {"value": "Hospital Area, Kuala Lumpur", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.140, "longitude": 101.686}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-09", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "14:50", "field_type_id": "FT_TIME"},
   "description": {"value": "Improper disposal of medical waste", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Medical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 75.2, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '9 days', 'Closed', '{
-  "location": {"value": "Chemical Plant, Pasir Gudang", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 1.484, "longitude": 103.880}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-12", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "16:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Hazardous chemical waste storage issue", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Chemical", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 500.0, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_scheduled_waste_1', NOW() - INTERVAL '6 days', 'Pending', '{
-  "location": {"value": "Industrial Zone, Ipoh", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 4.597, "longitude": 101.090}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-15", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "12:10", "field_type_id": "FT_TIME"},
   "description": {"value": "Suspected hazardous waste dumping", "field_type_id": "FT_TEXTAREA"},
   "waste_category": {"value": "Hazardous", "field_type_id": "FT_SELECT"},
   "estimated_weight": {"value": 150.8, "field_type_id": "FT_NUMBER"}
 }'),
 
--- Noise Pollution Reports
+-- Noise Pollution Reports (5 fields)
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_noise_pollution_1', NOW() - INTERVAL '13 days', 'In Review', '{
-  "location": {"value": "Construction Site, Bangsar", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.128, "longitude": 101.684}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-08", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "15:00", "field_type_id": "FT_TIME"},
   "description": {"value": "Excessive noise from construction equipment", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 85, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_noise_pollution_1', NOW() - INTERVAL '10 days', 'Closed', '{
-  "location": {"value": "Night Market, Petaling Jaya", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.107, "longitude": 101.606}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-11", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "10:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Loud music from entertainment venues", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 90, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_noise_pollution_1', NOW() - INTERVAL '7 days', 'Pending', '{
-  "location": {"value": "Industrial Area, Subang Jaya", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.043, "longitude": 101.449}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-14", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "18:20", "field_type_id": "FT_TIME"},
   "description": {"value": "Factory machinery noise exceeding limits", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 95, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_noise_pollution_1', NOW() - INTERVAL '4 days', 'In Review', '{
-  "location": {"value": "Residential Area, Cheras", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.085, "longitude": 101.740}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-17", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "21:10", "field_type_id": "FT_TIME"},
   "description": {"value": "Noise from air conditioning units", "field_type_id": "FT_TEXTAREA"},
   "noise_level": {"value": 75, "field_type_id": "FT_NUMBER"}
 }'),
 
--- Vibration Reports (4 fields)
+-- Vibration Reports (6 fields)
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '11 days', 'Closed', '{
-  "location": {"value": "Construction Site, Damansara", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.146, "longitude": 101.621}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-10", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "08:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Heavy machinery causing ground vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 45, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Construction", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '8 days', 'Pending', '{
-  "location": {"value": "Industrial Zone, Puchong", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.029, "longitude": 101.618}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-13", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "17:00", "field_type_id": "FT_TIME"},
   "description": {"value": "Factory equipment causing structural vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 35, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Industrial", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_vibration_1', NOW() - INTERVAL '5 days', 'In Review', '{
-  "location": {"value": "Mining Area, Rawang", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.318, "longitude": 101.576}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-16", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "12:40", "field_type_id": "FT_TIME"},
   "description": {"value": "Blasting operations causing ground vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 50, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Industrial", "field_type_id": "FT_SELECT"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_vibration_1', NOW() - INTERVAL '2 days', 'Closed', '{
-  "location": {"value": "Construction Site, Mont Kiara", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.167, "longitude": 101.651}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-19", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "19:20", "field_type_id": "FT_TIME"},
   "description": {"value": "Pile driving causing excessive vibration", "field_type_id": "FT_TEXTAREA"},
   "vibration_level": {"value": 40, "field_type_id": "FT_NUMBER"},
   "vibration_source": {"value": "Construction", "field_type_id": "FT_SELECT"}
 }'),
 
--- Land Oil Spill Reports
+-- Land Oil Spill Reports (5 fields)
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '9 days', 'Pending', '{
-  "location": {"value": "Industrial Park, Shah Alam", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.073, "longitude": 101.518}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-12", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "08:10", "field_type_id": "FT_TIME"},
   "description": {"value": "Oil spill from storage tank", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 200, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), 'b2ab83ee-4750-4f27-9e99-da86b7b2b783', 'FT_land_oil_spill_1', NOW() - INTERVAL '6 days', 'In Review', '{
-  "location": {"value": "Factory Area, Klang", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.033, "longitude": 101.445}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-15", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "13:30", "field_type_id": "FT_TIME"},
   "description": {"value": "Hydraulic oil leak from machinery", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 50, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '3 days', 'Closed', '{
-  "location": {"value": "Workshop Area, Petaling Jaya", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.104, "longitude": 101.651}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-18", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "17:50", "field_type_id": "FT_TIME"},
   "description": {"value": "Engine oil spill in workshop", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 30, "field_type_id": "FT_NUMBER"}
 }'),
 (uuid_generate_v4(), '25c9824a-9c8c-40d0-9efe-35a84372ab14', 'FT_land_oil_spill_1', NOW() - INTERVAL '1 day', 'Pending', '{
-  "location": {"value": "Service Station, Subang Jaya", "field_type_id": "FT_LOCATION"},
+  "location": {"value": {"latitude": 3.064, "longitude": 101.503}, "field_type_id": "FT_LOCATION"},
+  "incident_date": {"value": "2024-05-20", "field_type_id": "FT_DATE"},
+  "incident_time": {"value": "20:40", "field_type_id": "FT_TIME"},
   "description": {"value": "Fuel spill during refueling", "field_type_id": "FT_TEXTAREA"},
   "estimated_volume": {"value": 100, "field_type_id": "FT_NUMBER"}
 }');

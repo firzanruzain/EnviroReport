@@ -165,14 +165,16 @@ export const formFieldUtils = {
   formatFieldValue: (
     fieldTypes: FieldType[],
     value: any,
-    typeId: string,
-    config: Record<string, any>
+    typeId: string
   ): string => {
     const fieldType = formFieldUtils.getFieldTypeDefinition(fieldTypes, typeId);
+    console.log("Field type: ", fieldType?.label);
     if (!fieldType) return String(value);
 
     const formatSchema = fieldType.format_schema;
+    console.log("Format Schema: ", formatSchema);
     if (!formatSchema) return String(value);
+    console.log("value: ", value);
 
     // Transform the value based on the schema
     let transformedValue = value;
@@ -182,8 +184,36 @@ export const formFieldUtils = {
         break;
       case "date":
         transformedValue = new Date(value);
-        if (formatSchema.format) {
-          transformedValue = transformedValue[formatSchema.format]();
+        if (
+          formatSchema.format &&
+          typeof (transformedValue as Date)[
+            formatSchema.format as keyof Date
+          ] === "function"
+        ) {
+          transformedValue = (transformedValue as any)[formatSchema.format]();
+        }
+        break;
+      case "time":
+        if (typeof value === "string" && value.match(/^\d{2}:\d{2}$/)) {
+          const [hour, minute] = value.split(":").map(Number);
+          const date = new Date();
+          date.setHours(hour, minute, 0, 0);
+          if (
+            formatSchema.format &&
+            typeof (date as Date)[formatSchema.format as keyof Date] ===
+              "function"
+          ) {
+            // Use the format method if it exists
+            transformedValue = (date as any)[formatSchema.format]([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+          } else {
+            // Default to HH:mm
+            transformedValue = value;
+          }
+        } else {
+          transformedValue = value;
         }
         break;
       case "object":
@@ -192,6 +222,8 @@ export const formFieldUtils = {
       default:
         transformedValue = String(value);
     }
+
+    console.log("transformed value: ", transformedValue);
 
     // If it's an object, use the template with object properties
     if (formatSchema.transform === "object") {

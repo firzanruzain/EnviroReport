@@ -33,7 +33,7 @@ export interface FieldType {
   configuration_schema: Record<string, any>;
   format_schema?: {
     template: string;
-    transform: "number" | "date" | "object" | "string";
+    transform: "number" | "date" | "object" | "string" | "time";
     format?: string;
     fallback?: string;
   };
@@ -107,11 +107,7 @@ export interface FormStore {
     typeId: string,
     config: Record<string, any>
   ) => boolean;
-  formatFieldValue: (
-    value: any,
-    typeId: string,
-    config: Record<string, any>
-  ) => string;
+  formatFieldValue: (value: any, typeId: string) => string;
   updateFormTemplate: (
     form_template_id: string,
     form_name: string,

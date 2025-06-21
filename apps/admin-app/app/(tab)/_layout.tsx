@@ -109,7 +109,7 @@ const _layout = () => {
                     -1
                   );
                 if (currentRoute && currentRoute[0]?.name !== "index") {
-                  console.log(currentRoute);
+                  // console.log(currentRoute);
                   router.replace({ pathname: "/(tab)/report" });
                 }
               }

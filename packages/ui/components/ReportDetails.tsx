@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Report, ReportLog } from "models/report";
 import CollapsibleCard from "./CollapsibleCard";
-import { renderFieldValue } from "../../utils/formFieldUtils";
+import { useFormStore } from "../../modules/form/useFormStore";
 import StatusTag from "./StatusTag";
 
 type Props = {
@@ -11,6 +11,8 @@ type Props = {
 };
 
 export default function ReportDetails({ report, className }: Props) {
+  const formatFieldValue = useFormStore((state) => state.formatFieldValue);
+
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     else return date.toLocaleDateString();
@@ -102,20 +104,29 @@ export default function ReportDetails({ report, className }: Props) {
           {renderDetailItem("Report Id", report.report_id || "N/A")}
           {Object.entries(report.form_data).map(([key, field]) => (
             <React.Fragment key={key}>
-              {renderDetailItem(formatFieldLabel(key), renderFieldValue(field))}
+              {renderDetailItem(
+                formatFieldLabel(key),
+                formatFieldValue(field.value, field.field_type_id)
+              )}
             </React.Fragment>
           ))}
           {renderDetailItem(
             "Pollution Type",
             report.form_template?.pollution_type?.pollution_type_name || "N/A"
           )}
+        </View>
+      </CollapsibleCard>
+
+      <CollapsibleCard title="Status">
+        <View className="gap-4">
+          {renderDetailItem("Current Status", report.report_status)}
           {renderDetailItem(
-            "Date of Incident",
-            formatDate(report.submission_date)
+            "Submitted By",
+            report.user?.profile?.name || "Anonymous"
           )}
           {renderDetailItem(
-            "Time of Incident",
-            formatTime(report.submission_date)
+            "Report Submitted At",
+            report.submission_date.toLocaleString()
           )}
         </View>
       </CollapsibleCard>
@@ -145,19 +156,6 @@ export default function ReportDetails({ report, className }: Props) {
         </CollapsibleCard>
       )}
 
-      <CollapsibleCard title="Status">
-        <View className="gap-4">
-          {renderDetailItem("Current Status", report.report_status)}
-          {renderDetailItem(
-            "Submitted By",
-            report.user?.profile?.name || "Anonymous"
-          )}
-          {renderDetailItem(
-            "Submission Date",
-            formatDate(report.submission_date)
-          )}
-        </View>
-      </CollapsibleCard>
       <CollapsibleCard title="Timeline">
         <View className="">
           {(report.report_logs ?? []).length > 0 ? (
