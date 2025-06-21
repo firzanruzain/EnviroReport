@@ -23,7 +23,10 @@ export interface ReportStore {
   isLoading: boolean;
   hasMore: boolean;
   error: string | null;
-  fetchReports: (options?: { append?: boolean }) => Promise<void>;
+  fetchReports: (options?: {
+    append?: boolean;
+    search?: string;
+  }) => Promise<void>;
   fetchLatestReports: () => Promise<void>;
   resetReports: () => void;
   resetLatestReports: () => void;
@@ -31,6 +34,11 @@ export interface ReportStore {
   pollutionCounts: Record<string, { pending: number; total: number }>;
   fetchPollutionCounts: () => Promise<void>;
   setLimit: (newLimit: number) => void;
+  lastSearch?: string;
+  updateReportStatus: (
+    reportId: string,
+    status: ReportStatus
+  ) => Promise<Report | null>;
 }
 
 export interface RawReport {

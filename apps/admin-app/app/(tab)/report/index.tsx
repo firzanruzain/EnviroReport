@@ -1,4 +1,4 @@
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Text } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Header, MainScreenLayout, ReportCardList } from "ui";
 import { useReportStore } from "modules/report";
@@ -8,9 +8,9 @@ import { useNavigation, useFocusEffect } from "expo-router";
 export default function index() {
   const layoutRef = useRef<MainScreenLayoutRef>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [isReportListScrollable, setIsReportListScrollable] = useState(false);
-  const flatListRef = useRef<any>(null);
+  const [searchText, setSearchText] = useState("");
   const navigation = useNavigation();
+
   const {
     reports,
     fetchReports,
@@ -23,14 +23,17 @@ export default function index() {
   } = useReportStore();
 
   const refreshData = useCallback(async () => {
-    console.log("Refreshing reports");
+    console.log("Refreshing reports with: ", searchText);
     setRefreshing(true);
     try {
-      await Promise.all([resetReports(), fetchReports({ append: true })]);
+      await Promise.all([
+        resetReports(),
+        fetchReports({ append: true, search: searchText }),
+      ]);
     } finally {
       setRefreshing(false);
     }
-  }, [resetReports, fetchReports]);
+  }, [resetReports, fetchReports, searchText]);
 
   // Handle tab focus/unfocus
   useFocusEffect(
@@ -46,7 +49,7 @@ export default function index() {
           await refreshData();
         } else {
           // If we have data, just fetch the next page
-          fetchReports({ append: true });
+          fetchReports({ append: true, search: searchText });
         }
       };
 
@@ -59,16 +62,9 @@ export default function index() {
     }, [reports.length, fetchReports, refreshData])
   );
 
-  const handleScroll = useCallback((event: any) => {
-    const { velocity } = event.nativeEvent;
-    if (velocity.y < 0) {
-      layoutRef.current?.expandSheet();
-    }
-  }, []);
-
   const onRefresh = useCallback(() => {
     refreshData();
-  }, [refreshData]);
+  }, [refreshData, searchText]);
 
   useEffect(() => {
     if (reportsError) console.log("Reports Error: ", reportsError);
@@ -86,25 +82,22 @@ export default function index() {
     // Only check if we're not currently loading and there's more data to load
     if (!reportsLoading && hasMore) {
       console.log("Fetching more reports...");
-      fetchReports({ append: true });
+      fetchReports({ append: true, search: searchText });
     }
-  }, [reportsLoading, hasMore, total, offset, fetchReports, reports.length]);
+  }, [
+    reportsLoading,
+    hasMore,
+    total,
+    offset,
+    fetchReports,
+    reports.length,
+    searchText,
+  ]);
 
-  const handleContentSizeChange = useCallback(
-    (contentWidth: number, contentHeight: number) => {
-      if (flatListRef.current) {
-        const scrollView = flatListRef.current.getNativeScrollRef();
-        if (scrollView) {
-          scrollView.measure(
-            (x: number, y: number, width: number, height: number) => {
-              setIsReportListScrollable(contentHeight > height);
-            }
-          );
-        }
-      }
-    },
-    []
-  );
+  const handleSearch = () => {
+    console.log(searchText);
+    refreshData();
+  };
 
   // Prevent this screen from being added to the navigation stack
   useEffect(() => {
@@ -113,41 +106,42 @@ export default function index() {
     });
   }, [navigation]);
 
-  // Show loading screen while loading initial data
-  if (reportsLoading && reports.length === 0) {
-    return (
-      <MainScreenLayout ref={layoutRef} header={<Header />}>
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#32936F" />
-        </View>
-      </MainScreenLayout>
-    );
-  }
-
   return (
     <MainScreenLayout
       ref={layoutRef}
-      header={<Header />}
-      enableContentPanningGesture={!isReportListScrollable}
+      enableContentPanningGesture={false}
+      header={
+        <Header
+          mode="search"
+          searchText={searchText}
+          setSearchText={setSearchText}
+          handleSearch={() => handleSearch()}
+          searchPlaceholder="Search Form Name"
+        />
+      }
     >
-      <ReportCardList
-        ref={flatListRef}
-        reports={reports}
-        onStartReached={() => layoutRef.current?.collapseSheet()}
-        onMomentumScrollBegin={handleScroll}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.2}
-        onContentSizeChange={handleContentSizeChange}
-        ListFooterComponent={
-          reportsLoading && hasMore ? (
-            <View className="py-4">
-              <ActivityIndicator size="small" />
-            </View>
-          ) : null
-        }
-      />
+      {reports.length === 0 && !reportsLoading ? (
+        <View className="flex-1 items-center justify-center py-10">
+          <Text className="text-lg text-gray-500">No report found</Text>
+        </View>
+      ) : (
+        <View className="flex-1 pb-16">
+          <ReportCardList
+            reports={reports}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={
+              reportsLoading && hasMore && reports.length ? (
+                <View className="py-4">
+                  <ActivityIndicator size="small" />
+                </View>
+              ) : null
+            }
+          />
+        </View>
+      )}
     </MainScreenLayout>
   );
 }

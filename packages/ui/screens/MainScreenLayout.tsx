@@ -22,6 +22,7 @@ type Props = {
   children?: React.ReactNode;
   onChange?: () => void;
   enableContentPanningGesture?: boolean;
+  enableHandlePanningGesture?: boolean;
 };
 
 export type MainScreenLayoutRef = {
@@ -37,6 +38,7 @@ const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(
       children,
       onChange,
       enableContentPanningGesture = false,
+      enableHandlePanningGesture = false,
     },
     ref
   ) => {
@@ -86,6 +88,7 @@ const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(
               snapPoints={snapPoints}
               onChange={handleSheetChanges}
               enableContentPanningGesture={enableContentPanningGesture}
+              enableHandlePanningGesture={enableHandlePanningGesture}
               overDragResistanceFactor={0.3}
               enableDynamicSizing={false}
               topInset={0}

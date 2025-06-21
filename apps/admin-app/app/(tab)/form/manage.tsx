@@ -9,14 +9,7 @@ import {
   CreateNewButton,
 } from "ui";
 import { useFormStore, useUserStore } from "modules";
-import {
-  List,
-  useTheme,
-  Menu,
-  Portal,
-  Dialog,
-  Button,
-} from "react-native-paper";
+import { List, useTheme } from "react-native-paper";
 import { FormTemplate } from "models";
 import { useFocusEffect } from "@react-navigation/native";
 import { ConfirmDialog, ConfirmDialogRef } from "ui/components/ConfirmDialog";
@@ -29,7 +22,6 @@ export default function ManageForm() {
   const [forms, setForms] = useState<FormTemplate[]>([]);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
   const router = useRouter();
@@ -39,10 +31,6 @@ export default function ManageForm() {
   );
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Menu state
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState({ x: 0, y: 0 });
-  const [selectedForm, setSelectedForm] = useState<FormTemplate | null>(null);
   // ConfirmDialog state
   const confirmDialogRef = React.useRef<ConfirmDialogRef>(null);
   const [confirmDialogConfig, setConfirmDialogConfig] = useState<{
@@ -63,117 +51,111 @@ export default function ManageForm() {
     showConfirmButton: true,
   });
 
-  const openMenu = (event: any, form: FormTemplate) => {
-    setSelectedForm(null);
-    const { pageX, pageY } = event.nativeEvent;
-    setMenuAnchor({ x: pageX, y: pageY });
-    setSelectedForm(form);
-    setMenuVisible(true);
-  };
-  const closeMenu = () => {
-    setMenuVisible(false);
-  };
+  const handleEdit = useCallback(
+    (form: FormTemplate) => {
+      if (isNavigating) return;
+      setIsNavigating(true);
+      router.push({
+        pathname: "/(tab)/form/edit",
+        params: { formId: form.form_template_id },
+      });
+    },
+    [isNavigating, router]
+  );
 
-  const handleEdit = () => {
-    if (selectedForm) {
-      closeMenu();
-      handleFormPress(selectedForm);
-    }
-  };
-
-  const handleDelete = () => {
-    closeMenu();
-    if (selectedForm?.status === "Active") {
+  const handleDelete = useCallback(
+    (form: FormTemplate) => {
+      if (form.status === "Active") {
+        setConfirmDialogConfig({
+          title: "Delete Form",
+          message: "You cannot delete an Active form",
+          onConfirm: () => {},
+          loading: false,
+          error: null,
+          buttonText: "Delete",
+          showConfirmButton: false,
+        });
+        confirmDialogRef.current?.open();
+        return;
+      }
       setConfirmDialogConfig({
         title: "Delete Form",
-        message: "You cannot delete an Active form",
-        onConfirm: () => {},
+        message: "Are you sure you want to delete this form template?",
+        onConfirm: async () => {
+          setConfirmDialogConfig((prev) => ({
+            ...prev,
+            loading: true,
+            error: null,
+          }));
+          try {
+            await deleteFormTemplate(form.form_template_id);
+          } catch (err: any) {
+            setConfirmDialogConfig((prev) => ({
+              ...prev,
+              error: err?.message || "Failed to delete form template.",
+              loading: false,
+            }));
+          } finally {
+            setConfirmDialogConfig((prev) => ({ ...prev, loading: false }));
+            refreshData();
+          }
+        },
         loading: false,
         error: null,
         buttonText: "Delete",
-        showConfirmButton: false,
+        showConfirmButton: true,
       });
       confirmDialogRef.current?.open();
-      return;
-    }
-    setConfirmDialogConfig({
-      title: "Delete Form",
-      message: "Are you sure you want to delete this form template?",
-      onConfirm: async () => {
-        if (!selectedForm) return;
-        setConfirmDialogConfig((prev) => ({
-          ...prev,
-          loading: true,
-          error: null,
-        }));
-        try {
-          await deleteFormTemplate(selectedForm.form_template_id);
-          setSelectedForm(null);
-        } catch (err: any) {
-          setConfirmDialogConfig((prev) => ({
-            ...prev,
-            error: err?.message || "Failed to delete form template.",
-            loading: false,
-          }));
-        } finally {
-          setConfirmDialogConfig((prev) => ({ ...prev, loading: false }));
-          refreshData();
-        }
-      },
-      loading: false,
-      error: null,
-      buttonText: "Delete",
-      showConfirmButton: true,
-    });
-    confirmDialogRef.current?.open();
-  };
+    },
+    [deleteFormTemplate]
+  );
 
-  const handleSetAsActive = async () => {
-    closeMenu();
-    if (!selectedForm) return;
-    setConfirmDialogConfig({
-      title: "Set as Active",
-      message: `Setting this form as active will deactivate the current active form for this pollution type.\n\nConfirm this action?`,
-      onConfirm: async () => {
-        setConfirmDialogConfig((prev) => ({
-          ...prev,
-          loading: true,
-          error: null,
-        }));
-        try {
-          const result = await setFormTemplateActive(
-            typeId,
-            selectedForm.form_template_id
-          );
+  const handleSetAsActive = useCallback(
+    async (form: FormTemplate) => {
+      setConfirmDialogConfig({
+        title: "Set as Active",
+        message: `Setting this form as active will deactivate the current active form for this pollution type.\n\nConfirm this action?`,
+        onConfirm: async () => {
           setConfirmDialogConfig((prev) => ({
             ...prev,
-            loading: false,
+            loading: true,
             error: null,
-            message: result.message,
-            showConfirmButton: false,
           }));
-          alert(result.message);
-          await refreshData();
-        } catch (err: any) {
-          setConfirmDialogConfig((prev) => ({
-            ...prev,
-            loading: false,
-            error: err?.message || "Failed to set form as active.",
-          }));
-        }
-      },
-      loading: false,
-      error: null,
-      buttonText: "Confirm",
-      showConfirmButton: true,
-    });
-    confirmDialogRef.current?.open();
-  };
+          try {
+            const result = await setFormTemplateActive(
+              typeId,
+              form.form_template_id
+            );
+            setConfirmDialogConfig((prev) => ({
+              ...prev,
+              loading: false,
+              error: null,
+              message: result.message,
+              showConfirmButton: false,
+            }));
+            alert(result.message);
+            await refreshData();
+          } catch (err: any) {
+            setConfirmDialogConfig((prev) => ({
+              ...prev,
+              loading: false,
+              error: err?.message || "Failed to set form as active.",
+            }));
+          }
+        },
+        loading: false,
+        error: null,
+        buttonText: "Confirm",
+        showConfirmButton: true,
+      });
+      confirmDialogRef.current?.open();
+    },
+    [typeId, setFormTemplateActive]
+  );
 
   const loadData = useCallback(
     async (append: boolean = false) => {
       try {
-        setLoading(true);
         const { forms: newForms, hasMore: moreData } = await fetchForms(
           typeId,
           10,
@@ -187,8 +169,6 @@ export default function ManageForm() {
         setOffset((prevOffset) => (append ? prevOffset + 10 : 10));
       } catch (err) {
         console.error("Error fetching forms:", err);
-      } finally {
-        setLoading(false);
       }
     },
     [typeId, offset, fetchForms]
@@ -211,17 +191,22 @@ export default function ManageForm() {
   }, [resetData, loadData]);
 
   const loadMore = useCallback(() => {
-    if (!isLoading && hasMore) {
+    if (!refreshing && hasMore) {
       loadData(true);
     }
-  }, [isLoading, hasMore, loadData]);
+  }, [refreshing, hasMore, loadData]);
 
   useEffect(() => {
     let isActive = true;
 
     const initializeData = async () => {
       if (typeId && isActive) {
-        await loadData();
+        setRefreshing(true);
+        try {
+          await loadData();
+        } finally {
+          setRefreshing(false);
+        }
       }
     };
 
@@ -232,24 +217,16 @@ export default function ManageForm() {
     };
   }, [typeId, loadData]);
 
-  const handleFormPress = useCallback(
-    (form: FormTemplate) => {
-      if (isNavigating) return;
-      setIsNavigating(true);
-      router.push({
-        pathname: "/(tab)/form/edit",
-        params: { formId: form.form_template_id },
-      });
-    },
-    [isNavigating, router]
-  );
-
   const renderFormItem = useCallback(
-    (form: FormTemplate) => (
+    (
+      form: FormTemplate,
+      openMenu: (event: any, item: any) => void,
+      isNavigating: boolean
+    ) => (
       <List.Item
         onLongPress={(event) => openMenu(event, form)}
         style={{ backgroundColor: "transparent", borderRadius: 16 }}
-        onPress={() => handleFormPress(form)}
+        onPress={() => handleEdit(form)}
         disabled={isNavigating}
         title={(props) => (
           <View className="flex-row gap-2">
@@ -284,7 +261,35 @@ export default function ManageForm() {
         )}
       />
     ),
-    [handleFormPress, isNavigating]
+    [handleEdit]
+  );
+
+  const menuItems = [
+    {
+      title: "Edit",
+      leadingIcon: "pencil",
+      onPress: handleEdit,
+    },
+    {
+      title: "Delete",
+      leadingIcon: "delete",
+      onPress: handleDelete,
+    },
+  ];
+
+  const getMenuItems = useCallback(
+    (form: FormTemplate) => {
+      const items = [...menuItems];
+      if (form.status === "Inactive") {
+        items.push({
+          title: "Set as Active",
+          leadingIcon: "check",
+          onPress: handleSetAsActive,
+        });
+      }
+      return items;
+    },
+    [menuItems, handleSetAsActive]
   );
 
   useFocusEffect(
@@ -302,18 +307,6 @@ export default function ManageForm() {
         />
       }
     >
-      {/* Menu rendered at root, anchored to last clicked icon */}
-      <Menu visible={menuVisible} onDismiss={closeMenu} anchor={menuAnchor}>
-        <Menu.Item onPress={handleEdit} title="Edit" leadingIcon="pencil" />
-        <Menu.Item onPress={handleDelete} title="Delete" leadingIcon="delete" />
-        {selectedForm?.status === "Inactive" && (
-          <Menu.Item
-            onPress={handleSetAsActive}
-            title="Set as Active"
-            leadingIcon="check"
-          />
-        )}
-      </Menu>
       <ConfirmDialog
         ref={confirmDialogRef}
         title={confirmDialogConfig.title}
@@ -336,12 +329,13 @@ export default function ManageForm() {
         onEndReached={loadMore}
         onEndReachedThreshold={0.2}
         ListFooterComponent={
-          isLoading && hasMore ? (
+          refreshing && hasMore && forms.length ? (
             <View className="py-4">
               <ActivityIndicator size="small" />
             </View>
           ) : null
         }
+        menuItems={getMenuItems}
       />
       <CreateNewButton
         onPress={() =>
