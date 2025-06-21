@@ -140,7 +140,10 @@ export const useReportStore = create<ReportStore>()(
             dashboard: "false",
           });
           if (search && search !== "") {
-            params.set("form_name", search);
+            const trimmedSearch = search.trim();
+            if (trimmedSearch) {
+              params.set("form_name", trimmedSearch);
+            }
           }
 
           const { data, error } = await supabase.functions.invoke(
