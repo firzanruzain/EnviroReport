@@ -1,7 +1,7 @@
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import "../global.css";
 import { useFonts } from "expo-font";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { fonts } from "assets";
 import { useUserStore } from "modules/user";
 import { useAuth } from "modules/auth";
@@ -39,7 +39,7 @@ export default function RootLayout() {
   const { session, loading: authLoading } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  const { fetchUser, resetUser } = useUserStore();
+  const { fetchUser, resetUser, user } = useUserStore();
 
   // hide splash screen when all fonts loaded
   useEffect(() => {
@@ -47,24 +47,15 @@ export default function RootLayout() {
     if (fontsLoaded) SplashScreen.hideAsync();
   }, [fontsLoaded, error]);
 
-  // Fetch user data when session changes
-  useEffect(() => {
-    if (session?.user) {
-      fetchUser();
-    } else {
-      resetUser();
-    }
-  }, [session?.user?.id]); // Only re-run when the user ID changes
-
-  // Handle routing based on auth state
+  // Handle auth state changes
   useEffect(() => {
     if (authLoading) return;
-
     const inAuthGroup = segments[0] === "(tab)";
-
     if (session && !inAuthGroup) {
       router.replace("/(tab)/dashboard");
+      if (session.user.id !== user?.auth_user_id) fetchUser();
     } else if (!session && inAuthGroup) {
+      resetUser();
       router.replace("/login");
     }
   }, [session, authLoading, segments]);

@@ -17,6 +17,7 @@ export interface FormTemplate {
   status: "Active" | "Inactive";
   pollution_type?: PollutionType;
   form_fields: FormField[];
+  polution_type?: PollutionType;
 }
 
 export interface FormTemplateMetadata {

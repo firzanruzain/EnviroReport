@@ -6,7 +6,7 @@ import {
   ReportList,
   CreateNewButton,
 } from "ui";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Link, router } from "expo-router";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -25,7 +25,6 @@ const dashboard = () => {
     latestReports,
     fetchLatestReports,
     resetLatestReports,
-    isLoading: reportsLoading,
     error: reportsError,
     fetchPollutionCounts,
     pollutionCounts,
@@ -56,7 +55,7 @@ const dashboard = () => {
   }, []);
 
   // Combined loading state
-  const isLoading = reportsLoading || userLoading;
+  const isLoading = refreshing || userLoading;
 
   const pollutionTypes = currentUser?.division?.pollution_types;
 
@@ -152,18 +151,18 @@ const dashboard = () => {
               <Text className="flex-1 text-xl font-pBold text-dark-Default">
                 Latest Report
               </Text>
-              <Link href={"/report"}>
+              <TouchableOpacity onPress={refreshAllData}>
                 <Text className="flex-1 text-xl text-right font-pBold text-dark-100 underline">
-                  View All
+                  Refresh
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </View>
 
             <ReportList
               ref={flatListRef}
               onPress={handlePress}
               reports={latestReports}
-              loading={reportsLoading}
+              loading={refreshing}
               onScroll={handleScroll}
               onContentSizeChange={handleContentSizeChange}
             />

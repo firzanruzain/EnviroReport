@@ -2,7 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "services";
-import { parseReport, Report, ReportStore, RawReport } from "models/report";
+import {
+  parseReport,
+  Report,
+  ReportStore,
+  RawReport,
+  ReportStatus,
+} from "models/report";
 
 const DEFAULT_LIMIT = 10;
 const DASHBOARD_LIMIT = 5;
@@ -54,6 +60,7 @@ export const useReportStore = create<ReportStore>()(
       hasMore: true,
       error: null,
       pollutionCounts: {},
+      lastSearch: "",
 
       setLimit: (newLimit: number) => {
         set({ limit: newLimit, offset: 0, reports: [] });
@@ -104,7 +111,7 @@ export const useReportStore = create<ReportStore>()(
           });
 
           const { data, error } = await supabase.functions.invoke(
-            `fetch-reports?${params}`,
+            `search-report?${params}`,
             { method: "GET" }
           );
           if (error) throw error;
@@ -120,21 +127,27 @@ export const useReportStore = create<ReportStore>()(
         }
       },
 
-      fetchReports: async ({ append = true } = {}) => {
+      fetchReports: async ({ append = true, search } = {}) => {
         const { offset, limit, reports, isLoading } = get();
         if (isLoading) return;
         if (!get().hasMore) return;
 
         try {
-          set({ isLoading: true, error: null });
+          set({ isLoading: true, error: null, lastSearch: search || "" });
           const params = new URLSearchParams({
             offset: offset.toString(),
             limit: limit.toString(),
             dashboard: "false",
           });
+          if (search && search !== "") {
+            const trimmedSearch = search.trim();
+            if (trimmedSearch) {
+              params.set("form_name", trimmedSearch);
+            }
+          }
 
           const { data, error } = await supabase.functions.invoke(
-            `fetch-reports?${params}`,
+            `search-report?${params}`,
             { method: "GET" }
           );
           if (error) throw error;
@@ -163,6 +176,7 @@ export const useReportStore = create<ReportStore>()(
             hasMoreReports,
             newReportsLength: newReports.length,
             currentReportsLength: reports.length,
+            search,
           });
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch reports" });
@@ -201,6 +215,48 @@ export const useReportStore = create<ReportStore>()(
           return updatedReport;
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch report details" });
+          throw err;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      updateReportStatus: async (reportId: string, status: ReportStatus) => {
+        try {
+          set({ isLoading: true, error: null });
+          const params = new URLSearchParams({
+            report_id: reportId,
+            status: status,
+          });
+
+          const { data, error } = await supabase.functions.invoke(
+            `update-report-status?${params}`,
+            { method: "PATCH" }
+          );
+          if (error) throw error;
+
+          // Update the report in both reports and latestReports arrays
+          set((state) => {
+            const updateReportInArray = (reports: Report[]) =>
+              reports.map((report) =>
+                report.report_id === reportId
+                  ? { ...report, report_status: status }
+                  : report
+              );
+
+            return {
+              reports: updateReportInArray(state.reports),
+              latestReports: updateReportInArray(state.latestReports),
+            };
+          });
+
+          // Return the updated report
+          const updatedReport = get().reports.find(
+            (r) => r.report_id === reportId
+          );
+          return updatedReport || null;
+        } catch (err: any) {
+          set({ error: err.message || "Failed to update report status" });
           throw err;
         } finally {
           set({ isLoading: false });
@@ -263,14 +319,29 @@ export const useReportStore = create<ReportStore>()(
         },
       },
       // Only persist essential data
-      partialize: (state) => ({
-        ...state,
-        reports: state.reports.slice(0, DEFAULT_LIMIT), // Only store first page
-        offset: DEFAULT_LIMIT, // Reset offset to match stored reports
-        hasMore: state.total > DEFAULT_LIMIT, // Set hasMore based on total reports
-        isLoading: false,
-        error: null,
-      }),
+      partialize: (state) => {
+        // Only persist reports if no search is active
+        if (!state.lastSearch || state.lastSearch === "") {
+          return {
+            ...state,
+            reports: state.reports.slice(0, DEFAULT_LIMIT), // Only store first page
+            offset: DEFAULT_LIMIT, // Reset offset to match stored reports
+            hasMore: state.total > DEFAULT_LIMIT, // Set hasMore based on total reports
+            isLoading: false,
+            error: null,
+          };
+        } else {
+          // If search is active, do not persist reports
+          return {
+            ...state,
+            reports: [],
+            offset: 0,
+            hasMore: false,
+            isLoading: false,
+            error: null,
+          };
+        }
+      },
     }
   )
 );

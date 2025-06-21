@@ -87,11 +87,31 @@ const _layout = () => {
             const currentPath =
               navigation.getState?.()?.routes?.[navigation.getState().index]
                 ?.name || "";
+            // console.log(
+            //   "Current Path: ",
+            //   JSON.stringify(
+            //     navigation
+            //       .getState?.()
+            //       ?.routes?.[navigation.getState().index]?.state?.routes.slice(
+            //         -1
+            //       ),
+            //     null,
+            //     2
+            //   )
+            // );
             if (currentPath.startsWith("report")) {
               if (router.canDismiss()) {
                 router.dismissTo({ pathname: "/(tab)/report" });
               } else {
-                router.replace({ pathname: "/(tab)/report" });
+                const currentRoute = navigation
+                  .getState?.()
+                  ?.routes?.[navigation.getState().index]?.state?.routes.slice(
+                    -1
+                  );
+                if (currentRoute && currentRoute[0]?.name !== "index") {
+                  console.log(currentRoute);
+                  router.replace({ pathname: "/(tab)/report" });
+                }
               }
             } else {
               router.replace({ pathname: "/(tab)/report" });

@@ -41,7 +41,6 @@ const ReportList = forwardRef<
   }
 >(({ reports, loading, onPress, onScroll, onContentSizeChange }, ref) => {
   if (loading) return <ActivityIndicator size="large" />;
-  if (!reports.length) return <Text>No reports found</Text>;
 
   return (
     <FlatList
