@@ -8,5 +8,5 @@ export default function Report() {
     return null; // or some error state
   }
 
-  return <ReportPage reportId={id} />;
+  return <ReportPage enableOption reportId={id} />;
 }

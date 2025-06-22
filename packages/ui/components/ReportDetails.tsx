@@ -10,18 +10,8 @@ type Props = {
   className?: string;
 };
 
-export default function ReportDetails({ report, className }: Props) {
+export default function ({ report, className }: Props) {
   const formatFieldValue = useFormStore((state) => state.formatFieldValue);
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    else return date.toLocaleDateString();
-  };
-
-  const formatTime = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    else return date.toLocaleTimeString();
-  };
 
   const renderDetailItem = (label: string, value: string | number) => (
     <View className=" pb-2 border-primary-300">

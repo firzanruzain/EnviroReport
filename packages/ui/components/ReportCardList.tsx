@@ -22,6 +22,7 @@ type ReportCardListProps = {
   onRefresh?: () => void;
   ListFooterComponent?: React.ReactElement | null;
   menuItems?: MenuItem[] | ((item: any) => MenuItem[]);
+  enableUpdateStatus?: boolean;
 };
 
 const ReportCard = ({
@@ -64,7 +65,7 @@ const ReportCard = ({
             <StatusTag status={status} />
           </View>
           <Text
-            className="font-pBold"
+            className="font-pBold text-dark-Default"
             {...props}
             numberOfLines={1}
             ellipsizeMode="tail"
@@ -110,6 +111,7 @@ const ReportCardList = forwardRef<any, ReportCardListProps>(
       onRefresh,
       ListFooterComponent,
       menuItems,
+      enableUpdateStatus = false,
     },
     ref
   ) => {
@@ -122,10 +124,6 @@ const ReportCardList = forwardRef<any, ReportCardListProps>(
       null
     );
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-
-    const handleViewDetails = useCallback((report: Report) => {
-      router.navigate(`/report/${report.report_id}`);
-    }, []);
 
     // Status update handlers
     const handleUpdateStatus = async (newStatus: ReportStatus) => {
@@ -158,6 +156,10 @@ const ReportCardList = forwardRef<any, ReportCardListProps>(
       statusModalRef.current?.open();
     }, []);
 
+    const handleViewDetails = useCallback((report: Report) => {
+      router.navigate(`/report/${report.report_id}`);
+    }, []);
+
     // Default menu items if none provided
     const defaultMenuItems = [
       {
@@ -165,12 +167,14 @@ const ReportCardList = forwardRef<any, ReportCardListProps>(
         leadingIcon: "eye",
         onPress: handleViewDetails,
       },
-      {
+    ];
+
+    if (enableUpdateStatus)
+      defaultMenuItems.push({
         title: "Update Status",
         leadingIcon: "update",
         onPress: handleOpenStatusModal,
-      },
-    ];
+      });
 
     // Use provided menuItems or default ones
     const finalMenuItems = menuItems || defaultMenuItems;
@@ -193,15 +197,16 @@ const ReportCardList = forwardRef<any, ReportCardListProps>(
           ListFooterComponent={ListFooterComponent}
           menuItems={finalMenuItems}
         />
-
         {/* Status Update Modal - Always render it */}
-        <StatusUpdateModal
-          ref={statusModalRef}
-          currentStatus={selectedReport?.report_status || "Pending"}
-          onUpdateStatus={handleUpdateStatus}
-          isLoading={statusUpdateLoading}
-          error={statusUpdateError}
-        />
+        {enableUpdateStatus && (
+          <StatusUpdateModal
+            ref={statusModalRef}
+            currentStatus={selectedReport?.report_status || "Pending"}
+            onUpdateStatus={handleUpdateStatus}
+            isLoading={statusUpdateLoading}
+            error={statusUpdateError}
+          />
+        )}
       </>
     );
   }

@@ -6,7 +6,7 @@ import { useTheme } from "react-native-paper";
 import { useRouter } from "expo-router";
 
 type Props = {
-  title: String;
+  title?: String;
   children?: any;
   nav?: () => void;
   textClassName?: string;
@@ -47,11 +47,13 @@ const Heading = ({
           />
         </TouchableOpacity>
       )}
-      <Text
-        className={`font-pBold text-2xl text-dark-Default flex-1 text-center ${textClassName}`}
-      >
-        {title}
-      </Text>
+      {title && (
+        <Text
+          className={`font-pBold text-2xl text-dark-Default flex-1 text-center ${textClassName}`}
+        >
+          {title}
+        </Text>
+      )}
       {right}
       {option && (
         <TouchableOpacity onPress={option}>

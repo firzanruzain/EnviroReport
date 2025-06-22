@@ -3,7 +3,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Header, MainScreenLayout, ReportCardList } from "ui";
 import { useReportStore } from "modules/report";
 import type { MainScreenLayoutRef } from "ui";
-import { useNavigation, useFocusEffect } from "expo-router";
+import {
+  useNavigation,
+  useFocusEffect,
+  useLocalSearchParams,
+  router,
+} from "expo-router";
 
 export default function index() {
   const layoutRef = useRef<MainScreenLayoutRef>(null);
@@ -66,10 +71,6 @@ export default function index() {
     refreshData();
   }, [refreshData, searchText]);
 
-  useEffect(() => {
-    if (reportsError) console.log("Reports Error: ", reportsError);
-  }, [reportsError]);
-
   const loadMore = useCallback(() => {
     console.log("loadMore triggered", {
       reportsLoading,
@@ -127,6 +128,7 @@ export default function index() {
       ) : (
         <View className="flex-1 pb-16">
           <ReportCardList
+            enableUpdateStatus
             reports={reports}
             refreshing={refreshing}
             onRefresh={onRefresh}

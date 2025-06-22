@@ -1,131 +1,148 @@
-import { View, Text, StatusBar, Image, FlatList } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient'
-import images from "../../constants/images"
-import Heading from '@/components/Heading';
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Link, useRouter } from 'expo-router';
-import { FAB, List } from 'react-native-paper';
-import CreateNewButton from '@/components/CreateNewButton';
-import loadDummyReports from '@/data/loadReports';
-type ListItemProp = {
-  title: React.ReactNode,
-  right: string
-  id: string
-}
-
-const reports = loadDummyReports();
-
-const ListItem = ({title, right, id}:ListItemProp) => {
-  const router = useRouter();
-  return (
-    <View className="border-b-2  border-primary-200 ">
-      <List.Item
-        onPress={() => router.navigate(`/report/${id}`)}
-        rippleColor="#32936f20"
-        title={() => (
-          <Text className="text-dark-Default font-pBold text-xl">{title}</Text>
-        )}
-        left={() => <List.Icon color="black" icon="file-document-outline" />}
-        description={(style) => (
-          <Text {...style} className="text-dark-Default font-pSemiBold text-s">
-            {right}
-          </Text>
-        )}
-      />
-    </View>
-  );
-}
+import {
+  MainScreenLayout,
+  Heading,
+  Header,
+  Card,
+  ReportList,
+  CreateNewButton,
+} from "ui";
+import { Text, TouchableOpacity, View } from "react-native";
+import { Link, router } from "expo-router";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { ActivityIndicator } from "react-native-paper";
+import { useReportStore } from "modules/report";
+import { useUserStore } from "modules/user";
+import React from "react";
+import type { MainScreenLayoutRef } from "ui";
+import { supabase } from "services";
 
 const dashboard = () => {
-  const router = useRouter();
+  const layoutRef = useRef<MainScreenLayoutRef>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isReportListScrollable, setIsReportListScrollable] = useState(false);
+  const flatListRef = useRef<any>(null);
+  const [totalReport, setTotalReport] = useState(0);
+  const {
+    latestReports,
+    fetchLatestReports,
+    resetLatestReports,
+    error: reportsError,
+    fetchPollutionCounts,
+    pollutionCounts,
+  } = useReportStore();
+
+  const {
+    user: currentUser,
+    isLoading: userLoading,
+    error: userError,
+  } = useUserStore();
+
+  // Refresh all data
+  const refreshAllData = async () => {
+    setRefreshing(true);
+    try {
+      await resetLatestReports();
+      const latestReportsData = await fetchLatestReports();
+      setTotalReport(latestReportsData || 0);
+      await fetchPollutionCounts();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshAllData();
+  }, []);
+
+  // Combined loading state
+  const isLoading = refreshing || userLoading;
+
+  // Combined error handling
+  useEffect(() => {
+    if (reportsError) console.error("Reports error:", reportsError);
+    if (userError) {
+      console.error("User error:", userError);
+      supabase.auth.refreshSession();
+    }
+  }, [reportsError, userError]);
+
+  const handlePress = (reportId: string) => {
+    router.push(`/report/${reportId}`);
+  };
+
+  const handleScroll = useCallback((event: any) => {
+    const { velocity } = event.nativeEvent;
+    if (velocity.y < 0) {
+      layoutRef.current?.expandSheet();
+    } else {
+      layoutRef.current?.collapseSheet();
+    }
+  }, []);
+
+  const handleContentSizeChange = useCallback(
+    (contentWidth: number, contentHeight: number) => {
+      if (flatListRef.current) {
+        const scrollView = flatListRef.current.getNativeScrollRef();
+        if (scrollView) {
+          scrollView.measure(
+            (x: number, y: number, width: number, height: number) => {
+              setIsReportListScrollable(contentHeight > height);
+            }
+          );
+        }
+      }
+    },
+    []
+  );
+
   return (
-    <SafeAreaView className="bg-Secondary-Default h-full">
-      <StatusBar
-        translucent
-        backgroundColor={"transparent"}
-        barStyle={"dark-content"}
-      />
-
-      <Image
-        className="absolute bottom-[400px] right-[50px]"
-        source={images.light}
-      ></Image>
-
-      <View className="h-full flex-1">
-        <View className=" h-full flex flex-row justify-center items-center px-14">
-          <View className="w-[15%] m-2 ">
-            <Link href={"/profile"}>
-              <Image
-                className=""
-                resizeMode="contain"
-                source={images.defaultdp}
-              />
-            </Link>
-          </View>
-          <View className="w-[75%] m-2">
-            <Text className="font-pSemiBold text-primary-Default text-xl">
-              Welcome Back,
-            </Text>
-            <Text className="font-pBold text-primary-Default text-3xl">
-              Firzan
+    <MainScreenLayout
+      ref={layoutRef}
+      header={<Header name={currentUser?.profile?.name} />}
+      heading={
+        <Heading nav={() => refreshAllData()} className="p-5">
+          <View className="flex-1 flex-row  items-center justify-center ">
+            {/* <Text className="bg-white font-pBold text-center text-5xl text-primary-Default ">
+              {totalReport}
+            </Text> */}
+            <Text className="flex-1 text-center align-middle font-pBold text-3xl text-dark-Default">
+              {totalReport} Reports Submitted
             </Text>
           </View>
-          <View className=" w-[10%] m-2">
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={30}
-              color="#32936f"
-            />
-          </View>
-        </View>
-      </View>
-
-      <View className="h-[90%]">
-        <LinearGradient
-          style={{
-            borderRadius: 45,
-            shadowColor: "green",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 4,
-            elevation: 50, // Required for Android
-          }}
-          className="h-full "
-          colors={["#32936f", "#deedc8"]}
-        >
-          <CreateNewButton />
-          <View className="h-1 w-[20%] rounded-full bg-light mx-auto mt-2 fixed"></View>
-          <Heading title={"Reports Submitted"} nav={() => router.push('/report')}>
-            <Text className="bg-primary-100 w-16 h-16  rounded-full font-pBold text-5xl text-light p-4 ">
-              2
-            </Text>
-          </Heading>
-
-          <View className="bg-Secondary-Default rounded-3xl mt-4 mx-4 p-6 ">
+        </Heading>
+      }
+      enableContentPanningGesture={!isReportListScrollable}
+    >
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <>
+          <Card className="p-6 flex-shrink">
             <View className="flex-row w-full border-b-2 pb-2 border-primary-200">
               <Text className="flex-1 text-xl font-pBold text-dark-Default">
                 Latest Report
               </Text>
-              <Link href={"/(tab)/report"}>
+              <TouchableOpacity onPress={refreshAllData}>
                 <Text className="flex-1 text-xl text-right font-pBold text-dark-100 underline">
-                  View All
+                  Refresh
                 </Text>
-              </Link>
+              </TouchableOpacity>
             </View>
-            <FlatList
-              data={reports}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <ListItem id={item.id} title={item.title} right={item.date} />
-              )}
-            />
-          </View>
-        </LinearGradient>
-      </View>
-    </SafeAreaView>
-  );
-}
 
-export default dashboard
+            <ReportList
+              ref={flatListRef}
+              onPress={handlePress}
+              reports={latestReports}
+              loading={refreshing}
+              onScroll={handleScroll}
+              onContentSizeChange={handleContentSizeChange}
+            />
+          </Card>
+        </>
+      )}
+      <CreateNewButton bottom={120} onPress={() => {}} />
+    </MainScreenLayout>
+  );
+};
+
+export default dashboard;

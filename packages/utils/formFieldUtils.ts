@@ -168,13 +168,13 @@ export const formFieldUtils = {
     typeId: string
   ): string => {
     const fieldType = formFieldUtils.getFieldTypeDefinition(fieldTypes, typeId);
-    console.log("Field type: ", fieldType?.label);
+    // console.log("Field type: ", fieldType?.label);
     if (!fieldType) return String(value);
 
     const formatSchema = fieldType.format_schema;
-    console.log("Format Schema: ", formatSchema);
+    // console.log("Format Schema: ", formatSchema);
     if (!formatSchema) return String(value);
-    console.log("value: ", value);
+    // console.log("value: ", value);
 
     // Transform the value based on the schema
     let transformedValue = value;
@@ -223,7 +223,7 @@ export const formFieldUtils = {
         transformedValue = String(value);
     }
 
-    console.log("transformed value: ", transformedValue);
+    // console.log("transformed value: ", transformedValue);
 
     // If it's an object, use the template with object properties
     if (formatSchema.transform === "object") {

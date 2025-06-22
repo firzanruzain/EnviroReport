@@ -14,9 +14,13 @@ import { StatusUpdateModalRef } from "ui";
 
 interface ReportPageProps {
   reportId: string;
+  enableOption?: boolean;
 }
 
-export default function ReportPage({ reportId }: ReportPageProps) {
+export default function ReportPage({
+  reportId,
+  enableOption = false,
+}: ReportPageProps) {
   const { report, isLoading, error, refetch } = useReportDetails(reportId);
   const { updateReportStatus } = useReportStore();
 
@@ -72,7 +76,7 @@ export default function ReportPage({ reportId }: ReportPageProps) {
         <Heading
           title={report?.form_template?.form_name || ""}
           enableBackButton
-          option={handleOpenStatusModal}
+          option={enableOption ? handleOpenStatusModal : undefined}
         />
       }
       refreshControl={
@@ -93,7 +97,7 @@ export default function ReportPage({ reportId }: ReportPageProps) {
       ) : null}
 
       {/* Status Update Modal */}
-      {report && (
+      {report && enableOption && (
         <StatusUpdateModal
           ref={statusModalRef}
           currentStatus={report.report_status}

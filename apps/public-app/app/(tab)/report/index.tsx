@@ -1,153 +1,148 @@
-import { View, Text, StatusBar, Image, FlatList, TextInput } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Link, router } from "expo-router";
-import images from "@/constants/images";
-import { List } from "react-native-paper";
-import CreateNewButton from "@/components/CreateNewButton";
-import loadDummyReports from "@/data/loadReports";
+import { View, ActivityIndicator, Text } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { CreateNewButton, Header, MainScreenLayout, ReportCardList } from "ui";
+import { useReportStore } from "modules/report";
+import type { MainScreenLayoutRef } from "ui";
+import { useNavigation, useFocusEffect } from "expo-router";
 
-type reportProp = {
-  title:string,
-  id: string,
-  date: string,
-  time: string,
-  status: string
-}
+export default function index() {
+  const layoutRef = useRef<MainScreenLayoutRef>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
-const reports = loadDummyReports();
+  const navigation = useNavigation();
 
-const ReportList = ({title, id, date, time, status}:reportProp) => {
-  return (
-    <View className="bg-Secondary-Default rounded-3xl mt-4 mx-4 px-2 flex-row">
-      <List.Item
-        className="flex-1"
-        onPress={() => router.navigate(`/report/${id}`)}
-        rippleColor="#32936f20"
-        title={(props) => (
-          <Text
-            {...props}
-            className="text-dark-Default font-pBold text-xl"
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {title} | {id}
-          </Text>
-        )}
-        left={(props) => (
-          <List.Icon
-            style={{ paddingLeft: 6 }}
-            color="black"
-            icon="file-document-outline"
-          />
-        )}
-        description={(style) => (
-          <View className="flex-row gap-2">
-            <Text
-              {...style}
-              className="text-dark-Default font-pSemiBold text-sm"
-            >
-              Submitted On {date} - {time}
-            </Text>
-            <View
-              className="rounded-full items-center justify-center px-1"
-              style={{
-                backgroundColor:
-                  status === "In Review" ? "#b2f58a" :
-                  status === "Pending" ? '#f5d08a' :
-                  "transparent",
-              }}
-            >
-              <Text className="font-pMedium text-sm">{status}</Text>
-            </View>
-          </View>
-        )}
-      />
-      <MaterialCommunityIcons
-        className="self-center"
-        name="dots-vertical"
-        size={24}
-        color="black"
-      />
-    </View>
+  const {
+    reports,
+    fetchReports,
+    resetReports,
+    isLoading: reportsLoading,
+    error: reportsError,
+    hasMore,
+    total,
+    offset,
+  } = useReportStore();
+
+  const refreshData = useCallback(async () => {
+    console.log("Refreshing reports with: ", searchText);
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        resetReports(),
+        fetchReports({ append: true, search: searchText }),
+      ]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [resetReports, fetchReports, searchText]);
+
+  // Handle tab focus/unfocus
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const loadData = async () => {
+        if (!isActive) return;
+
+        // Always fetch fresh data when the screen is focused
+        if (reports.length === 0) {
+          // If no data, do a full reset and fetch
+          await refreshData();
+        } else {
+          // If we have data, just fetch the next page
+          fetchReports({ append: true, search: searchText });
+        }
+      };
+
+      loadData();
+
+      // Cleanup function
+      return () => {
+        isActive = false;
+      };
+    }, [reports.length, fetchReports, refreshData])
   );
-};
 
-export default function ReportListScreen() {
+  const onRefresh = useCallback(() => {
+    refreshData();
+  }, [refreshData, searchText]);
+
+  useEffect(() => {
+    if (reportsError) console.log("Reports Error: ", reportsError);
+  }, [reportsError]);
+
+  const loadMore = useCallback(() => {
+    console.log("loadMore triggered", {
+      reportsLoading,
+      hasMore,
+      total,
+      offset,
+      currentReportsCount: reports.length,
+    });
+
+    // Only check if we're not currently loading and there's more data to load
+    if (!reportsLoading && hasMore) {
+      console.log("Fetching more reports...");
+      fetchReports({ append: true, search: searchText });
+    }
+  }, [
+    reportsLoading,
+    hasMore,
+    total,
+    offset,
+    fetchReports,
+    reports.length,
+    searchText,
+  ]);
+
+  const handleSearch = () => {
+    console.log(searchText);
+    refreshData();
+  };
+
+  // Prevent this screen from being added to the navigation stack
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
+
   return (
-    <SafeAreaView className="bg-Secondary-Default h-full">
-      <StatusBar
-        translucent
-        backgroundColor={"transparent"}
-        barStyle={"dark-content"}
-      />
-
-      <CreateNewButton />
-      <Image
-        className="absolute bottom-[400px] right-[50px]"
-        source={images.light}
-      ></Image>
-
-      <View className="h-full flex-1">
-        <View className=" h-full flex flex-row justify-center items-center px-14">
-          <View className="w-[15%] m-2 ">
-            <Link href={"/profile"}>
-              <Image
-                className=""
-                resizeMode="contain"
-                source={images.defaultdp}
-              />
-            </Link>
-          </View>
-          <View className="w-[75%] m-2">
-            <TextInput
-              placeholder="Search"
-              placeholderTextColor="#32936f"
-              className="h-[60%] px-6 text-primary-Default w-full border-primary-Default border-2 rounded-full"
-            ></TextInput>
-          </View>
-          <View className=" w-[10%] m-2">
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={30}
-              color="#32936f"
-            />
-          </View>
+    <MainScreenLayout
+      ref={layoutRef}
+      enableContentPanningGesture={false}
+      header={
+        <Header
+          mode="search"
+          searchText={searchText}
+          setSearchText={setSearchText}
+          handleSearch={() => handleSearch()}
+          searchPlaceholder="Search by Form Name"
+        />
+      }
+    >
+      {reports.length === 0 && !reportsLoading ? (
+        <View className="flex-1 items-center justify-center py-10">
+          <Text className="text-lg text-gray-500">No report found</Text>
         </View>
-      </View>
-
-      <View className="h-[90%]">
-        <LinearGradient
-          style={{
-            borderRadius: 45,
-            shadowColor: "green",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 4,
-            elevation: 50, // Required for Android
-          }}
-          className="h-full "
-          colors={["#32936f", "#deedc8"]}
-        >
-          <View className="h-1 w-[20%] rounded-full bg-light mx-auto mt-2 fixed"></View>
-
-          <FlatList
-            data={reports}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <ReportList
-                title={item.title}
-                id={item.id}
-                date={item.date}
-                time={item.time}
-                status={item.status}
-              />
-            )}
+      ) : (
+        <View className="flex-1 pb-16 ">
+          <ReportCardList
+            reports={reports}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={
+              reportsLoading && hasMore && reports.length ? (
+                <View className="py-4">
+                  <ActivityIndicator size="small" />
+                </View>
+              ) : null
+            }
           />
-        </LinearGradient>
-      </View>
-    </SafeAreaView>
+        </View>
+      )}
+    </MainScreenLayout>
   );
 }

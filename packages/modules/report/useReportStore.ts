@@ -120,6 +120,7 @@ export const useReportStore = create<ReportStore>()(
             parseReport(raw)
           );
           set({ latestReports: newReports });
+          return data.total;
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch latest reports" });
         } finally {

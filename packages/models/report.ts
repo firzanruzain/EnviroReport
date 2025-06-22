@@ -27,7 +27,7 @@ export interface ReportStore {
     append?: boolean;
     search?: string;
   }) => Promise<void>;
-  fetchLatestReports: () => Promise<void>;
+  fetchLatestReports: () => Promise<void | number>;
   resetReports: () => void;
   resetLatestReports: () => void;
   getReportById: (id: string) => Report | undefined;

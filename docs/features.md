@@ -17,7 +17,7 @@ This page document and tracks full implementation of each features based on proj
 
 ### Dashboard
 
-- [ ] View User Dashboard (shows submitted reports count and latest reports)
+- [x] View User Dashboard (shows submitted reports count and latest reports)
 
 ### Incident Reporting
 
@@ -26,8 +26,8 @@ This page document and tracks full implementation of each features based on proj
   - [ ] Fill dynamic form based on pollution type
   - [ ] Location tagging on map
   - [ ] Document upload
-- [ ] View Submitted Reports (list view)
-- [ ] View Report Details
+- [x] View Submitted Reports (list view)
+- [x] View Report Details
 - [ ] Map View of submitted reports
 
 ## Staff Division App

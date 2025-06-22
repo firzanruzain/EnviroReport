@@ -1,5 +1,5 @@
-import Welcome from "screens-core/welcome";
+import { Welcome } from "ui";
 
 export default function Index() {
-  return <Welcome title="Contribute to our beloved earth." />;
+  return <Welcome showLogin={false} />;
 }

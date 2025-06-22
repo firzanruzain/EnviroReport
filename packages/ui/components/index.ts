@@ -15,4 +15,5 @@ export { default as CreateNewButton } from "./CreateNewButton";
 export { default as DeleteDialog } from "./DeleteDialog";
 export { default as StatusUpdateModal } from "./StatusUpdateModal";
 export { StatusUpdateModalRef } from "./StatusUpdateModal";
+export { default as FormRenderer } from "./Form/FormRenderer";
 export * from "./ConfirmDialog";
