@@ -1,13 +1,17 @@
-import { View, Text, Button, StatusBar, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import Heading from "@/components/Heading";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-import Field from "@/components/Field";
-import images from "@/constants/images";
-import supabase from "utils/supabase";
+import { supabase } from "services";
 
 const Page = () => {
   const router = useRouter();
@@ -33,29 +37,7 @@ const Page = () => {
         className="h-full pb-28"
         colors={["#32936f", "#deedc8"]}
       >
-        <Heading title={"Profile"} nav={() => router.navigate("/dashboard")}>
-          <MaterialCommunityIcons
-            color={theme.colors.primary}
-            name="chevron-left"
-            size={40}
-          />
-        </Heading>
-
         <View className="mx-2 p-2">
-          <View className="items-center justify-center flex h-[12%] mb-2">
-            <Image
-              className="h-full w-full"
-              source={images.defaultdp}
-              resizeMode="contain"
-            ></Image>
-          </View>
-          <View className="bg-Secondary-Default flex-col gap-6 p-4 rounded-3xl my-1">
-            <Field label="Name" />
-            <Field label="Race" />
-            <Field label="NRIC" />
-            <Field label="Birthdate" />
-            <Field label="Phone Number" />
-          </View>
           <TouchableOpacity
             onPress={() => {
               console.log("LogOut Pressed");

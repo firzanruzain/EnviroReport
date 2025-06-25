@@ -79,9 +79,10 @@ form_template_id character varying NOT NULL,
 submission_date timestamp with time zone NOT NULL DEFAULT now(),
 report_status USER-DEFINED NOT NULL DEFAULT 'Pending'::report_status_type,
 form_data jsonb NOT NULL,
+location USER-DEFINED,
 CONSTRAINT report_pkey PRIMARY KEY (report_id),
-CONSTRAINT report_auth_user_id_fkey FOREIGN KEY (auth_user_id) REFERENCES public.user_account(auth_user_id),
-CONSTRAINT report_form_template_id_fkey FOREIGN KEY (form_template_id) REFERENCES public.form_template(form_template_id)
+CONSTRAINT report_form_template_id_fkey FOREIGN KEY (form_template_id) REFERENCES public.form_template(form_template_id),
+CONSTRAINT report_auth_user_id_fkey FOREIGN KEY (auth_user_id) REFERENCES public.user_account(auth_user_id)
 );
 CREATE TABLE public.report_log (
 log_id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -93,6 +94,14 @@ created_by uuid,
 CONSTRAINT report_log_pkey PRIMARY KEY (log_id),
 CONSTRAINT report_log_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user_account(auth_user_id),
 CONSTRAINT report_log_report_id_fkey FOREIGN KEY (report_id) REFERENCES public.report(report_id)
+);
+CREATE TABLE public.spatial_ref_sys (
+srid integer NOT NULL CHECK (srid > 0 AND srid <= 998999),
+auth_name character varying,
+auth_srid integer,
+srtext character varying,
+proj4text character varying,
+CONSTRAINT spatial_ref_sys_pkey PRIMARY KEY (srid)
 );
 CREATE TABLE public.user_account (
 auth_user_id uuid NOT NULL,

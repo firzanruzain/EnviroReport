@@ -15,4 +15,7 @@ export { default as CreateNewButton } from "./CreateNewButton";
 export { default as DeleteDialog } from "./DeleteDialog";
 export { default as StatusUpdateModal } from "./StatusUpdateModal";
 export { StatusUpdateModalRef } from "./StatusUpdateModal";
+export { default as FormRenderer } from "./Form/FormRenderer";
+export { default as MapLocationPicker } from "./MapLocationPicker";
+export { default as MapView } from "./MapView";
 export * from "./ConfirmDialog";

@@ -8,7 +8,11 @@
     "admin": "cd apps/admin-app && expo start",
     "public": "cd apps/public-app && expo start",
     "admin:clear": "cd apps/admin-app && expo start -c",
-    "public:clear": "cd apps/public-app && expo start -c"
+    "public:clear": "cd apps/public-app && expo start -c",
+    "public:expo": "cd apps/public-app && npx expo run:android",
+    "public:expo:clear": "cd apps/public-app && npx expo prebuild && npx expo run:android",
+    "admin:expo": "cd apps/admin-app && npx expo run:android",
+    "admin:expo:clear": "cd apps/admin-app && npx expo prebuild && npx expo run:android"
   },
   "keywords": [],
   "author": "",
@@ -26,16 +30,21 @@
     "@supabase/supabase-js": "^2.49.4",
     "dotenv": "^16.5.0",
     "expo": "~52.0.46",
+    "expo-location": "~18.0.10",
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-date-picker": "^5.0.13",
     "react-native-gesture-handler": "~2.20.2",
-    "react-native-maps": "1.18.0",
+    "react-native-keyboard-controller": "^1.17.5",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
     "react-native-url-polyfill": "^2.0.0",
     "tailwindcss": "^3.4.17",
-    "zustand": "^5.0.5"
+    "zustand": "^5.0.5",
+    "react-native-maps": "1.18.0",
+    "expo-notifications": "~0.29.14",
+    "expo-device": "~7.0.3",
+    "expo-constants": "~17.0.8"
   }
 }

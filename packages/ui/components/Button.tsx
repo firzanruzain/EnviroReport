@@ -5,8 +5,7 @@ const variantStyles = {
   primary: "bg-primary-100 rounded-full justify-center h-20 my-8",
   secondary:
     "bg-primary-Default flex-col gap-6 p-4 rounded-xl my-2 items-center",
-  disabled:
-    "bg-gray-500 rounded-full justify-center h-20 my-8",
+  disabled: "bg-gray-500 rounded-full justify-center h-20 my-8",
 };
 
 type ButtonProps = {
@@ -17,14 +16,22 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
-export default function Button({ title, onPress, variant, className, disabled }: ButtonProps) {
+export default function Button({
+  title,
+  onPress,
+  variant,
+  className,
+  disabled,
+}: ButtonProps) {
   return (
     <TouchableOpacity
       disabled={disabled}
       onPress={onPress}
-      className={`${disabled ? variantStyles.disabled : variantStyles[variant || "primary"]} ${className}`}
+      className={`${
+        disabled ? variantStyles.disabled : variantStyles[variant || "primary"]
+      } ${className}`}
     >
-        {title}
+      {title}
     </TouchableOpacity>
   );
 }

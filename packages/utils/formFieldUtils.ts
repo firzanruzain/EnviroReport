@@ -1,40 +1,42 @@
 import { FormFieldValue, FormField, FieldType } from "../models/form";
 
+// Deprecated
+
 // Helper function to get field value
-export const getFieldValue = (field: FormFieldValue): string | number => {
-  return field.value;
-};
+// export const getFieldValue = (field: FormFieldValue): string | number => {
+//   return field.value;
+// };
 
-// Helper function to get field type
-export const getFieldType = (field: FormFieldValue): string => {
-  return field.field_type_id;
-};
+// // Helper function to get field type
+// export const getFieldType = (field: FormFieldValue): string => {
+//   return field.field_type_id;
+// };
 
-// Helper function to check if field is of specific type
-export const isFieldType = (field: FormFieldValue, type: string): boolean => {
-  return field.field_type_id === type;
-};
+// // Helper function to check if field is of specific type
+// export const isFieldType = (field: FormFieldValue, type: string): boolean => {
+//   return field.field_type_id === type;
+// };
 
-// Helper function to render field value based on type
-export const renderFieldValue = (field: FormFieldValue): string => {
-  const value = field.value;
+// // Helper function to render field value based on type
+// export const renderFieldValue = (field: FormFieldValue): string => {
+//   const value = field.value;
 
-  switch (field.field_type_id) {
-    case "FT_TEXT":
-    case "FT_TEXTAREA":
-      return String(value);
-    case "FT_NUMBER":
-      return String(value);
-    case "FT_DECIBEL":
-      return `${value} dB`;
-    case "FT_VIBRATION":
-      return `${value} Hz`;
-    case "FT_SELECT":
-      return String(value);
-    default:
-      return String(value);
-  }
-};
+//   switch (field.field_type_id) {
+//     case "FT_TEXT":
+//     case "FT_TEXTAREA":
+//       return String(value);
+//     case "FT_NUMBER":
+//       return String(value);
+//     case "FT_DECIBEL":
+//       return `${value} dB`;
+//     case "FT_VIBRATION":
+//       return `${value} Hz`;
+//     case "FT_SELECT":
+//       return String(value);
+//     default:
+//       return String(value);
+//   }
+// };
 
 // Helper functions for working with form fields
 export const formFieldUtils = {
@@ -168,13 +170,13 @@ export const formFieldUtils = {
     typeId: string
   ): string => {
     const fieldType = formFieldUtils.getFieldTypeDefinition(fieldTypes, typeId);
-    console.log("Field type: ", fieldType?.label);
+    // console.log("Field type: ", fieldType?.label);
     if (!fieldType) return String(value);
 
     const formatSchema = fieldType.format_schema;
-    console.log("Format Schema: ", formatSchema);
+    // console.log("Format Schema: ", formatSchema);
     if (!formatSchema) return String(value);
-    console.log("value: ", value);
+    // console.log("value: ", value);
 
     // Transform the value based on the schema
     let transformedValue = value;
@@ -223,7 +225,7 @@ export const formFieldUtils = {
         transformedValue = String(value);
     }
 
-    console.log("transformed value: ", transformedValue);
+    // console.log("transformed value: ", transformedValue);
 
     // If it's an object, use the template with object properties
     if (formatSchema.transform === "object") {

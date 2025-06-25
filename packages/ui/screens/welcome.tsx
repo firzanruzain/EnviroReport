@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { Container } from "ui";
 import { useRouter, Link } from "expo-router";
-import {images} from "assets";
+import { images } from "assets";
 import { Button } from "ui";
 import { RotatingImage } from "ui";
 

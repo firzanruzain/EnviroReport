@@ -1,35 +1,46 @@
 import React, { useState } from "react";
-import { View, TextInput, Button } from "react-native";
+import { Text } from "react-native";
 import DatePicker from "react-native-date-picker";
+import { TouchableRipple } from "react-native-paper";
+import { FormFieldBase, StandardFormFieldProps } from "./FormFieldBase";
 
-export function TimeField({
-  field,
-  config,
-  formatSchema,
-  ...props
-}: {
-  field: any;
-  config?: any;
-  formatSchema?: any;
-}) {
-  const [date, setDate] = useState(new Date());
+type TimeFieldProps = StandardFormFieldProps<Date> & {
+  configurationSchema: string[];
+};
+
+export function TimeField(props: TimeFieldProps) {
   const [open, setOpen] = useState(false);
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Button title="Pick Date" onPress={() => setOpen(true)} />
-      <DatePicker
-        modal
-        open={open}
-        date={date}
-        mode="time"
-        onConfirm={(date) => {
-          setOpen(false);
-          setDate(date);
-        }}
-        onCancel={() => {
-          setOpen(false);
-        }}
-      />
-    </View>
+    <FormFieldBase {...props}>
+      {({ value, onChange, error, onBlur }) => (
+        <>
+          <TouchableRipple
+            borderless
+            onPress={() => setOpen(true)}
+            className=" bg-primary-Default rounded-lg items-center justify-center elevation-sm  p-2"
+          >
+            <Text className="font-pBold text-lg text-light outline-2">
+              {value
+                ? value.toLocaleTimeString()
+                : props.config?.placeholder || "Pick Time"}
+            </Text>
+          </TouchableRipple>
+          <DatePicker
+            modal
+            open={open}
+            date={value || new Date()}
+            mode="time"
+            onConfirm={(date) => {
+              setOpen(false);
+              onChange(date);
+            }}
+            onCancel={() => {
+              setOpen(false);
+              onBlur();
+            }}
+          />
+        </>
+      )}
+    </FormFieldBase>
   );
 }

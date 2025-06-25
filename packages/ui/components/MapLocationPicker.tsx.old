@@ -1,0 +1,141 @@
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import { Container, Heading, MainScreenLayout } from "ui";
+import MapView, {
+  LatLng,
+  Marker,
+  PROVIDER_GOOGLE,
+  Region,
+} from "react-native-maps";
+import { View, Text } from "react-native";
+import * as Location from "expo-location";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { TouchableRipple } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const staticRegion = {
+  latitude: 2.7535104,
+  longitude: 101.7623471,
+  latitudeDelta: 0.01,
+  longitudeDelta: 0.01,
+};
+
+export default function MapLocationPicker() {
+  const [region, setRegion] = useState<Region | null>(null);
+  const [coord, setCoord] = useState<LatLng>();
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["100%"], []);
+
+  const getCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  useEffect(() => {
+    if (location) {
+      console.log("Location Found");
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+      setCoord({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    } else if (errorMsg) {
+      alert(errorMsg);
+    }
+  }, [location]);
+
+  const onRegionChange = useCallback((newRegion: any) => {
+    console.log("Region changed:", newRegion);
+  }, []);
+
+  const handleSaveLocation = () => {
+    bottomSheetRef.current?.close();
+  };
+
+  if (!coord || !region) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+  return (
+    <BottomSheet
+      keyboardBehavior="fillParent"
+      backgroundStyle={{
+        backgroundColor: "transparent",
+        borderRadius: 40,
+      }}
+      handleIndicatorStyle={{
+        display: "none",
+      }}
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={snapPoints}
+      overDragResistanceFactor={0.3}
+      enableDynamicSizing={false}
+      enableContentPanningGesture={false}
+    >
+      <BottomSheetView
+        style={{
+          flex: 1,
+          borderRadius: 40,
+          backgroundColor: "white",
+          overflow: "hidden",
+        }}
+      >
+        <MapView
+          zoomEnabled
+          style={{
+            flex: 1,
+          }}
+          region={region}
+          onRegionChangeComplete={onRegionChange}
+        >
+          <Marker
+            draggable
+            onDragEnd={(e) => {
+              setCoord(e.nativeEvent.coordinate);
+            }}
+            coordinate={coord}
+            title="Your Location"
+          />
+        </MapView>
+        <TouchableRipple
+          onPress={handleSaveLocation}
+          className="self-center absolute bottom-40 bg-primary-Default w-96 rounded-2xl p-2 items-center elevation-md"
+        >
+          <Text className="text-center text-3xl font-pBold text-light">
+            Save Location
+          </Text>
+        </TouchableRipple>
+      </BottomSheetView>
+    </BottomSheet>
+  );
+}

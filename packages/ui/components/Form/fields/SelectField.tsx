@@ -1,37 +1,45 @@
 import React from "react";
-import { View, Text } from "react-native";
-// Make sure to install @react-native-picker/picker: npm install @react-native-picker/picker
+import { View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { FormFieldBase, StandardFormFieldProps } from "./FormFieldBase";
 
-interface SelectFieldProps {
-  field: any;
-  config?: any;
-  value: any;
-  onValueChange: (value: any, index: number) => void;
-}
+type SelectFieldProps = StandardFormFieldProps<string> & {
+  configurationSchema: string[];
+};
 
-export function SelectField({
-  field,
-  config,
-  value,
-  onValueChange,
-  ...props
-}: SelectFieldProps) {
+export function SelectField(props: SelectFieldProps) {
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Picker
-        selectedValue={value}
-        onValueChange={onValueChange}
-        style={{ borderWidth: 1, borderColor: "#ccc", borderRadius: 4 }}
-      >
-        {(config?.options || []).map((option: any) => (
-          <Picker.Item
-            key={option.value}
-            label={option.label}
-            value={option.value}
-          />
-        ))}
-      </Picker>
-    </View>
+    <FormFieldBase {...props}>
+      {({ value, onChange, error, onBlur }) => (
+        <View
+          style={{
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 4,
+            backgroundColor: "#b7d7b3",
+          }}
+        >
+          <Picker
+            selectedValue={value}
+            onValueChange={onChange}
+            onBlur={onBlur}
+            mode="dropdown"
+            style={{ height: 50, width: "100%" }}
+          >
+            <Picker.Item
+              label={props.config?.placeholder || "Select an option"}
+              value=""
+            />
+            {(props.config?.options || []).map((option: any) => (
+              <Picker.Item
+                key={option.value}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Picker>
+        </View>
+      )}
+    </FormFieldBase>
   );
 }

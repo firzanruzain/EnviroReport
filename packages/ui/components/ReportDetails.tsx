@@ -10,18 +10,12 @@ type Props = {
   className?: string;
 };
 
-export default function ReportDetails({ report, className }: Props) {
+export default function ({ report, className }: Props) {
   const formatFieldValue = useFormStore((state) => state.formatFieldValue);
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    else return date.toLocaleDateString();
-  };
-
-  const formatTime = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    else return date.toLocaleTimeString();
-  };
+  if (!report || !report.submission_date) {
+    return <Text>Report details are unavailable or incomplete.</Text>;
+  }
 
   const renderDetailItem = (label: string, value: string | number) => (
     <View className=" pb-2 border-primary-300">
@@ -35,7 +29,6 @@ export default function ReportDetails({ report, className }: Props) {
     const isStatusUpdate = item.event_type === "status_updated";
     // Optionally extract status from description (e.g., "Status changed to In Review")
     let status: string | null = null;
-    let statusColor: string | undefined = undefined;
     if (isStatusUpdate) {
       const match = item.event_description.match(/Status changed to (.+)/);
       if (match) {

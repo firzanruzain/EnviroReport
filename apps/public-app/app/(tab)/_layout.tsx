@@ -1,30 +1,34 @@
-import { View, Text, Image } from 'react-native'
-import { Tabs } from 'expo-router'
-import React from 'react'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { StatusBar } from 'expo-status-bar'
-import Constants from 'expo-constants'
-import tailwind from 'nativeWind'
+import { View, Text, TouchableOpacity } from "react-native";
+import { router, Tabs, useSegments } from "expo-router";
+import React, { useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "react-native-paper";
 
 type tabIconProps = {
   icon: any;
   color: string;
   name: string;
-  focused: boolean
-}
+  focused: boolean;
+};
 
-
-
-const TabIcon = ({icon, color, name, focused}:tabIconProps) => {
-    return (
-      <View className='items-center justify-center'>
-        <MaterialCommunityIcons name={icon} color={color} size={30} />
-        <Text style={{color:color}} className='font-pBold'>{name}</Text>
-      </View>
-    );
-}
+const TabIcon = ({ icon, color, name, focused }: tabIconProps) => {
+  return (
+    <View className="items-center justify-center">
+      <MaterialCommunityIcons name={icon} color={color} size={30} />
+      <Text style={{ color: color }} className="font-pBold">
+        {name}
+      </Text>
+    </View>
+  );
+};
 
 const _layout = () => {
+  const segment = useSegments();
+  const page = segment[segment.length - 1];
+  const rootPage = segment[1];
+  const pagesToHideTabBar = ["create"];
+
+  const theme = useTheme();
   return (
     <Tabs
       screenOptions={{
@@ -37,9 +41,10 @@ const _layout = () => {
           backgroundColor: "#DEEDC8",
           height: 80,
           shadowColor: "#32936f",
-          elevation: 50,
+          elevation: 1,
           bottom: 0,
-          zIndex:0
+          zIndex: 0,
+          display: pagesToHideTabBar.includes(page) ? "none" : "flex",
         },
         tabBarIconStyle: {
           flexGrow: 1,
@@ -63,6 +68,21 @@ const _layout = () => {
       />
       <Tabs.Screen
         name="report"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (rootPage !== "report") navigation.navigate("report");
+            else {
+              if (page == "[id]") {
+                if (router.canDismiss()) {
+                  router.dismissTo("/report");
+                } else {
+                  router.replace("/report");
+                }
+              }
+            }
+          },
+        })}
         options={{
           title: "Reports",
           tabBarIcon: ({ color, focused }) => (
@@ -72,6 +92,46 @@ const _layout = () => {
               name="Reports"
               focused={focused}
             />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="new"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (page !== "new") {
+              router.replace("/new");
+            }
+          },
+        })}
+        options={{
+          title: "asdasd",
+          tabBarButton: ({ onPress }) => (
+            <View
+              className="rounded-full bg-Secondary-Default items-center justify-center"
+              style={{
+                bottom: 25,
+                width: 80,
+                height: 80,
+                marginHorizontal: "auto",
+              }}
+            >
+              <TouchableOpacity
+                className="bg-primary-Default rounded-full  items-center justify-center"
+                style={{
+                  width: 65,
+                  height: 65,
+                }}
+                onPress={onPress}
+              >
+                <MaterialCommunityIcons
+                  name="plus"
+                  size={30}
+                  color={theme.colors.light}
+                />
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -105,6 +165,6 @@ const _layout = () => {
       />
     </Tabs>
   );
-}
+};
 
-export default _layout
+export default _layout;
