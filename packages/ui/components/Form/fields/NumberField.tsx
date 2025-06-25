@@ -1,31 +1,30 @@
 import React from "react";
-import { View, TextInput, Text } from "react-native";
+import { TextInput, Text } from "react-native";
+import { FormFieldBase, StandardFormFieldProps } from "./FormFieldBase";
 
-export function NumberField({
-  field,
-  config,
-  ...props
-}: {
-  field: any;
-  config?: any;
-}) {
+type NumberFieldProps = StandardFormFieldProps<string> & {
+  configurationSchema: string[];
+};
+
+export function NumberField(props: NumberFieldProps) {
+  const unit = props.config?.unit || null;
   return (
-    <View
-      style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}
-    >
-      <TextInput
-        style={{
-          flex: 1,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          padding: 8,
-          borderRadius: 4,
-        }}
-        placeholder={config?.placeholder}
-        keyboardType="numeric"
-        {...props}
-      />
-      {config?.unit && <Text style={{ marginLeft: 8 }}>{config.unit}</Text>}
-    </View>
+    <FormFieldBase {...props}>
+      {({ value, onChange, error, onBlur }) => (
+        <>
+          <TextInput
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur}
+            placeholder={props.config?.placeholder}
+            keyboardType="numeric"
+            className="rounded-lg p-2 bg-primary-300 font-pSemiBold text-lg"
+          />
+          {/* {props.config?.unit && (
+            <Text style={{ marginLeft: 8 }}>{props.config.unit}</Text>
+          )} */}
+        </>
+      )}
+    </FormFieldBase>
   );
 }

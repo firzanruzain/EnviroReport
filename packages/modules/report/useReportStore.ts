@@ -222,6 +222,38 @@ export const useReportStore = create<ReportStore>()(
         }
       },
 
+      submitReport: async (reportPayload: any) => {
+        try {
+          set({ isLoading: true, error: null });
+
+          console.log("Submitting: ", reportPayload);
+
+          const { data, error } = await supabase.functions.invoke(
+            "create-report",
+            {
+              method: "POST",
+              body: JSON.stringify(reportPayload),
+            }
+          );
+
+          if (error) throw error;
+
+          // Refresh the latest reports and main reports list
+          await Promise.all([
+            get().fetchLatestReports(),
+            get().fetchReports({ append: false }),
+          ]);
+
+          // Optionally reset any state if needed (not clearing form here)
+          return data;
+        } catch (err: any) {
+          set({ error: err.message || "Failed to submit report" });
+          throw err;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       updateReportStatus: async (reportId: string, status: ReportStatus) => {
         try {
           set({ isLoading: true, error: null });
@@ -284,6 +316,79 @@ export const useReportStore = create<ReportStore>()(
         set({
           latestReports: [],
         });
+      },
+
+      /**
+       * Fetch reports within a radius from a center coordinate using the edge function
+       */
+      fetchReportsWithinRadius: async ({
+        center_lat,
+        center_lng,
+        radius_meters,
+        limit = DEFAULT_LIMIT,
+        offset = 0,
+        append = false,
+      }: {
+        center_lat: number;
+        center_lng: number;
+        radius_meters: number;
+        limit?: number;
+        offset?: number;
+        append?: boolean;
+      }) => {
+        set({ isLoading: true, error: null });
+        try {
+          console.log(
+            "Fetching reports",
+            JSON.stringify(
+              {
+                center_lat,
+                center_lng,
+                radius_meters,
+              },
+              null,
+              2
+            )
+          );
+          const params = new URLSearchParams({
+            center_lat: center_lat.toString(),
+            center_lng: center_lng.toString(),
+            radius_meters: radius_meters.toString(),
+            limit: limit.toString(),
+            offset: offset.toString(),
+          });
+          const { data, error } = await supabase.functions.invoke(
+            `find-reports-within-radius?${params}`,
+            { method: "GET" }
+          );
+          if (error) throw error;
+          const newReports = (data.data || []).map((raw: RawReport) =>
+            parseReport(raw)
+          );
+          const total = data.total || 0;
+          const newOffset = append
+            ? offset + newReports.length
+            : newReports.length;
+          const hasMoreReports = total > newOffset;
+          return {
+            reports: newReports,
+            total,
+            offset: newOffset,
+            hasMore: hasMoreReports,
+          };
+        } catch (err: any) {
+          set({
+            error: err.message || "Failed to fetch reports within radius",
+          });
+          return {
+            reports: [],
+            total: 0,
+            offset: 0,
+            hasMore: false,
+          };
+        } finally {
+          set({ isLoading: false });
+        }
       },
     }),
     {

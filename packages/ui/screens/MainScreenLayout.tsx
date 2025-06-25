@@ -6,7 +6,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
-import { View, Image } from "react-native";
+import { View, Image, KeyboardAvoidingView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, {
@@ -76,7 +76,11 @@ const MainScreenLayout = forwardRef<MainScreenLayoutRef, Props>(
             {header}
 
             <BottomSheet
-              backgroundStyle={{ backgroundColor: "#32936f", borderRadius: 40 }}
+              keyboardBehavior="fillParent"
+              backgroundStyle={{
+                backgroundColor: "#32936f",
+                borderRadius: 40,
+              }}
               handleIndicatorStyle={{
                 backgroundColor: "white",
                 width: 100,

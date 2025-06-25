@@ -1,5 +1,5 @@
 import { View, Text, Image } from "react-native";
-import { router, Tabs } from "expo-router";
+import { router, Tabs, useSegments } from "expo-router";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -25,6 +25,10 @@ const TabIcon = ({ icon, color, name, focused }: tabIconProps) => {
 };
 
 const _layout = () => {
+  const segment = useSegments();
+  const page = segment[segment.length - 1];
+  const rootPage = segment[1];
+  const pagesToHideTabBar = ["create"];
   return (
     <Tabs
       screenOptions={{
@@ -43,6 +47,7 @@ const _layout = () => {
           zIndex: 0,
           borderColor: "#603d29",
           borderTopWidth: 1,
+          display: pagesToHideTabBar.includes(page) ? "none" : "flex",
         },
         tabBarIconStyle: {
           flexGrow: 1,
@@ -83,38 +88,15 @@ const _layout = () => {
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            // Check if current path is under /report, then dismissTo, else replace
-            const currentPath =
-              navigation.getState?.()?.routes?.[navigation.getState().index]
-                ?.name || "";
-            // console.log(
-            //   "Current Path: ",
-            //   JSON.stringify(
-            //     navigation
-            //       .getState?.()
-            //       ?.routes?.[navigation.getState().index]?.state?.routes.slice(
-            //         -1
-            //       ),
-            //     null,
-            //     2
-            //   )
-            // );
-            if (currentPath.startsWith("report")) {
-              if (router.canDismiss()) {
-                router.dismissTo({ pathname: "/(tab)/report" });
-              } else {
-                const currentRoute = navigation
-                  .getState?.()
-                  ?.routes?.[navigation.getState().index]?.state?.routes.slice(
-                    -1
-                  );
-                if (currentRoute && currentRoute[0]?.name !== "index") {
-                  // console.log(currentRoute);
-                  router.replace({ pathname: "/(tab)/report" });
+            if (rootPage !== "report") navigation.navigate("report");
+            else {
+              if (page == "[id]") {
+                if (router.canDismiss()) {
+                  router.dismissTo("/report");
+                } else {
+                  router.replace("/report");
                 }
               }
-            } else {
-              router.replace({ pathname: "/(tab)/report" });
             }
           },
         })}

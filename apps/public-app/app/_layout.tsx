@@ -8,6 +8,7 @@ import { useAuth } from "modules/auth";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import { configureReanimatedLogger } from "react-native-reanimated";
 import { useFormStore } from "modules/form";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export default function RootLayout() {
   configureReanimatedLogger({
@@ -68,8 +69,10 @@ export default function RootLayout() {
   }, [session, authLoading, segments]);
 
   return (
-    <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </PaperProvider>
+    <KeyboardProvider>
+      <PaperProvider theme={theme}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </PaperProvider>
+    </KeyboardProvider>
   );
 }

@@ -1,114 +1,45 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, ScrollView } from "react-native";
+import React from "react";
+import { View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { FormFieldBase, StandardFormFieldProps } from "./FormFieldBase";
 
-interface SelectFieldProps {
-  field: any;
-  config?: any;
-  value?: any;
-  onValueChange?: (value: any) => void;
-}
+type SelectFieldProps = StandardFormFieldProps<string> & {
+  configurationSchema: string[];
+};
 
-export function SelectField({
-  field,
-  config,
-  value,
-  onValueChange,
-  ...props
-}: SelectFieldProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(value);
-
-  const handleSelect = (optionValue: any) => {
-    setSelectedValue(optionValue);
-    setIsVisible(false);
-    if (onValueChange) {
-      onValueChange(optionValue);
-    }
-  };
-
-  const selectedOption = config?.options?.find(
-    (option: any) => option.value === selectedValue
-  );
-
+export function SelectField(props: SelectFieldProps) {
   return (
-    <View style={{ marginBottom: 16 }}>
-      <TouchableOpacity
-        onPress={() => setIsVisible(true)}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 4,
-          padding: 12,
-          backgroundColor: "#fff",
-        }}
-      >
-        <Text style={{ color: selectedOption ? "#000" : "#888" }}>
-          {selectedOption
-            ? selectedOption.label
-            : config?.placeholder || "Select an option"}
-        </Text>
-      </TouchableOpacity>
-
-      <Modal
-        visible={isVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsVisible(false)}
-      >
+    <FormFieldBase {...props}>
+      {({ value, onChange, error, onBlur }) => (
         <View
           style={{
-            flex: 1,
-            justifyContent: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 4,
+            backgroundColor: "#b7d7b3",
           }}
         >
-          <View
-            style={{
-              backgroundColor: "#fff",
-              margin: 20,
-              borderRadius: 8,
-              maxHeight: 400,
-            }}
+          <Picker
+            selectedValue={value}
+            onValueChange={onChange}
+            onBlur={onBlur}
+            mode="dropdown"
+            style={{ height: 50, width: "100%" }}
           >
-            <View
-              style={{
-                padding: 16,
-                borderBottomWidth: 1,
-                borderBottomColor: "#eee",
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                Select {field.field_label}
-              </Text>
-            </View>
-            <ScrollView>
-              {(config?.options || []).map((option: any) => (
-                <TouchableOpacity
-                  key={option.value}
-                  onPress={() => handleSelect(option.value)}
-                  style={{
-                    padding: 16,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#eee",
-                    backgroundColor:
-                      selectedValue === option.value ? "#f0f0f0" : "#fff",
-                  }}
-                >
-                  <Text style={{ fontSize: 16 }}>{option.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity
-              onPress={() => setIsVisible(false)}
-              style={{ padding: 16, borderTopWidth: 1, borderTopColor: "#eee" }}
-            >
-              <Text style={{ textAlign: "center", color: "#007AFF" }}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <Picker.Item
+              label={props.config?.placeholder || "Select an option"}
+              value=""
+            />
+            {(props.config?.options || []).map((option: any) => (
+              <Picker.Item
+                key={option.value}
+                label={option.label}
+                value={option.value}
+              />
+            ))}
+          </Picker>
         </View>
-      </Modal>
-    </View>
+      )}
+    </FormFieldBase>
   );
 }

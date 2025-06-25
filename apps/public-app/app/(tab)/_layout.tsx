@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { Tabs } from "expo-router";
-import React from "react";
+import { router, Tabs, useSegments } from "expo-router";
+import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
 
@@ -23,6 +23,11 @@ const TabIcon = ({ icon, color, name, focused }: tabIconProps) => {
 };
 
 const _layout = () => {
+  const segment = useSegments();
+  const page = segment[segment.length - 1];
+  const rootPage = segment[1];
+  const pagesToHideTabBar = ["create"];
+
   const theme = useTheme();
   return (
     <Tabs
@@ -39,6 +44,7 @@ const _layout = () => {
           elevation: 1,
           bottom: 0,
           zIndex: 0,
+          display: pagesToHideTabBar.includes(page) ? "none" : "flex",
         },
         tabBarIconStyle: {
           flexGrow: 1,
@@ -62,6 +68,21 @@ const _layout = () => {
       />
       <Tabs.Screen
         name="report"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (rootPage !== "report") navigation.navigate("report");
+            else {
+              if (page == "[id]") {
+                if (router.canDismiss()) {
+                  router.dismissTo("/report");
+                } else {
+                  router.replace("/report");
+                }
+              }
+            }
+          },
+        })}
         options={{
           title: "Reports",
           tabBarIcon: ({ color, focused }) => (
@@ -76,6 +97,14 @@ const _layout = () => {
       />
       <Tabs.Screen
         name="new"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            if (page !== "new") {
+              router.replace("/new");
+            }
+          },
+        })}
         options={{
           title: "asdasd",
           tabBarButton: ({ onPress }) => (

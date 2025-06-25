@@ -39,6 +39,20 @@ export interface ReportStore {
     reportId: string,
     status: ReportStatus
   ) => Promise<Report | null>;
+  submitReport: (reportPayload: any) => Promise<any>;
+  fetchReportsWithinRadius: (params: {
+    center_lat: number;
+    center_lng: number;
+    radius_meters: number;
+    limit?: number;
+    offset?: number;
+    append?: boolean;
+  }) => Promise<{
+    reports: Report[];
+    total: number;
+    offset: number;
+    hasMore: boolean;
+  }>;
 }
 
 export interface RawReport {

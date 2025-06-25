@@ -21,14 +21,16 @@ This page document and tracks full implementation of each features based on proj
 
 ### Incident Reporting
 
-- [ ] Submit New Report
-  - [ ] Select pollution type
-  - [ ] Fill dynamic form based on pollution type
-  - [ ] Location tagging on map
+- [x] Submit New Report
+  - [x] Select pollution type
+  - [x] Fill dynamic form based on pollution type
+  - [x] Location tagging on map
   - [ ] Document upload
 - [x] View Submitted Reports (list view)
+  - [x] search report by form name
+  - [ ] filter report by pollution type
 - [x] View Report Details
-- [ ] Map View of submitted reports
+- [x] Map View of submitted reports
 
 ## Staff Division App
 
@@ -50,11 +52,12 @@ This page document and tracks full implementation of each features based on proj
 - [x] View Division Submitted Reports
   - [x] add report id in report details
   - [ ] Filter by pollution type
-  - [x] Search reports
+  - [x] Search reports by form name
 - [x] Update Report Status (Pending/In Review/Closed)
 - [ ] Send Form Feedback
 - [x] View Report Details
   - [x] timeline view of reports
+- [ ] Notifications Alert on new report submitted
 
 ### Form Management
 
@@ -70,11 +73,5 @@ This page document and tracks full implementation of each features based on proj
   - [x] save form
 - [x] Publish/Unpublish Form
 - [x] Delete Form
-
-## Cross-Cutting Features
-
-- [ ] Notifications system
-- [ ] Data validation
-- [ ] Responsive UI for mobile
 
 ---

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { RefreshControl } from "react-native";
 import {
   MainScreenScrollLayout,
@@ -7,7 +7,7 @@ import {
   StatusUpdateModal,
 } from "ui";
 import { ActivityIndicator, Text } from "react-native-paper";
-import { useReportDetails } from "modules/report/useReportDetails";
+import { useReportsCacheStore } from "modules/report/useReportDetails";
 import { useReportStore } from "modules/report/useReportStore";
 import { ReportStatus } from "models/report";
 import { StatusUpdateModalRef } from "ui";
@@ -21,7 +21,7 @@ export default function ReportPage({
   reportId,
   enableOption = false,
 }: ReportPageProps) {
-  const { report, isLoading, error, refetch } = useReportDetails(reportId);
+  const { getReport } = useReportsCacheStore();
   const { updateReportStatus } = useReportStore();
 
   // Modal ref
@@ -31,8 +31,31 @@ export default function ReportPage({
     null
   );
 
+  // Report state
+  const [report, setReport] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   // Refresh state
   const [refreshing, setRefreshing] = useState(false);
+
+  const fetchReport = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await getReport(reportId);
+      setReport(res);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch report");
+      setReport(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getReport, reportId]);
+
+  useEffect(() => {
+    fetchReport();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reportId]);
 
   const handleUpdateStatus = async (newStatus: ReportStatus) => {
     if (!report) return;
@@ -62,19 +85,19 @@ export default function ReportPage({
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await refetch();
+      await fetchReport();
     } catch (err) {
       console.error("Error refreshing report:", err);
     } finally {
       setRefreshing(false);
     }
-  }, [refetch]);
+  }, [fetchReport]);
 
   return (
     <MainScreenScrollLayout
       heading={
         <Heading
-          title={report?.form_template?.form_name || ""}
+          title={report?.form_template?.form_name || "Report Loading...."}
           enableBackButton
           option={enableOption ? handleOpenStatusModal : undefined}
         />
@@ -94,7 +117,9 @@ export default function ReportPage({
         <Text>Error: {error}</Text>
       ) : report ? (
         <ReportDetails report={report} />
-      ) : null}
+      ) : (
+        <Text>No report found.</Text>
+      )}
 
       {/* Status Update Modal */}
       {report && enableOption && (

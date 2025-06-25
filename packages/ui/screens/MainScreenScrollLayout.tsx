@@ -15,6 +15,10 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { images } from "assets";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  KeyboardAvoidingView,
+  KeyboardAwareScrollView,
+} from "react-native-keyboard-controller";
 
 type Props = {
   header?: React.ReactNode;
@@ -23,6 +27,8 @@ type Props = {
   onChange?: () => void;
   refreshControl?: React.ReactElement;
   enableContentPanningGesture?: boolean;
+  className?: string;
+  keyboardShouldPersistTaps?: "always" | "never" | "handled" | boolean;
 };
 
 export type MainScreenScrollLayoutRef = {
@@ -39,6 +45,8 @@ const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
       onChange,
       refreshControl,
       enableContentPanningGesture = false,
+      className,
+      keyboardShouldPersistTaps = "handled",
     },
     ref
   ) => {
@@ -66,7 +74,7 @@ const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
     );
 
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView className="" style={{ flex: 1 }}>
         <SafeAreaView className="bg-Secondary-Default flex-1">
           <Container>
             <Image
@@ -75,44 +83,56 @@ const MainScreenScrollLayout = forwardRef<MainScreenScrollLayoutRef, Props>(
             ></Image>
             {header}
 
-            <BottomSheet
-              backgroundStyle={{ backgroundColor: "#32936f", borderRadius: 40 }}
-              handleIndicatorStyle={{
-                backgroundColor: "white",
-                width: 100,
-                height: 4,
-                marginTop: 5,
-              }}
-              ref={bottomSheetRef}
-              index={0}
-              snapPoints={snapPoints}
-              onChange={handleSheetChanges}
-              enableContentPanningGesture={enableContentPanningGesture}
-              overDragResistanceFactor={0.3}
-              enableDynamicSizing={false}
-              topInset={0}
-            >
-              <BottomSheetView className="h-[90%]">
-                <LinearGradient
-                  style={{
-                    shadowColor: "green",
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 4,
-                    elevation: 50,
-                  }}
-                  className="h-full items-center"
-                  colors={["#32936f", "#deedc8"]}
-                >
-                  <View className="h-full w-full px-4 gap-4 pb-10">
-                    {heading}
-                    <ScrollView refreshControl={refreshControl}>
-                      {children}
-                    </ScrollView>
-                  </View>
-                </LinearGradient>
-              </BottomSheetView>
-            </BottomSheet>
+            <KeyboardAvoidingView className="flex-1">
+              <BottomSheet
+                backgroundStyle={{
+                  backgroundColor: "#32936f",
+                  borderRadius: 40,
+                }}
+                handleIndicatorStyle={{
+                  backgroundColor: "white",
+                  width: 100,
+                  height: 4,
+                  marginTop: 10,
+                }}
+                ref={bottomSheetRef}
+                index={0}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}
+                enableContentPanningGesture={enableContentPanningGesture}
+                overDragResistanceFactor={0.3}
+                enableDynamicSizing={false}
+                topInset={0}
+              >
+                <BottomSheetView className="h-[100%]">
+                  <LinearGradient
+                    style={{
+                      shadowColor: "green",
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 4,
+                      elevation: 50,
+                    }}
+                    className="h-full items-center"
+                    colors={["#32936f", "#deedc8"]}
+                  >
+                    <View
+                      className={`${
+                        className ? className : "pb-24"
+                      } h-full w-full px-4 gap-4  `}
+                    >
+                      {heading}
+                      <KeyboardAwareScrollView
+                        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+                        refreshControl={refreshControl}
+                      >
+                        {children}
+                      </KeyboardAwareScrollView>
+                    </View>
+                  </LinearGradient>
+                </BottomSheetView>
+              </BottomSheet>
+            </KeyboardAvoidingView>
           </Container>
         </SafeAreaView>
       </GestureHandlerRootView>

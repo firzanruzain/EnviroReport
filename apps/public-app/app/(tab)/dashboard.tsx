@@ -4,7 +4,7 @@ import {
   Header,
   Card,
   ReportList,
-  CreateNewButton,
+  MapLocationPicker,
 } from "ui";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Link, router } from "expo-router";
@@ -19,6 +19,8 @@ import { supabase } from "services";
 const dashboard = () => {
   const layoutRef = useRef<MainScreenLayoutRef>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [coord, setCoord] = useState();
   const [isReportListScrollable, setIsReportListScrollable] = useState(false);
   const flatListRef = useRef<any>(null);
   const [totalReport, setTotalReport] = useState(0);
@@ -140,7 +142,6 @@ const dashboard = () => {
           </Card>
         </>
       )}
-      <CreateNewButton bottom={120} onPress={() => {}} />
     </MainScreenLayout>
   );
 };

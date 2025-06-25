@@ -580,7 +580,7 @@ INSERT INTO public.feedback (feedback_id, report_id, auth_user_id, feedback_text
 -- Insert Form Field Configurations
 INSERT INTO public.form_field_configuration (configuration_id, field_type_id, configuration_data, form_field_id) VALUES
     -- Water Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 2)),
@@ -590,13 +590,13 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 4)),
     (gen_random_uuid(), 'FT_NUMBER', '{"placeholder": "Enter severity level (1-5)", "min": 1, "max": 5, "step": 1}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 5)),
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter water source", "allowCurrentLocation": true, "radius": 5000, "mapType": "hybrid"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter water source", "allowCurrentLocation": true, "radius": 5000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 6)),
     (gen_random_uuid(), 'FT_SELECT', '{"placeholder": "Select pollution category", "options": [{"label": "Chemical", "value": "chemical"}, {"label": "Biological", "value": "biological"}, {"label": "Physical", "value": "physical"}, {"label": "Thermal", "value": "thermal"}]}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_1' AND field_order = 7)),
 
     -- Water Pollution Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 2)),
@@ -614,7 +614,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_water_pollution_2' AND field_order = 8)),
 
     -- Marine Oil Spill Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 2)),
@@ -626,7 +626,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_1' AND field_order = 5)),
 
     -- Marine Oil Spill Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 2)),
@@ -642,7 +642,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_marine_oil_spill_2' AND field_order = 7)),
 
     -- Air Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 2)),
@@ -656,7 +656,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_1' AND field_order = 6)),
 
     -- Air Pollution Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 2)),
@@ -674,7 +674,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_air_pollution_2' AND field_order = 8)),
 
     -- Scheduled Waste Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 2)),
@@ -688,7 +688,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_1' AND field_order = 6)),
 
     -- Scheduled Waste Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 2)),
@@ -706,7 +706,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_scheduled_waste_2' AND field_order = 8)),
 
     -- Noise Pollution Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 2)),
@@ -718,7 +718,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_1' AND field_order = 5)),
 
     -- Noise Pollution Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 2)),
@@ -734,7 +734,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_noise_pollution_2' AND field_order = 7)),
 
     -- Vibration Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 2)),
@@ -748,7 +748,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_1' AND field_order = 6)),
 
     -- Vibration Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 2)),
@@ -766,7 +766,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_vibration_2' AND field_order = 8)),
 
     -- Land Oil Spill Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 2)),
@@ -778,7 +778,7 @@ INSERT INTO public.form_field_configuration (configuration_id, field_type_id, co
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_1' AND field_order = 5)),
 
     -- Land Oil Spill Alternative Form Fields Configurations
-    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000, "mapType": "satellite"}', 
+    (gen_random_uuid(), 'FT_LOCATION', '{"placeholder": "Enter location", "allowCurrentLocation": true, "radius": 1000}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 1)),
     (gen_random_uuid(), 'FT_DATE', '{"placeholder": "Select incident date", "minDate": "2020-01-01", "maxDate": "2025-12-31", "format": "YYYY-MM-DD"}', 
         (SELECT form_field_id FROM public.form_field WHERE form_template_id = 'FT_land_oil_spill_2' AND field_order = 2)),
