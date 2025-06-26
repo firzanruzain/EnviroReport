@@ -8,14 +8,30 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "NODE_WORKSPACES": "true"
+        "NODE_WORKSPACES": "true",
+        "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY": "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+        "EXPO_PUBLIC_SUPABASE_URL": "EXPO_PUBLIC_SUPABASE_URL",
+        "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY": "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+        "EXPO_PUBLIC_SUPABASE_URL": "EXPO_PUBLIC_SUPABASE_URL",
+        "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY": "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+        "EXPO_PUBLIC_SUPABASE_URL": "EXPO_PUBLIC_SUPABASE_URL",
+        "GOOGLE_SERVICES_JSON": "GOOGLE_SERVICES_JSON"
+      }
     }
   },
   "submit": {

@@ -105,7 +105,6 @@ const MapScreen = () => {
             }
           }
           if (lat && lng) {
-            console.log(lat, lng);
             return (
               <Marker
                 key={report.report_id || idx}

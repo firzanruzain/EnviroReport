@@ -8,7 +8,7 @@ type UserStoreState = {
   user: User | null;
   isLoading: boolean;
   error: Error | null;
-  fetchUser: () => Promise<void>;
+  fetchUser: (userId: String) => Promise<void>;
   setUser: (user: User | null) => void;
   getUserName: () => string | null;
   resetUser: () => void;
@@ -25,20 +25,22 @@ export const useUserStore = create<UserStoreState>()(
         set({ user, error: null });
       },
 
-      fetchUser: async () => {
+      fetchUser: async (userId: String) => {
         set({ isLoading: true, error: null });
         try {
-          const { data, error } = await supabase.functions.invoke(
-            "fetch-current-user"
-          );
+          const { data, error } = await supabase
+            .from("user_account")
+            .select(
+              `*,
+              profile:profile_details(*),
+              division:division_id(*, pollution_types:pollution_type(*))`
+            )
+            .eq("auth_user_id", userId)
+            .single();
           console.log("Fetching current user");
 
           if (error) {
-            const errorContext = error?.context;
-            const errorMessage = `Error ${errorContext.status}: ${
-              errorContext.statusText || "Unauthorized"
-            }`;
-            throw new Error(errorMessage);
+            throw error;
           }
 
           if (!data) {

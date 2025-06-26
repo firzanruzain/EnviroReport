@@ -66,7 +66,6 @@ This page document and tracks full implementation of each features based on proj
   - [ ] From template library
 - [x] View Existing Forms
 - [x] View Published Form
-- [ ] Search/filter forms
 - [x] Edit Form
   - [x] Add/remove fields
   - [x] Reorder fields

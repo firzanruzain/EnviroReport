@@ -8,9 +8,27 @@ interface PollutionState {
   pollutionTypes: PollutionType[] | null;
   isLoading: boolean;
   error: Error | null;
-  fetchPollutions: (division_id: string) => Promise<void>;
+  // fetchPollutions: (division_id: string) => Promise<void>;
   fetchAllPollutions: () => Promise<void>;
 }
+
+// Local function to fetch all pollutions directly from database
+const fetchAllPollutionsFromDB = async () => {
+  const { data, error } = await supabase
+    .from("pollution_type")
+    .select("*")
+    .order("pollution_type_name");
+
+  if (error) {
+    throw new Error("Error fetching pollution types: " + error.message);
+  }
+
+  if (!data) {
+    throw new Error("No pollution types found");
+  }
+
+  return data;
+};
 
 export const usePollutionStore = create<PollutionState>()(
   persist(
@@ -18,40 +36,38 @@ export const usePollutionStore = create<PollutionState>()(
       pollutionTypes: null,
       isLoading: false,
       error: null,
-      fetchPollutions: async (division_id: string) => {
-        if (!division_id) return;
 
-        set({ isLoading: true, error: null });
+      // Deprecated
+      // fetchPollutions: async (division_id: string) => {
+      //   if (!division_id) return;
 
-        try {
-          const { data, error } = await supabase.functions.invoke(
-            `fetch-pollutions?division_id=${division_id}`,
-            { method: "GET" }
-          );
+      //   set({ isLoading: true, error: null });
 
-          if (error) throw error;
+      //   try {
+      //     const { data, error } = await supabase.functions.invoke(
+      //       `fetch-pollutions?division_id=${division_id}`,
+      //       { method: "GET" }
+      //     );
 
-          set({
-            pollutionTypes: data as PollutionType[],
-            isLoading: false,
-          });
-        } catch (err) {
-          set({
-            error: err as Error,
-            isLoading: false,
-          });
-        }
-      },
+      //     if (error) throw error;
+
+      //     set({
+      //       pollutionTypes: data as PollutionType[],
+      //       isLoading: false,
+      //     });
+      //   } catch (err) {
+      //     set({
+      //       error: err as Error,
+      //       isLoading: false,
+      //     });
+      //   }
+      // },
       fetchAllPollutions: async () => {
         set({ isLoading: true, error: null });
 
         try {
-          const { data, error } = await supabase.functions.invoke(
-            `fetch-all-pollutions`,
-            { method: "GET" }
-          );
-
-          if (error) throw error;
+          console.log("Fetching all pollutions");
+          const data = await fetchAllPollutionsFromDB();
 
           set({
             pollutionTypes: data as PollutionType[],

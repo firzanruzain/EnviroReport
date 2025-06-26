@@ -225,7 +225,6 @@ function CustomMapView(
       .map((s) => s.trim())
       .filter(Boolean);
     const count = parts.length;
-    console.log(count);
 
     if (count <= minCount) return maxDelta;
     if (count >= maxCount) return minDelta;

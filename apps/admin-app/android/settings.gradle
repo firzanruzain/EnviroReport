@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'EnviroReport-Admin'
+rootProject.name = 'EnviroReport-Staff'
 
 dependencyResolutionManagement {
   versionCatalogs {

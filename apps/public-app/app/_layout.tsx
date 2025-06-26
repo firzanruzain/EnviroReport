@@ -61,7 +61,7 @@ export default function RootLayout() {
     const inAuthGroup = segments[0] === "(tab)";
     if (session && !inAuthGroup) {
       router.replace("/(tab)/dashboard");
-      if (session.user.id !== user?.auth_user_id) fetchUser();
+      if (session.user.id !== user?.auth_user_id) fetchUser(session.user.id);
     } else if (!session && inAuthGroup) {
       resetUser();
       router.replace("/login");

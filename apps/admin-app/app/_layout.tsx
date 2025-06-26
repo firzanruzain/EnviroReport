@@ -146,7 +146,7 @@ export default function RootLayout() {
     const inAuthGroup = segments[0] === "(tab)";
     if (session && !inAuthGroup) {
       router.replace("/(tab)/dashboard");
-      if (session.user.id !== user?.auth_user_id) fetchUser();
+      if (session.user.id !== user?.auth_user_id) fetchUser(session.user.id);
     } else if (!session && inAuthGroup) {
       resetUser();
       router.replace("/login");
@@ -171,7 +171,21 @@ export default function RootLayout() {
 
     const responseListener =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        console.log("Response: ", response);
+        // Check for a deep link in the notification data
+        const link = response.notification.request.content.data?.link;
+        if (link) {
+          console.log(link);
+          // Ensure the link is relative to the (tab) group
+          // If the link starts with /report/, prefix with /(tab) if not present
+          if (link.startsWith("/report/")) {
+            router.push(`/(tab)${link}` as any);
+          } else {
+            router.push(link as any);
+          }
+        } else {
+          console.log(response);
+        }
       });
 
     return () => {
@@ -181,31 +195,31 @@ export default function RootLayout() {
   }, []);
 
   return (
-    // <KeyboardProvider>
-    //   <PaperProvider theme={theme}>
-    //     <Stack screenOptions={{ headerShown: false }} />
-    //   </PaperProvider>
-    // </KeyboardProvider>
-    <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
-    >
-      <Text>Your Expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
-      </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
-    </View>
+    <KeyboardProvider>
+      <PaperProvider theme={theme}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </PaperProvider>
+    </KeyboardProvider>
+    // <View
+    //   style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
+    // >
+    //   <Text>Your Expo push token: {expoPushToken}</Text>
+    //   <View style={{ alignItems: "center", justifyContent: "center" }}>
+    //     <Text>
+    //       Title: {notification && notification.request.content.title}{" "}
+    //     </Text>
+    //     <Text>Body: {notification && notification.request.content.body}</Text>
+    //     <Text>
+    //       Data:{" "}
+    //       {notification && JSON.stringify(notification.request.content.data)}
+    //     </Text>
+    //   </View>
+    //   <Button
+    //     title="Press to Send Notification"
+    //     onPress={async () => {
+    //       await sendPushNotification(expoPushToken);
+    //     }}
+    //   />
+    // </View>
   );
 }

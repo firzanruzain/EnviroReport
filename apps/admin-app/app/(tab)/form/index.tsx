@@ -48,7 +48,7 @@ const index = () => {
 
         return (
           <CollapsibleCard
-            defaultExpanded={false}
+            defaultExpanded={true}
             className="mb-4"
             key={typeId}
             title={typeName}
@@ -103,7 +103,7 @@ const index = () => {
   }, [pollutionTypes, fetchActiveForm, router]);
 
   return (
-    <MainScreenLayout ref={layoutRef} header={<Header />}>
+    <MainScreenLayout ref={layoutRef}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

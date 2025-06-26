@@ -14,7 +14,98 @@ const DEFAULT_LIMIT = 10;
 const DASHBOARD_LIMIT = 5;
 const STORE_VERSION = 1;
 
-// Helper function to parse stored reports
+// Local function to search reports directly from database
+const searchReport = async ({
+  offset = 0,
+  limit = DEFAULT_LIMIT,
+  search = "",
+  dashboard = false,
+}: {
+  offset?: number;
+  limit?: number;
+  search?: string;
+  dashboard?: boolean;
+}) => {
+  // Step 1: If filtering by form_name, get matching form_template_ids
+  let templateIds = undefined;
+  if (search && search.trim()) {
+    const { data: matchingTemplates, error: formError } = await supabase
+      .from("form_template")
+      .select("form_template_id")
+      .ilike("form_name", `%${search.trim()}%`);
+
+    if (formError) {
+      throw new Error("Error fetching templates: " + formError.message);
+    }
+
+    templateIds = matchingTemplates?.map((ft) => ft.form_template_id);
+    if (!templateIds || templateIds.length === 0) {
+      return {
+        data: [],
+        total: 0,
+      };
+    }
+  }
+
+  // Step 2: Query reports with optional template filtering
+  let query = supabase.from("report").select(
+    `
+      *,
+      form_template!inner(
+        form_name,
+        pollution_type!inner(
+          pollution_type_name
+        )
+      )
+    `,
+    { count: "exact" }
+  );
+
+  // Apply template ID filter if we have matching templates
+  if (templateIds) {
+    query = query.in("form_template_id", templateIds);
+  }
+
+  // Apply pagination
+  query = query.range(offset, offset + limit - 1);
+
+  // Order by submission date (newest first)
+  query = query.order("submission_date", { ascending: false });
+
+  const { data, error, count } = await query;
+
+  if (error) throw error;
+
+  return {
+    data: data || [],
+    total: count || 0,
+  };
+};
+
+// Local function to update report status directly in database
+const updateReportStatus = async (reportId: string, status: ReportStatus) => {
+  const { data, error } = await supabase
+    .from("report")
+    .update({ report_status: status })
+    .eq("report_id", reportId)
+    .select(
+      `
+      *,
+      form_template!inner(
+        form_name,
+        pollution_type!inner(
+          pollution_type_name
+        )
+      )
+    `
+    )
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+// Helper function to parse stoports
 const parseStoredReports = (storedData: any) => {
   if (!storedData) return null;
 
@@ -71,15 +162,43 @@ export const useReportStore = create<ReportStore>()(
         set({ isLoading: true, error: null });
 
         try {
-          const { data, error } = await supabase.functions.invoke(
-            "fetch-reports-count",
-            { method: "GET" }
-          );
+          // Query the database directly to get pollution counts
+          const { data, error } = await supabase.from("report").select(`
+              report_status,
+              form_template!inner(
+                pollution_type!inner(
+                  pollution_type_name
+                )
+              )
+            `);
+
           if (error) throw error;
 
-          console.log(data);
+          // Process the data to count by pollution type and status
+          const counts = data.reduce((acc: any, report: any) => {
+            const pollutionTypeName =
+              report.form_template.pollution_type.pollution_type_name;
+            const status = report.report_status;
+
+            if (!acc[pollutionTypeName]) {
+              acc[pollutionTypeName] = {
+                pending: 0,
+                total: 0,
+              };
+            }
+
+            acc[pollutionTypeName].total += 1;
+
+            if (status === "Pending") {
+              acc[pollutionTypeName].pending += 1;
+            }
+
+            return acc;
+          }, {});
+
+          console.log({ counts });
           set({
-            pollutionCounts: data.counts,
+            pollutionCounts: counts,
             isLoading: false,
           });
         } catch (err) {
@@ -99,28 +218,21 @@ export const useReportStore = create<ReportStore>()(
 
         try {
           set({ isLoading: true, error: null });
-          const params = new URLSearchParams({
-            offset: "0",
-            limit: DASHBOARD_LIMIT.toString(),
-            dashboard: "true",
-          });
 
           console.log("Fetching Latest Reports", {
             isLoading,
-            params: params,
+            limit: DASHBOARD_LIMIT,
           });
 
-          const { data, error } = await supabase.functions.invoke(
-            `search-report?${params}`,
-            { method: "GET" }
-          );
-          if (error) throw error;
+          const { data, total } = await searchReport({
+            offset: 0,
+            limit: DASHBOARD_LIMIT,
+            dashboard: true,
+          });
 
-          const newReports = data.data.map((raw: RawReport) =>
-            parseReport(raw)
-          );
+          const newReports = data.map((raw: RawReport) => parseReport(raw));
           set({ latestReports: newReports });
-          return data.total;
+          return total;
         } catch (err: any) {
           set({ error: err.message || "Failed to fetch latest reports" });
         } finally {
@@ -135,28 +247,15 @@ export const useReportStore = create<ReportStore>()(
 
         try {
           set({ isLoading: true, error: null, lastSearch: search || "" });
-          const params = new URLSearchParams({
-            offset: offset.toString(),
-            limit: limit.toString(),
-            dashboard: "false",
+
+          const { data, total } = await searchReport({
+            offset,
+            limit,
+            search,
+            dashboard: false,
           });
-          if (search && search !== "") {
-            const trimmedSearch = search.trim();
-            if (trimmedSearch) {
-              params.set("form_name", trimmedSearch);
-            }
-          }
 
-          const { data, error } = await supabase.functions.invoke(
-            `search-report?${params}`,
-            { method: "GET" }
-          );
-          if (error) throw error;
-
-          const newReports = data.data.map((raw: RawReport) =>
-            parseReport(raw)
-          );
-          const total = data.total;
+          const newReports = data.map((raw: RawReport) => parseReport(raw));
           const newOffset = append
             ? offset + newReports.length
             : newReports.length;
@@ -186,41 +285,42 @@ export const useReportStore = create<ReportStore>()(
         }
       },
 
-      fetchReportDetails: async (reportId: string) => {
-        try {
-          set({ isLoading: true, error: null });
-          const params = new URLSearchParams({
-            report_id: reportId,
-          });
+      // Deprecated
+      // fetchReportDetails: async (reportId: string) => {
+      //   try {
+      //     set({ isLoading: true, error: null });
+      //     const params = new URLSearchParams({
+      //       report_id: reportId,
+      //     });
 
-          const { data, error } = await supabase.functions.invoke(
-            `fetch-report-details?${params}`,
-            { method: "GET" }
-          );
-          if (error) throw error;
+      //     const { data, error } = await supabase.functions.invoke(
+      //       `fetch-report-details?${params}`,
+      //       { method: "GET" }
+      //     );
+      //     if (error) throw error;
 
-          // Update the report in both reports and latestReports arrays
-          const updatedReport = parseReport(data);
-          set((state) => {
-            const updateReportInArray = (reports: Report[]) =>
-              reports.map((report) =>
-                report.report_id === reportId ? updatedReport : report
-              );
+      //     // Update the report in both reports and latestReports arrays
+      //     const updatedReport = parseReport(data);
+      //     set((state) => {
+      //       const updateReportInArray = (reports: Report[]) =>
+      //         reports.map((report) =>
+      //           report.report_id === reportId ? updatedReport : report
+      //         );
 
-            return {
-              reports: updateReportInArray(state.reports),
-              latestReports: updateReportInArray(state.latestReports),
-            };
-          });
+      //       return {
+      //         reports: updateReportInArray(state.reports),
+      //         latestReports: updateReportInArray(state.latestReports),
+      //       };
+      //     });
 
-          return updatedReport;
-        } catch (err: any) {
-          set({ error: err.message || "Failed to fetch report details" });
-          throw err;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
+      //     return updatedReport;
+      //   } catch (err: any) {
+      //     set({ error: err.message || "Failed to fetch report details" });
+      //     throw err;
+      //   } finally {
+      //     set({ isLoading: false });
+      //   }
+      // },
 
       submitReport: async (reportPayload: any) => {
         try {
@@ -257,24 +357,15 @@ export const useReportStore = create<ReportStore>()(
       updateReportStatus: async (reportId: string, status: ReportStatus) => {
         try {
           set({ isLoading: true, error: null });
-          const params = new URLSearchParams({
-            report_id: reportId,
-            status: status,
-          });
 
-          const { data, error } = await supabase.functions.invoke(
-            `update-report-status?${params}`,
-            { method: "PATCH" }
-          );
-          if (error) throw error;
+          const updatedReportData = await updateReportStatus(reportId, status);
+          const updatedReport = parseReport(updatedReportData);
 
           // Update the report in both reports and latestReports arrays
           set((state) => {
             const updateReportInArray = (reports: Report[]) =>
               reports.map((report) =>
-                report.report_id === reportId
-                  ? { ...report, report_status: status }
-                  : report
+                report.report_id === reportId ? updatedReport : report
               );
 
             return {
@@ -283,11 +374,7 @@ export const useReportStore = create<ReportStore>()(
             };
           });
 
-          // Return the updated report
-          const updatedReport = get().reports.find(
-            (r) => r.report_id === reportId
-          );
-          return updatedReport || null;
+          return updatedReport;
         } catch (err: any) {
           set({ error: err.message || "Failed to update report status" });
           throw err;

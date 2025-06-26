@@ -19,13 +19,18 @@ export default ({ config }) => ({
       backgroundColor: "#ffffff",
     },
     package: "com.enviro.admin",
-    googleServicesFile: "./google-services.json",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     softwareKeyboardLayoutMode: "pan",
     config: {
       googleMaps: {
         apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
       },
     },
+    permissions: [
+      "android.permission.ACCESS_COARSE_LOCATION",
+      "android.permission.ACCESS_FINE_LOCATION",
+    ],
   },
   web: {
     bundler: "metro",

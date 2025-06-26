@@ -12,14 +12,6 @@ export default function ReportLayout() {
         name="[id]"
         options={{ title: "Report Details", headerShown: false }}
       />
-      <Stack.Screen
-        name="new"
-        options={{ title: "New Report", headerShown: false }}
-      />
-      <Stack.Screen
-        name="submit"
-        options={{ title: "Submit Report", headerShown: false }}
-      />
     </Stack>
   );
 }

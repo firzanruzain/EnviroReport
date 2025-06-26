@@ -7,7 +7,7 @@ interface ReportsCacheStore {
   order: string[]; // reportId order for LRU
   isLoading: boolean;
   error: string | null;
-  getReport: (reportId: string) => Promise<Report | null>;
+  getReport: (reportId: string, refresh?: boolean) => Promise<Report | null>;
 }
 
 const MAX_CACHE = 5;
@@ -17,22 +17,29 @@ export const useReportsCacheStore = create<ReportsCacheStore>((set, get) => ({
   order: [],
   isLoading: false,
   error: null,
-  getReport: async (reportId: string) => {
+  getReport: async (reportId: string, refresh = false) => {
     const { reports, order } = get();
-    if (reports[reportId]) {
+
+    // If not refreshing and report exists in cache, return cached version
+    if (!refresh && reports[reportId]) {
+      console.log("fetching reports details from cache");
       // Move to front (most recently used)
       set({
         order: [reportId, ...order.filter((id) => id !== reportId)],
       });
       return reports[reportId];
     }
+
+    console.log("fetching reports details from db");
     set({ isLoading: true, error: null });
     try {
-      const params = new URLSearchParams({ report_id: reportId });
-      const { data, error } = await supabase.functions.invoke(
-        `fetch-report-details?${params}`,
-        { method: "GET" }
-      );
+      const { data, error } = await supabase
+        .from("report")
+        .select(
+          "*, form_template:form_template_id(*, pollution_type:pollution_type_id(*)), report_logs:report_log(log_id, created_at, event_type, event_description, created_by), feedback:feedback(*)"
+        )
+        .eq("report_id", reportId)
+        .maybeSingle();
       if (error) throw error;
       if (!data) return null;
       const parsedReport = parseReport(data);

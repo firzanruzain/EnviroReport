@@ -61,7 +61,13 @@
     "react-native-webview": "13.12.5",
     "shared-ui": "*",
     "StatusBar": "^1.0.0",
-    "expo-location": "~18.0.10"
+    "expo-location": "~18.0.10",
+    "ui": "*",
+    "assets": "*",
+    "utils": "*",
+    "modules": "*",
+    "models": "*",
+    "services": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

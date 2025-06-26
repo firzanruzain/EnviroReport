@@ -38,19 +38,22 @@ export default function ReportPage({
   // Refresh state
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchReport = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await getReport(reportId);
-      setReport(res);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch report");
-      setReport(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [getReport, reportId]);
+  const fetchReport = useCallback(
+    async (refresh = false) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await getReport(reportId, refresh);
+        setReport(res);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch report");
+        setReport(null);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [getReport, reportId]
+  );
 
   useEffect(() => {
     fetchReport();
@@ -66,8 +69,10 @@ export default function ReportPage({
 
       await updateReportStatus(reportId, newStatus);
 
+      // Refresh the report with fresh data from database
+      await fetchReport(true);
+
       // Modal will automatically close when loading becomes false
-      handleRefresh();
     } catch (err) {
       setStatusUpdateError(
         err instanceof Error ? err.message : "Failed to update status"
@@ -85,7 +90,7 @@ export default function ReportPage({
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await fetchReport();
+      await fetchReport(true);
     } catch (err) {
       console.error("Error refreshing report:", err);
     } finally {
