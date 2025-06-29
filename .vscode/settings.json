@@ -6,5 +6,18 @@
   "editor.formatOnSave": true, // optional
   "editor.formatOnSaveMode": "file", // required to format on save
   "files.autoSave": "onFocusChange", // optional but recommended
-  "vs-code-prettier-eslint.prettierLast": false // set as "true" to run 'prettier' last not first
+  "vs-code-prettier-eslint.prettierLast": false,
+  "piny.project_settings": {
+    "open-pages": ["pinyfakepage.html"],
+    "urls": {
+      "pinyfakepage.html": {
+        "open-page-views": [
+          {
+            "w": 640,
+            "h": 0
+          }
+        ]
+      }
+    }
+  } // set as "true" to run 'prettier' last not first
 }

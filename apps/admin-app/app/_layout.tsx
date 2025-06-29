@@ -24,26 +24,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { someData: "goes here" },
-  };
-
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
-
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
   throw new Error(errorMessage);
@@ -88,6 +68,7 @@ async function registerForPushNotificationsAsync() {
       console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
+      console.error(e);
       handleRegistrationError(`${e}`);
     }
   } else {
@@ -159,9 +140,9 @@ export default function RootLayout() {
   >(undefined);
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
-      .catch((error: any) => setExpoPushToken(`${error}`));
+    // registerForPushNotificationsAsync()
+    //   .then((token) => setExpoPushToken(token ?? ""))
+    //   .catch((error: any) => setExpoPushToken(`${error}`));
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {

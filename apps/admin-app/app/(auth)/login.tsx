@@ -1,7 +1,5 @@
-import { signIn as SignIn } from "modules"
+import { signIn as SignIn } from "modules";
 
 export default function login() {
-  return (
-    <SignIn />
-  );
+  return SignIn({ enableNotificationPrompt: true });
 }

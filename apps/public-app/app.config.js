@@ -18,14 +18,19 @@ export default ({ config }) => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.enviro.firebase",
-    googleServicesFile: "./google-services.json",
+    package: "com.enviro.admin",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
     softwareKeyboardLayoutMode: "pan",
     config: {
       googleMaps: {
         apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
       },
     },
+    permissions: [
+      "android.permission.ACCESS_COARSE_LOCATION",
+      "android.permission.ACCESS_FINE_LOCATION",
+    ],
   },
   web: {
     bundler: "metro",

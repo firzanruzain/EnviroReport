@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "services";
 import { User } from "models/user";
+import { Profile } from "../../models/user";
 
 type UserStoreState = {
   user: User | null;
@@ -12,6 +13,7 @@ type UserStoreState = {
   setUser: (user: User | null) => void;
   getUserName: () => string | null;
   resetUser: () => void;
+  updateProfile: (profile: Profile) => Promise<Profile | null>;
 };
 
 export const useUserStore = create<UserStoreState>()(
@@ -72,6 +74,36 @@ export const useUserStore = create<UserStoreState>()(
           isLoading: false,
           error: null,
         });
+      },
+
+      updateProfile: async (profile) => {
+        set({ isLoading: true, error: null });
+        try {
+          const { data, error } = await supabase
+            .from("profile_details")
+            .update(profile)
+            .eq("auth_user_id", profile.auth_user_id)
+            .select()
+            .single();
+          if (error) throw error;
+          // Update local user state
+          const { user } = get();
+          if (user) {
+            set({ user: { ...user, profile: data } });
+          }
+          return data;
+        } catch (err) {
+          console.error(err);
+          set({
+            error:
+              err instanceof Error
+                ? err
+                : new Error("Failed to update profile"),
+          });
+          return null;
+        } finally {
+          set({ isLoading: false });
+        }
       },
     }),
     {

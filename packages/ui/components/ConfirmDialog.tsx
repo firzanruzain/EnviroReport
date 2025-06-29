@@ -16,6 +16,8 @@ export type dialogProps = {
   message: string;
   buttonText?: string;
   showConfirmButton?: boolean;
+  reverse?: boolean;
+  extraActions?: { label: string; onPress: () => void }[];
 };
 
 export const ConfirmDialog = forwardRef<ConfirmDialogRef, dialogProps>(
@@ -29,24 +31,32 @@ export const ConfirmDialog = forwardRef<ConfirmDialogRef, dialogProps>(
       message,
       buttonText,
       showConfirmButton = true,
+      reverse = false,
+      extraActions = [],
     },
     ref
   ) => {
     const [visible, setVisible] = useState(false);
     const prevLoadingRef = React.useRef(loading);
+    const prevErrorRef = React.useRef(error);
 
     useImperativeHandle(ref, () => ({
       open: () => setVisible(true),
       close: () => setVisible(false),
     }));
 
-    // Automatically close dialog when loading transitions from true to false
+    // Automatically close dialog when loading transitions from true to false and there is no error
     React.useEffect(() => {
-      if (prevLoadingRef.current && !loading) {
+      if (
+        prevErrorRef.current &&
+        prevLoadingRef.current &&
+        !loading &&
+        !error
+      ) {
         setVisible(false);
       }
       prevLoadingRef.current = loading;
-    }, [loading]);
+    }, [loading, error, visible]);
 
     const handleCancel = () => {
       setVisible(false);
@@ -68,12 +78,16 @@ export const ConfirmDialog = forwardRef<ConfirmDialogRef, dialogProps>(
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={handleCancel} disabled={loading}>
+            <Button
+              onPress={handleCancel}
+              disabled={loading}
+              textColor={reverse ? "red" : undefined}
+            >
               Cancel
             </Button>
             {showConfirmButton && (
               <Button
-                textColor="red"
+                textColor={reverse ? undefined : "red"}
                 onPress={handleConfirm}
                 loading={loading}
                 disabled={loading}
@@ -81,6 +95,12 @@ export const ConfirmDialog = forwardRef<ConfirmDialogRef, dialogProps>(
                 {buttonText || "Delete"}
               </Button>
             )}
+            {extraActions &&
+              extraActions.map((action, idx) => (
+                <Button key={idx} onPress={action.onPress} disabled={loading}>
+                  {action.label}
+                </Button>
+              ))}
           </Dialog.Actions>
         </Dialog>
       </Portal>

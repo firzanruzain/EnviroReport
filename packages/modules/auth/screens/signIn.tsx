@@ -1,12 +1,12 @@
 // This file is part of the shared-ui package.
 // It is subject to the license terms in the LICENSE file found in the top-level directory of this distribution.
-import {Container, Field, Button, RotatingImage} from "ui"
+import { Container, Field, Button, RotatingImage } from "ui";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Text, View, Image, ActivityIndicator, AppState } from "react-native";
-import { Link } from "expo-router";
-import {images} from "assets"
-import {supabase} from "services"
+import { Link, useRouter } from "expo-router";
+import { images } from "assets";
+import { supabase } from "services";
 import React from "react";
 
 AppState.addEventListener("change", (state) => {
@@ -17,12 +17,19 @@ AppState.addEventListener("change", (state) => {
   }
 });
 
-export default function login({disabledSignUp}: {disabledSignUp?: boolean}) {
+export default function login({
+  disabledSignUp,
+  enableNotificationPrompt,
+}: {
+  disabledSignUp?: boolean;
+  enableNotificationPrompt?: boolean;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [buttonEnabled, enableButton] = useState(false);
+  const router = useRouter();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -42,8 +49,20 @@ export default function login({disabledSignUp}: {disabledSignUp?: boolean}) {
       email: email,
       password: password,
     });
-    if (error) alert(error.message);
     setLoading(false);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    // Navigate to dashboard with param if notification prompt is enabled
+    if (enableNotificationPrompt) {
+      router.replace({
+        pathname: "/(tab)/dashboard",
+        params: { enableNotificationPrompt: "true" },
+      });
+    } else {
+      router.replace("/(tab)/dashboard");
+    }
   };
 
   return (

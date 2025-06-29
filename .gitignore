@@ -64,3 +64,4 @@ node_modules/
 **/android/local.properties
 **/android/gradle.properties
 nativewind-env.d.ts
+**/*.apk

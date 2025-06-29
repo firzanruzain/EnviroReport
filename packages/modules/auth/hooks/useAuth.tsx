@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "services";
-import { Session } from "@supabase/supabase-js";
+import { FunctionsHttpError, Session } from "@supabase/supabase-js";
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
@@ -53,5 +53,63 @@ export function useAuth() {
     };
   }, []);
 
-  return { session, loading, error };
+  const signUp = async ({
+    name,
+    email,
+    password,
+    identityCard,
+    user_type,
+    isStaff = false,
+    division_id = null,
+    phone_number = null,
+    address = null,
+    profile_pic = null,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+    identityCard: string;
+    user_type: string;
+    isStaff?: boolean;
+    division_id?: string | null;
+    phone_number?: string | null;
+    address?: string | null;
+    profile_pic?: string | null;
+  }) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("sign-up", {
+        body: {
+          name,
+          email,
+          password,
+          identityCard,
+          user_type,
+          isStaff,
+          division_id,
+          phone_number,
+          address,
+          profile_pic,
+        },
+        method: "POST",
+      });
+      if (error) {
+        if (error instanceof FunctionsHttpError) {
+          // The Edge Function returned an HTTP error
+          const errorMessage = await error.context.json(); // Or .text() if not JSON
+          throw new Error(errorMessage.error);
+        } else throw Error(error);
+      }
+
+      return data;
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Sign up failed"));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { session, loading, error, signUp };
 }
