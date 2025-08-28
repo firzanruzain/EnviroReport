@@ -38,12 +38,12 @@
 
   <p align="center">
     A full-stack mobile app for reporting and managing environmental incidents, built for government use with React Native, Supabase, and Firebase.
+<!--     <br /> -->
+<!--     <a href="https://github.com/firzanruzain/EnviroReport"><strong>Explore the docs »</strong></a> -->
     <br />
-    <a href="https://github.com/firzanruzain/EnviroReport"><strong>Explore the docs »</strong></a>
     <br />
-    <br />
-    <a href="https://github.com/firzanruzain/EnviroReport">View Demo</a>
-    &middot;
+<!--     <a href="https://github.com/firzanruzain/EnviroReport">View Demo</a> -->
+<!--     &middot; -->
     <a href="https://github.com/firzanruzain/EnviroReport/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
     <a href="https://github.com/firzanruzain/EnviroReport/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
